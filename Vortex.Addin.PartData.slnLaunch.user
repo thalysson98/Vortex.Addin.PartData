@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "Novo Perfil",
+    "Projects": [
+      {
+        "Path": "Vortex.Addin.PartData\\Vortex.Addin.PartData.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "Vortex.Tests\\Vortex.Tests.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]

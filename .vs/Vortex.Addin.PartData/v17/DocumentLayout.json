@@ -1,0 +1,213 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "S:\\PROJETOS\\PROJETO (ESTUDO PARA NOVA ORGANIZACAO)\\USUARIOS\\THALYSSON\\ESTUDOS C#\\Vortex.Addin.PartData\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{B74E1178-0E6C-4ACB-9EFA-0997FE7D3380}|Vortex.Addin.PartData\\Vortex.Addin.PartData.csproj|S:\\PROJETOS\\PROJETO (ESTUDO PARA NOVA ORGANIZACAO)\\USUARIOS\\THALYSSON\\ESTUDOS C#\\Vortex.Addin.PartData\\vortex.addin.partdata\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B74E1178-0E6C-4ACB-9EFA-0997FE7D3380}|Vortex.Addin.PartData\\Vortex.Addin.PartData.csproj|solutionrelative:vortex.addin.partdata\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B74E1178-0E6C-4ACB-9EFA-0997FE7D3380}|Vortex.Addin.PartData\\Vortex.Addin.PartData.csproj|S:\\PROJETOS\\PROJETO (ESTUDO PARA NOVA ORGANIZACAO)\\USUARIOS\\THALYSSON\\ESTUDOS C#\\Vortex.Addin.PartData\\vortex.addin.partdata\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{B74E1178-0E6C-4ACB-9EFA-0997FE7D3380}|Vortex.Addin.PartData\\Vortex.Addin.PartData.csproj|solutionrelative:vortex.addin.partdata\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B74E1178-0E6C-4ACB-9EFA-0997FE7D3380}|Vortex.Addin.PartData\\Vortex.Addin.PartData.csproj|S:\\PROJETOS\\PROJETO (ESTUDO PARA NOVA ORGANIZACAO)\\USUARIOS\\THALYSSON\\ESTUDOS C#\\Vortex.Addin.PartData\\vortex.addin.partdata\\core\\sqlcommands.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B74E1178-0E6C-4ACB-9EFA-0997FE7D3380}|Vortex.Addin.PartData\\Vortex.Addin.PartData.csproj|solutionrelative:vortex.addin.partdata\\core\\sqlcommands.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B74E1178-0E6C-4ACB-9EFA-0997FE7D3380}|Vortex.Addin.PartData\\Vortex.Addin.PartData.csproj|s:\\projetos\\projeto (estudo para nova organizacao)\\usuarios\\thalysson\\estudos c#\\vortex.addin.partdata\\vortex.addin.partdata\\visualizador.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{B74E1178-0E6C-4ACB-9EFA-0997FE7D3380}|Vortex.Addin.PartData\\Vortex.Addin.PartData.csproj|solutionrelative:vortex.addin.partdata\\visualizador.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B74E1178-0E6C-4ACB-9EFA-0997FE7D3380}|Vortex.Addin.PartData\\Vortex.Addin.PartData.csproj|S:\\PROJETOS\\PROJETO (ESTUDO PARA NOVA ORGANIZACAO)\\USUARIOS\\THALYSSON\\ESTUDOS C#\\Vortex.Addin.PartData\\vortex.addin.partdata\\cadastro_main.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B74E1178-0E6C-4ACB-9EFA-0997FE7D3380}|Vortex.Addin.PartData\\Vortex.Addin.PartData.csproj|solutionrelative:vortex.addin.partdata\\cadastro_main.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B74E1178-0E6C-4ACB-9EFA-0997FE7D3380}|Vortex.Addin.PartData\\Vortex.Addin.PartData.csproj|S:\\PROJETOS\\PROJETO (ESTUDO PARA NOVA ORGANIZACAO)\\USUARIOS\\THALYSSON\\ESTUDOS C#\\Vortex.Addin.PartData\\vortex.addin.partdata\\cadastro_main.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{B74E1178-0E6C-4ACB-9EFA-0997FE7D3380}|Vortex.Addin.PartData\\Vortex.Addin.PartData.csproj|solutionrelative:vortex.addin.partdata\\cadastro_main.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B74E1178-0E6C-4ACB-9EFA-0997FE7D3380}|Vortex.Addin.PartData\\Vortex.Addin.PartData.csproj|S:\\PROJETOS\\PROJETO (ESTUDO PARA NOVA ORGANIZACAO)\\USUARIOS\\THALYSSON\\ESTUDOS C#\\Vortex.Addin.PartData\\vortex.addin.partdata\\cadastro_main.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B74E1178-0E6C-4ACB-9EFA-0997FE7D3380}|Vortex.Addin.PartData\\Vortex.Addin.PartData.csproj|solutionrelative:vortex.addin.partdata\\cadastro_main.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B74E1178-0E6C-4ACB-9EFA-0997FE7D3380}|Vortex.Addin.PartData\\Vortex.Addin.PartData.csproj|S:\\PROJETOS\\PROJETO (ESTUDO PARA NOVA ORGANIZACAO)\\USUARIOS\\THALYSSON\\ESTUDOS C#\\Vortex.Addin.PartData\\vortex.addin.partdata\\core\\epdmhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B74E1178-0E6C-4ACB-9EFA-0997FE7D3380}|Vortex.Addin.PartData\\Vortex.Addin.PartData.csproj|solutionrelative:vortex.addin.partdata\\core\\epdmhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B74E1178-0E6C-4ACB-9EFA-0997FE7D3380}|Vortex.Addin.PartData\\Vortex.Addin.PartData.csproj|S:\\PROJETOS\\PROJETO (ESTUDO PARA NOVA ORGANIZACAO)\\USUARIOS\\THALYSSON\\ESTUDOS C#\\Vortex.Addin.PartData\\vortex.addin.partdata\\visualizador.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B74E1178-0E6C-4ACB-9EFA-0997FE7D3380}|Vortex.Addin.PartData\\Vortex.Addin.PartData.csproj|solutionrelative:vortex.addin.partdata\\visualizador.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B74E1178-0E6C-4ACB-9EFA-0997FE7D3380}|Vortex.Addin.PartData\\Vortex.Addin.PartData.csproj|S:\\PROJETOS\\PROJETO (ESTUDO PARA NOVA ORGANIZACAO)\\USUARIOS\\THALYSSON\\ESTUDOS C#\\Vortex.Addin.PartData\\vortex.addin.partdata\\core\\swdochandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B74E1178-0E6C-4ACB-9EFA-0997FE7D3380}|Vortex.Addin.PartData\\Vortex.Addin.PartData.csproj|solutionrelative:vortex.addin.partdata\\core\\swdochandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B74E1178-0E6C-4ACB-9EFA-0997FE7D3380}|Vortex.Addin.PartData\\Vortex.Addin.PartData.csproj|S:\\PROJETOS\\PROJETO (ESTUDO PARA NOVA ORGANIZACAO)\\USUARIOS\\THALYSSON\\ESTUDOS C#\\Vortex.Addin.PartData\\vortex.addin.partdata\\visualizador.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B74E1178-0E6C-4ACB-9EFA-0997FE7D3380}|Vortex.Addin.PartData\\Vortex.Addin.PartData.csproj|solutionrelative:vortex.addin.partdata\\visualizador.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F3311F67-6B53-427F-823C-47BEC6DF4E60}|Vortex.Tests\\Vortex.Tests.csproj|s:\\projetos\\projeto (estudo para nova organizacao)\\usuarios\\thalysson\\estudos c#\\vortex.addin.partdata\\vortex.tests\\cadastromaintests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F3311F67-6B53-427F-823C-47BEC6DF4E60}|Vortex.Tests\\Vortex.Tests.csproj|solutionrelative:vortex.tests\\cadastromaintests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 301,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Cadastro_main.Designer.cs",
+              "DocumentMoniker": "S:\\PROJETOS\\PROJETO (ESTUDO PARA NOVA ORGANIZACAO)\\USUARIOS\\THALYSSON\\ESTUDOS C#\\Vortex.Addin.PartData\\Vortex.Addin.PartData\\Cadastro_main.Designer.cs",
+              "RelativeDocumentMoniker": "Vortex.Addin.PartData\\Cadastro_main.Designer.cs",
+              "ToolTip": "S:\\PROJETOS\\PROJETO (ESTUDO PARA NOVA ORGANIZACAO)\\USUARIOS\\THALYSSON\\ESTUDOS C#\\Vortex.Addin.PartData\\Vortex.Addin.PartData\\Cadastro_main.Designer.cs",
+              "RelativeToolTip": "Vortex.Addin.PartData\\Cadastro_main.Designer.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-06T20:14:57.678Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "MainForm.cs",
+              "DocumentMoniker": "S:\\PROJETOS\\PROJETO (ESTUDO PARA NOVA ORGANIZACAO)\\USUARIOS\\THALYSSON\\ESTUDOS C#\\Vortex.Addin.PartData\\Vortex.Addin.PartData\\MainForm.cs",
+              "RelativeDocumentMoniker": "Vortex.Addin.PartData\\MainForm.cs",
+              "ToolTip": "S:\\PROJETOS\\PROJETO (ESTUDO PARA NOVA ORGANIZACAO)\\USUARIOS\\THALYSSON\\ESTUDOS C#\\Vortex.Addin.PartData\\Vortex.Addin.PartData\\MainForm.cs",
+              "RelativeToolTip": "Vortex.Addin.PartData\\MainForm.cs",
+              "ViewState": "AgIAAMIAAAAAAAAAAAAowNcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-04T14:12:00.426Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Cadastro_main.cs [Design]",
+              "DocumentMoniker": "S:\\PROJETOS\\PROJETO (ESTUDO PARA NOVA ORGANIZACAO)\\USUARIOS\\THALYSSON\\ESTUDOS C#\\Vortex.Addin.PartData\\Vortex.Addin.PartData\\Cadastro_main.cs",
+              "RelativeDocumentMoniker": "Vortex.Addin.PartData\\Cadastro_main.cs",
+              "ToolTip": "C:\\Users\\engenharia01\\Documents\\ESTUDOS C#\\Vortex.Addin.PartData\\Vortex.Addin.PartData\\Cadastro_main.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-28T17:17:34.626Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Cadastro_main.cs",
+              "DocumentMoniker": "S:\\PROJETOS\\PROJETO (ESTUDO PARA NOVA ORGANIZACAO)\\USUARIOS\\THALYSSON\\ESTUDOS C#\\Vortex.Addin.PartData\\Vortex.Addin.PartData\\Cadastro_main.cs",
+              "RelativeDocumentMoniker": "Vortex.Addin.PartData\\Cadastro_main.cs",
+              "ToolTip": "S:\\PROJETOS\\PROJETO (ESTUDO PARA NOVA ORGANIZACAO)\\USUARIOS\\THALYSSON\\ESTUDOS C#\\Vortex.Addin.PartData\\Vortex.Addin.PartData\\Cadastro_main.cs",
+              "RelativeToolTip": "Vortex.Addin.PartData\\Cadastro_main.cs",
+              "ViewState": "AgIAAAEAAAAAAAAAAAAowBIAAAAXAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-04T16:20:26.727Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "EPDMHandler.cs",
+              "DocumentMoniker": "S:\\PROJETOS\\PROJETO (ESTUDO PARA NOVA ORGANIZACAO)\\USUARIOS\\THALYSSON\\ESTUDOS C#\\Vortex.Addin.PartData\\Vortex.Addin.PartData\\Core\\EPDMHandler.cs",
+              "RelativeDocumentMoniker": "Vortex.Addin.PartData\\Core\\EPDMHandler.cs",
+              "ToolTip": "S:\\PROJETOS\\PROJETO (ESTUDO PARA NOVA ORGANIZACAO)\\USUARIOS\\THALYSSON\\ESTUDOS C#\\Vortex.Addin.PartData\\Vortex.Addin.PartData\\Core\\EPDMHandler.cs",
+              "RelativeToolTip": "Vortex.Addin.PartData\\Core\\EPDMHandler.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAoAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-03T14:36:16.263Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Visualizador.cs [Design]",
+              "DocumentMoniker": "S:\\PROJETOS\\PROJETO (ESTUDO PARA NOVA ORGANIZACAO)\\USUARIOS\\THALYSSON\\ESTUDOS C#\\Vortex.Addin.PartData\\Vortex.Addin.PartData\\Visualizador.cs",
+              "RelativeDocumentMoniker": "Vortex.Addin.PartData\\Visualizador.cs",
+              "ToolTip": "S:\\PROJETOS\\PROJETO (ESTUDO PARA NOVA ORGANIZACAO)\\USUARIOS\\THALYSSON\\ESTUDOS C#\\Vortex.Addin.PartData\\Vortex.Addin.PartData\\Visualizador.cs [Design]",
+              "RelativeToolTip": "Vortex.Addin.PartData\\Visualizador.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-03T14:33:05.99Z",
+              "EditorCaption": " [Design]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "MainForm.cs [Design]",
+              "DocumentMoniker": "S:\\PROJETOS\\PROJETO (ESTUDO PARA NOVA ORGANIZACAO)\\USUARIOS\\THALYSSON\\ESTUDOS C#\\Vortex.Addin.PartData\\Vortex.Addin.PartData\\MainForm.cs",
+              "RelativeDocumentMoniker": "Vortex.Addin.PartData\\MainForm.cs",
+              "ToolTip": "S:\\PROJETOS\\PROJETO (ESTUDO PARA NOVA ORGANIZACAO)\\USUARIOS\\THALYSSON\\ESTUDOS C#\\Vortex.Addin.PartData\\Vortex.Addin.PartData\\MainForm.cs [Design]",
+              "RelativeToolTip": "Vortex.Addin.PartData\\MainForm.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-05T13:46:57.91Z",
+              "EditorCaption": " [Design]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "SQLCommands.cs",
+              "DocumentMoniker": "S:\\PROJETOS\\PROJETO (ESTUDO PARA NOVA ORGANIZACAO)\\USUARIOS\\THALYSSON\\ESTUDOS C#\\Vortex.Addin.PartData\\Vortex.Addin.PartData\\Core\\SQLCommands.cs",
+              "RelativeDocumentMoniker": "Vortex.Addin.PartData\\Core\\SQLCommands.cs",
+              "ToolTip": "S:\\PROJETOS\\PROJETO (ESTUDO PARA NOVA ORGANIZACAO)\\USUARIOS\\THALYSSON\\ESTUDOS C#\\Vortex.Addin.PartData\\Vortex.Addin.PartData\\Core\\SQLCommands.cs",
+              "RelativeToolTip": "Vortex.Addin.PartData\\Core\\SQLCommands.cs",
+              "ViewState": "AgIAAJ4AAAAAAAAAAAAuwL8AAABIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-28T16:14:00.94Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Visualizador.cs",
+              "DocumentMoniker": "S:\\PROJETOS\\PROJETO (ESTUDO PARA NOVA ORGANIZACAO)\\USUARIOS\\THALYSSON\\ESTUDOS C#\\Vortex.Addin.PartData\\Vortex.Addin.PartData\\Visualizador.cs",
+              "RelativeDocumentMoniker": "Vortex.Addin.PartData\\Visualizador.cs",
+              "ToolTip": "S:\\PROJETOS\\PROJETO (ESTUDO PARA NOVA ORGANIZACAO)\\USUARIOS\\THALYSSON\\ESTUDOS C#\\Vortex.Addin.PartData\\Vortex.Addin.PartData\\Visualizador.cs",
+              "RelativeToolTip": "Vortex.Addin.PartData\\Visualizador.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAP0AAAATAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-06T19:35:23.93Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "SwDocHandler.cs",
+              "DocumentMoniker": "S:\\PROJETOS\\PROJETO (ESTUDO PARA NOVA ORGANIZACAO)\\USUARIOS\\THALYSSON\\ESTUDOS C#\\Vortex.Addin.PartData\\Vortex.Addin.PartData\\Core\\SwDocHandler.cs",
+              "RelativeDocumentMoniker": "Vortex.Addin.PartData\\Core\\SwDocHandler.cs",
+              "ToolTip": "S:\\PROJETOS\\PROJETO (ESTUDO PARA NOVA ORGANIZACAO)\\USUARIOS\\THALYSSON\\ESTUDOS C#\\Vortex.Addin.PartData\\Vortex.Addin.PartData\\Core\\SwDocHandler.cs",
+              "RelativeToolTip": "Vortex.Addin.PartData\\Core\\SwDocHandler.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-06T12:45:58.673Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "Visualizador.Designer.cs",
+              "DocumentMoniker": "S:\\PROJETOS\\PROJETO (ESTUDO PARA NOVA ORGANIZACAO)\\USUARIOS\\THALYSSON\\ESTUDOS C#\\Vortex.Addin.PartData\\Vortex.Addin.PartData\\Visualizador.Designer.cs",
+              "RelativeDocumentMoniker": "Vortex.Addin.PartData\\Visualizador.Designer.cs",
+              "ToolTip": "S:\\PROJETOS\\PROJETO (ESTUDO PARA NOVA ORGANIZACAO)\\USUARIOS\\THALYSSON\\ESTUDOS C#\\Vortex.Addin.PartData\\Vortex.Addin.PartData\\Visualizador.Designer.cs",
+              "RelativeToolTip": "Vortex.Addin.PartData\\Visualizador.Designer.cs",
+              "ViewState": "AgIAACEAAAAAAAAAAAAAAD0AAAA1AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-04T12:52:24.304Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "CadastroMainTests.cs",
+              "DocumentMoniker": "S:\\PROJETOS\\PROJETO (ESTUDO PARA NOVA ORGANIZACAO)\\USUARIOS\\THALYSSON\\ESTUDOS C#\\Vortex.Addin.PartData\\Vortex.Tests\\CadastroMainTests.cs",
+              "RelativeDocumentMoniker": "Vortex.Tests\\CadastroMainTests.cs",
+              "ToolTip": "S:\\PROJETOS\\PROJETO (ESTUDO PARA NOVA ORGANIZACAO)\\USUARIOS\\THALYSSON\\ESTUDOS C#\\Vortex.Addin.PartData\\Vortex.Tests\\CadastroMainTests.cs",
+              "RelativeToolTip": "Vortex.Tests\\CadastroMainTests.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAA8AAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-28T13:59:17.407Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
