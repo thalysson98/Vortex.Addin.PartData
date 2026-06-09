@@ -295,13 +295,7 @@ namespace Vortex.Addin.PartData.Core
                     }
                 }
 
-                if (dadosEmMemoria.ContainsKey("CATEGORIAS"))
-                {
-                    var row = dadosEmMemoria["CATEGORIAS"].NewRow();
-                    row["MATERIAL"] = categoria;
-                    row["TIPO"]     = tipo;
-                    dadosEmMemoria["CATEGORIAS"].Rows.Add(row);
-                }
+                await AtualizarMemoriaAsync("CATEGORIAS");
                 return true;
             }
             catch (Exception ex)
@@ -364,6 +358,7 @@ namespace Vortex.Addin.PartData.Core
                         tx.Commit();
                     }
                 }
+                await AtualizarMemoriaAsync("MATERIAIS");
                 return true;
             }
             catch (Exception ex)
@@ -401,8 +396,7 @@ namespace Vortex.Addin.PartData.Core
                         cmd.Parameters.AddWithValue("@cod3", cod3);
                         await conn.OpenAsync();
                         int rows = await cmd.ExecuteNonQueryAsync();
-                        if (rows > 0)
-                            SyncMaterialCache(cod1, cod2, cod3, categoria, diametro, espessura, comprimento, m4);
+                        if (rows > 0) await AtualizarMemoriaAsync("MATERIAIS");
                         return rows > 0;
                     }
                 }
@@ -413,22 +407,6 @@ namespace Vortex.Addin.PartData.Core
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
-        }
-
-        private void SyncMaterialCache(string cod1, string cod2, string cod3,
-            string categoria, string diametro, string espessura, string comprimento, string m4)
-        {
-            if (!dadosEmMemoria.ContainsKey("MATERIAIS")) return;
-            var row = dadosEmMemoria["MATERIAIS"].AsEnumerable().FirstOrDefault(r =>
-                r["COD1"]?.ToString().Trim() == cod1 &&
-                r["COD2"]?.ToString().Trim() == cod2 &&
-                r["COD3"]?.ToString().Trim() == cod3);
-            if (row == null) return;
-            row["CATEGORIA"]   = categoria;
-            row["DIAMETRO"]    = diametro;
-            row["ESPESSURA"]   = espessura;
-            row["COMPRIMENTO"] = comprimento;
-            row["M4"]          = m4 ?? "0";
         }
 
         public async Task<bool> UpdateCategoriaAsync(string materialAtual, string novoMaterial, string novoTipo)
@@ -447,12 +425,11 @@ namespace Vortex.Addin.PartData.Core
                         cmd.Parameters.AddWithValue("@atual", materialAtual);
                         await conn.OpenAsync();
                         int rows = await cmd.ExecuteNonQueryAsync();
-
-                        if (rows > 0 && dadosEmMemoria.ContainsKey("CATEGORIAS"))
+                        if (rows > 0)
                         {
-                            var row = dadosEmMemoria["CATEGORIAS"].AsEnumerable()
-                                .FirstOrDefault(r => r["MATERIAL"]?.ToString().Trim() == materialAtual);
-                            if (row != null) { row["MATERIAL"] = novoMaterial; row["TIPO"] = novoTipo; }
+                            // Atualiza CATEGORIAS e MATERIAIS (JOIN usa nome da categoria)
+                            await AtualizarMemoriaAsync("CATEGORIAS");
+                            await AtualizarMemoriaAsync("MATERIAIS");
                         }
                         return rows > 0;
                     }
@@ -483,20 +460,11 @@ namespace Vortex.Addin.PartData.Core
                         cmd.Parameters.AddWithValue("@item", item);
                         await conn.OpenAsync();
                         int rows = await cmd.ExecuteNonQueryAsync();
-
-                        if (rows > 0 && dadosEmMemoria.ContainsKey(tabela))
-                        {
-                            var dt = dadosEmMemoria[tabela];
-                            foreach (var row in dt.AsEnumerable()
-                                .Where(r => r[columnTable]?.ToString().Trim() == item).ToList())
-                                dt.Rows.Remove(row);
-                            dt.AcceptChanges();
-                        }
-                        else if (rows == 0)
-                        {
+                        if (rows > 0)
+                            await AtualizarMemoriaAsync(tabela);
+                        else
                             MessageBox.Show("Nenhum item encontrado para exclusão!", "Aviso",
                                 MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        }
                         return rows > 0;
                     }
                 }
@@ -527,15 +495,7 @@ namespace Vortex.Addin.PartData.Core
 
                         MessageBox.Show($"{rows} materiais da categoria '{categoria}' excluídos.",
                             "Exclusão Concluída", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                        if (dadosEmMemoria.ContainsKey("MATERIAIS"))
-                        {
-                            var dt = dadosEmMemoria["MATERIAIS"];
-                            foreach (var row in dt.AsEnumerable()
-                                .Where(r => r["CATEGORIA"]?.ToString().Trim() == categoria).ToList())
-                                dt.Rows.Remove(row);
-                            dt.AcceptChanges();
-                        }
+                        await AtualizarMemoriaAsync("MATERIAIS");
                     }
                 }
             }
@@ -565,6 +525,7 @@ namespace Vortex.Addin.PartData.Core
                 await conn.OpenAsync();
                 await cmd.ExecuteNonQueryAsync();
             }
+            await AtualizarMemoriaAsync("MATERIAIS");
         }
 
         // ── SELECT (cache) ───────────────────────────────────────────────────────

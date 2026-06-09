@@ -109,13 +109,19 @@ namespace Vortex.Addin.PartData
 
         private void PopulateBancoCascade()
         {
-            if (BancoCat_cb.Items.Count > 0) return;
+            // Sempre recarrega do cache (já atualizado após qualquer mutação)
+            BancoCat_cb.Items.Clear();
             foreach (var cat in sqlCommand.GetValColumn("CATEGORIA", "MATERIAIS"))
                 BancoCat_cb.Items.Add(cat);
-            // Popula também o painel de edição
-            if (FCategoria_cb.Items.Count == 0)
-                foreach (var cat in sqlCommand.GetValColumn("MATERIAL", "CATEGORIAS"))
-                    FCategoria_cb.Items.Add(cat.Trim());
+
+            FCategoria_cb.Items.Clear();
+            foreach (var cat in sqlCommand.GetValColumn("MATERIAL", "CATEGORIAS"))
+                FCategoria_cb.Items.Add(cat.Trim());
+
+            // Limpa os filtros em cascata para evitar exibir dados stale
+            ClearCbs(BancoM1_cb, BancoM2_cb, BancoM3_cb, BancoM4_cb);
+            DataListGrid.Rows.Clear();
+            BancoSalvar_bt.Enabled = false;
         }
 
         private void OnBancoCatChanged(object sender, EventArgs e)
@@ -544,7 +550,7 @@ namespace Vortex.Addin.PartData
                 Cadastrar_bt.Enabled = false;
                 if (await sqlCommand.CadastrarItensDataGridAsync(dataGridView1, User_PDM_lb.Text))
                 {
-                    sqlCommand.CarregarDadosIniciais();
+                    // Cache de MATERIAIS já atualizado dentro de CadastrarItensDataGridAsync
                     dataGridView1.Rows.Clear();
                     MessageBox.Show("Itens cadastrados com sucesso!", "Operação Finalizada", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
@@ -939,16 +945,12 @@ namespace Vortex.Addin.PartData
         private async void CadCat_bt_Click(object sender, EventArgs e)
         {
             if (NewCatName_txt.Text != "")
-                await sqlCommand.InsertCategoriaAsync(NewCatName_txt.Text.ToUpper(), tipoSelecionado);
-
-            Categoria_CBox.Items.Clear();
-            ExcCategoria_cb.Items.Clear();
-            foreach (string categoria in sqlCommand.GetValColumn("MATERIAL", "CATEGORIAS"))
             {
-                Categoria_CBox.Items.Add(categoria.Trim());
-                ExcCategoria_cb.Items.Add(categoria.Trim());
+                await sqlCommand.InsertCategoriaAsync(NewCatName_txt.Text.ToUpper(), tipoSelecionado);
                 NewCatName_txt.Clear();
             }
+            // InsertCategoriaAsync já atualizou o cache — apenas atualiza a UI
+            AtualizarListaCategorias();
         }
 
         private async void ExcluiCat_bt_Click(object sender, EventArgs e)
