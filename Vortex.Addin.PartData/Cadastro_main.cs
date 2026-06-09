@@ -50,26 +50,27 @@ namespace Vortex.Addin.PartData
 
         }
 
-        private void Cadastrar_bt_Click(object sender, EventArgs e)
+        private async void Cadastrar_bt_Click(object sender, EventArgs e)
         {
-            if (PdmEvents.Connect()&& RowMask(dataGridView1) && DestacarLinhasDuplicadas(dataGridView1))
+            if (PdmEvents.Connect() && RowMask(dataGridView1) && DestacarLinhasDuplicadas(dataGridView1))
             {
-                if (sqlCommand.CadastrarItensDataGrid(dataGridView1, User_PDM_lb.Text))
+                Cadastrar_bt.Enabled = false;
+                if (await sqlCommand.CadastrarItensDataGridAsync(dataGridView1, User_PDM_lb.Text))
                 {
-                    
                     sqlCommand.CarregarDadosIniciais();
                     dataGridView1.Rows.Clear();
                     MessageBox.Show("Itens cadastrados com sucesso!", "Operação Finalizada", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
                 }
-                else { MessageBox.Show("Não foi possível cadastrar os itens.", "Operação Finalizada", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+                else
+                {
+                    MessageBox.Show("Não foi possível cadastrar os itens.", "Operação Finalizada", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                Cadastrar_bt.Enabled = true;
             }
             else
             {
                 Cadastrar_bt.Enabled = false;
             }
-
-
         }
         public void PreencherTextBoxComLinhaSelecionada(DataGridView dataGridView)
         {
@@ -120,10 +121,10 @@ namespace Vortex.Addin.PartData
             }
         }
 
-        private void ExcluiDUP_bt_Click(object sender, EventArgs e)
+        private async void ExcluiDUP_bt_Click(object sender, EventArgs e)
         {
             List<string> colunas = new List<string> { "CATEGORIA", "DIAMETRO", "ESPESSURA", "COMPRIMENTO", "M4", "COD1", "COD2", "COD3" };
-            sqlCommand.RemoverDuplicatas("MATERIAIS", "ID", colunas);
+            await sqlCommand.RemoverDuplicatasAsync("MATERIAIS", "ID", colunas);
             Buscar_bt_Click(sender, e);
         }
 
@@ -231,132 +232,39 @@ namespace Vortex.Addin.PartData
 
             foreach (DataGridViewRow row in dataGrid.Rows)
             {
-                if (!row.IsNewRow) // Evita erro ao processar a linha vazia no final
+                if (row.IsNewRow) continue;
+
+                bool err = false;
+                string cod = $"{row.Cells[6]?.Value}.{row.Cells[7]?.Value}.{row.Cells[8]?.Value}";
+
+                if (!PartValidator.ValidateCOD(cod, items))
                 {
-                    bool err = false;
-                    if (!ValidateCOD($"{row.Cells[6]?.Value}.{row.Cells[7]?.Value}.{row.Cells[8]?.Value}", items))
+                    row.Cells[1].Value = row.Cells[1].Value?.ToString().Trim();
+                    if (PartValidator.ValidateCat(row.Cells[1].Value?.ToString().Trim(), categorias))
                     {
-                        row.Cells[1].Value = row.Cells[1].Value?.ToString().Trim(); // CATEGORIA
-                        if (ValidateCat(row.Cells[1].Value?.ToString().Trim(), categorias))
-                        {
-                            row.Cells[1].Value = row.Cells[1].Value?.ToString().Trim();
-                            row.DefaultCellStyle.BackColor = Color.Red; err = true; error = false;
-                        }
-
-                        for (int i = 2; i <= 5; i++)
-                        {
-                            string result;
-                            if (!FormatDecimal(row.Cells[i].Value, out result)) row.Cells[i].Value = result;
-                            else { row.DefaultCellStyle.BackColor = Color.Red; err = true; error = false; }
-                        }
-
-                        for (int i = 6; i <= 8; i++)
-                        {
-                            string result;
-                            int v = 3;
-                            if (i == 8) v = 4;
-                            if (!FormatInteger(row.Cells[i].Value, v, out result)) row.Cells[i].Value = result;
-                            else { row.DefaultCellStyle.BackColor = Color.Red; err = true; error = false; }
-                        }
-
+                        row.DefaultCellStyle.BackColor = Color.Red; err = true; error = false;
                     }
-                    else { row.DefaultCellStyle.BackColor = Color.Red; err = true; error = false; }
-                    if (!err) row.DefaultCellStyle.BackColor = Color.White;
+
+                    for (int i = 2; i <= 5; i++)
+                    {
+                        if (!PartValidator.FormatDecimal(row.Cells[i].Value, out string result))
+                            row.Cells[i].Value = result;
+                        else { row.DefaultCellStyle.BackColor = Color.Red; err = true; error = false; }
+                    }
+
+                    for (int i = 6; i <= 8; i++)
+                    {
+                        int v = (i == 8) ? 4 : 3;
+                        if (!PartValidator.FormatInteger(row.Cells[i].Value, v, out string result))
+                            row.Cells[i].Value = result;
+                        else { row.DefaultCellStyle.BackColor = Color.Red; err = true; error = false; }
+                    }
                 }
+                else { row.DefaultCellStyle.BackColor = Color.Red; err = true; error = false; }
+
+                if (!err) row.DefaultCellStyle.BackColor = Color.White;
             }
             return error;
-        }
-
-        private bool ValidateCOD(string value, List<List<string>> items)
-        {
-            if (!string.IsNullOrEmpty(value) && items.Count > 0)
-            {
-                foreach (var row in items)
-                {
-
-                    if (row.Count >= 3)
-                    {
-                        string vCod = $"{row[0].Trim()}.{row[1].Trim()}.{row[2].Trim()}";
-                        if (vCod == value)
-                        {
-                            return true;
-                        }
-                    }
-                }
-            }
-            return false;
-        }
-
-        private bool ValidateCat(string value, List<string> categorias)
-        {
-
-            foreach (string val in categorias)
-            {
-                if (val.Trim() == value)
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        private bool FormatDecimal(object value, out string result)
-        {
-            result = string.Empty;
-            if (value == null) return true; // Valor padrão
-
-
-            string[] vsa = value.ToString().Replace(",", ".").Split('.');
-            string v = string.Empty;
-            if (vsa.Length > 1)
-            {
-                if (vsa[1].Count() > 1)
-                {
-                    if (decimal.TryParse(value.ToString().Replace(",", "."), System.Globalization.NumberStyles.Any,
-                                         System.Globalization.CultureInfo.InvariantCulture, out decimal res))
-                    {
-                        result = res.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
-                        return false;// Mantém a casa decimal correta
-                    }
-                }
-                else
-                {
-                    if (decimal.TryParse(value.ToString().Replace(",", "."), System.Globalization.NumberStyles.Any,
-                                         System.Globalization.CultureInfo.InvariantCulture, out decimal res))
-                    {
-                        result = res.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture); // Mantém a casa decimal correta
-                        return false;
-                    }
-                }
-            }
-            else
-            {
-                if (decimal.TryParse(value.ToString().Replace(",", "."), System.Globalization.NumberStyles.Any,
-                                         System.Globalization.CultureInfo.InvariantCulture, out decimal res))
-                {
-                    result = res.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture);
-                    return false;// Mantém a casa decimal correta
-                }
-            }
-            return true; // Retorno seguro em caso de erro
-        }
-
-        private bool FormatInteger(object value, int digits, out string result)
-        {
-            result = string.Empty;
-            if (value == null) return true;
-
-            if (int.TryParse(value.ToString(), out int res))
-            {
-                if (res > 0)
-                {
-                    result = res.ToString(new string('0', digits));
-                    if (result.Count() > digits) return true;
-                    return false;
-                }
-            }
-
-            return true;
         }
 
         private void SelectTipo(string material)
@@ -624,11 +532,11 @@ namespace Vortex.Addin.PartData
             }
         }
 
-        private void CadCat_bt_Click(object sender, EventArgs e)
+        private async void CadCat_bt_Click(object sender, EventArgs e)
         {
             if (NewCatName_txt.Text != "")
             {
-                sqlCommand.InsertCategoria(NewCatName_txt.Text.ToUpper(), tipoSelecionado);
+                await sqlCommand.InsertCategoriaAsync(NewCatName_txt.Text.ToUpper(), tipoSelecionado);
             }
 
             Categoria_CBox.Items.Clear();
@@ -642,53 +550,44 @@ namespace Vortex.Addin.PartData
             }
         }
 
-        private void ExcluiCat_bt_Click(object sender, EventArgs e)
+        private async void ExcluiCat_bt_Click(object sender, EventArgs e)
         {
             if (Allitems_ch.Checked)
             {
-                DialogResult result = MessageBox.Show($"Tem certeza que deseja excluir todos os materiais da categoria '{ExcCategoria_cb.Text}'?",
-            "Confirmação", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                DialogResult confirm = MessageBox.Show(
+                    $"Tem certeza que deseja excluir todos os materiais da categoria '{ExcCategoria_cb.Text}'?",
+                    "Confirmação", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
-                if (result == DialogResult.Yes)
+                if (confirm == DialogResult.Yes)
                 {
-                    sqlCommand.ExcluirMateriaisPorCategoria(ExcCategoria_cb.Text);
-                    sqlCommand.DeleteItem("CATEGORIAS", ExcCategoria_cb.Text, "MATERIAL");
-                    Categoria_CBox.Items.Clear();
-                    ExcCategoria_cb.Text = "";
-                    ExcCategoria_cb.Items.Clear();
-
-                    List<string> categorias = sqlCommand.GetValColumn("MATERIAL", "CATEGORIAS");
-                    foreach (string categoria in categorias)
-                    {
-                        Categoria_CBox.Items.Add(categoria.Trim());
-                        ExcCategoria_cb.Items.Add(categoria.Trim());
-                    }
-                    //sqlCommand.CarregarDadosIniciais();
+                    await sqlCommand.ExcluirMateriaisPorCategoriaAsync(ExcCategoria_cb.Text);
+                    await sqlCommand.DeleteItemAsync("CATEGORIAS", ExcCategoria_cb.Text, "MATERIAL");
+                    AtualizarListaCategorias();
                 }
             }
             else
             {
-                DialogResult = MessageBox.Show("Deseja excluir a categoria selecionada?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                if (DialogResult.Yes == DialogResult)
+                DialogResult confirm = MessageBox.Show("Deseja excluir a categoria selecionada?", "",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                if (confirm == DialogResult.Yes && ExcCategoria_cb.Text != "")
                 {
-                    if (ExcCategoria_cb.Text != "")
-                    {
-                        sqlCommand.DeleteItem("CATEGORIAS", ExcCategoria_cb.Text, "MATERIAL");
-                        Categoria_CBox.Items.Clear();
-                        ExcCategoria_cb.Text = "";
-                        ExcCategoria_cb.Items.Clear();
-
-                        List<string> categorias = sqlCommand.GetValColumn("MATERIAL", "CATEGORIAS");
-                        foreach (string categoria in categorias)
-                        {
-                            Categoria_CBox.Items.Add(categoria.Trim());
-                            ExcCategoria_cb.Items.Add(categoria.Trim());
-                        }
-                    }
-
+                    await sqlCommand.DeleteItemAsync("CATEGORIAS", ExcCategoria_cb.Text, "MATERIAL");
+                    AtualizarListaCategorias();
                 }
             }
+        }
 
+        private void AtualizarListaCategorias()
+        {
+            Categoria_CBox.Items.Clear();
+            ExcCategoria_cb.Text = "";
+            ExcCategoria_cb.Items.Clear();
+            foreach (string categoria in sqlCommand.GetValColumn("MATERIAL", "CATEGORIAS"))
+            {
+                Categoria_CBox.Items.Add(categoria.Trim());
+                ExcCategoria_cb.Items.Add(categoria.Trim());
+            }
         }
 
         private void FCategoria_cb_SelectedIndexChanged(object sender, EventArgs e)

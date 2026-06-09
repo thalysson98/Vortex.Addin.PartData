@@ -49,12 +49,7 @@ namespace Vortex.Addin.PartData
             Task task1 = Task.Run(() => sql_comm.CarregarDadosIniciais());
             
         }
-        public override void OnDisconnect() 
-        {
-            sql_comm.Disconnect();
-            //this.CommandManager.AddCommandGroup<Commands_e>().CommandClick -= OnButtonClick;
-            //Application.Documents.DocumentActivated -= OnDocumentActivated;
-        }
+        public override void OnDisconnect() { }
         private void OnDocumentActivated(IXDocument doc)
         {
             //ModelDoc2 model = (ModelDoc2)Application.Documents.Active.Model;

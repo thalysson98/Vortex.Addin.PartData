@@ -1,5 +1,5 @@
 ﻿using SolidWorks.Interop.sldworks;
-using SolidWorks.Interop.swdimxpert;
+//using SolidWorks.Interop.swdimxpert;
 using SolidWorks.Interop.swconst;
 using SolidWorks.Interop;
 using System;
@@ -31,7 +31,7 @@ namespace Vortex.Addin.PartData
         public void InitializeFoms()
         {
             Inserir_bt.Enabled = false;
-            if (!sql_comm.oncon())
+            if (sql_comm.CanConnect())
             {
                 List<string> categorias = sql_comm.GetValColumn("CATEGORIA", "MATERIAIS");
                 foreach (string categoria in categorias)
@@ -42,9 +42,7 @@ namespace Vortex.Addin.PartData
             else
             {
                 menu.Enabled = false;
-                //Cadastro_menu.Visible = false;
             }
-
         }
         private void clear(List<ComboBox> items)
         {

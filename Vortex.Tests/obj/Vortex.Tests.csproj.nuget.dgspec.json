@@ -1,40 +1,39 @@
 {
   "format": 1,
   "restore": {
-    "S:\\PROJETOS\\PROJETO (ESTUDO PARA NOVA ORGANIZACAO)\\USUARIOS\\THALYSSON\\ESTUDOS C#\\Vortex.Addin.PartData\\Vortex.Tests\\Vortex.Tests.csproj": {}
+    "C:\\Users\\ia.cardall\\Documents\\GitHub\\Vortex.Addin.PartData\\Vortex.Tests\\Vortex.Tests.csproj": {}
   },
   "projects": {
-    "S:\\PROJETOS\\PROJETO (ESTUDO PARA NOVA ORGANIZACAO)\\USUARIOS\\THALYSSON\\ESTUDOS C#\\Vortex.Addin.PartData\\Vortex.Addin.PartData\\Vortex.Addin.PartData.csproj": {
+    "C:\\Users\\ia.cardall\\Documents\\GitHub\\Vortex.Addin.PartData\\Vortex.Addin.PartData\\Vortex.Addin.PartData.csproj": {
       "restore": {
-        "projectUniqueName": "S:\\PROJETOS\\PROJETO (ESTUDO PARA NOVA ORGANIZACAO)\\USUARIOS\\THALYSSON\\ESTUDOS C#\\Vortex.Addin.PartData\\Vortex.Addin.PartData\\Vortex.Addin.PartData.csproj",
+        "projectUniqueName": "C:\\Users\\ia.cardall\\Documents\\GitHub\\Vortex.Addin.PartData\\Vortex.Addin.PartData\\Vortex.Addin.PartData.csproj",
         "projectName": "Vortex.Addin.PartData",
-        "projectPath": "S:\\PROJETOS\\PROJETO (ESTUDO PARA NOVA ORGANIZACAO)\\USUARIOS\\THALYSSON\\ESTUDOS C#\\Vortex.Addin.PartData\\Vortex.Addin.PartData\\Vortex.Addin.PartData.csproj",
+        "projectPath": "C:\\Users\\ia.cardall\\Documents\\GitHub\\Vortex.Addin.PartData\\Vortex.Addin.PartData\\Vortex.Addin.PartData.csproj",
         "UsingMicrosoftNETSdk": false,
         "frameworks": {
           "net48": {
+            "framework": "net48",
             "projectReferences": {}
           }
         }
       },
       "frameworks": {
-        "net48": {}
+        "net48": {
+          "framework": "net48"
+        }
       }
     },
-    "S:\\PROJETOS\\PROJETO (ESTUDO PARA NOVA ORGANIZACAO)\\USUARIOS\\THALYSSON\\ESTUDOS C#\\Vortex.Addin.PartData\\Vortex.Tests\\Vortex.Tests.csproj": {
+    "C:\\Users\\ia.cardall\\Documents\\GitHub\\Vortex.Addin.PartData\\Vortex.Tests\\Vortex.Tests.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "S:\\PROJETOS\\PROJETO (ESTUDO PARA NOVA ORGANIZACAO)\\USUARIOS\\THALYSSON\\ESTUDOS C#\\Vortex.Addin.PartData\\Vortex.Tests\\Vortex.Tests.csproj",
+        "projectUniqueName": "C:\\Users\\ia.cardall\\Documents\\GitHub\\Vortex.Addin.PartData\\Vortex.Tests\\Vortex.Tests.csproj",
         "projectName": "Vortex.Tests",
-        "projectPath": "S:\\PROJETOS\\PROJETO (ESTUDO PARA NOVA ORGANIZACAO)\\USUARIOS\\THALYSSON\\ESTUDOS C#\\Vortex.Addin.PartData\\Vortex.Tests\\Vortex.Tests.csproj",
-        "packagesPath": "C:\\Users\\engenharia01\\.nuget\\packages\\",
-        "outputPath": "S:\\PROJETOS\\PROJETO (ESTUDO PARA NOVA ORGANIZACAO)\\USUARIOS\\THALYSSON\\ESTUDOS C#\\Vortex.Addin.PartData\\Vortex.Tests\\obj\\",
+        "projectPath": "C:\\Users\\ia.cardall\\Documents\\GitHub\\Vortex.Addin.PartData\\Vortex.Tests\\Vortex.Tests.csproj",
+        "packagesPath": "C:\\Users\\ia.cardall\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\ia.cardall\\Documents\\GitHub\\Vortex.Addin.PartData\\Vortex.Tests\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\engenharia01\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\ia.cardall\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -46,10 +45,11 @@
         },
         "frameworks": {
           "net8.0": {
+            "framework": "net8.0",
             "targetAlias": "net8.0",
             "projectReferences": {
-              "S:\\PROJETOS\\PROJETO (ESTUDO PARA NOVA ORGANIZACAO)\\USUARIOS\\THALYSSON\\ESTUDOS C#\\Vortex.Addin.PartData\\Vortex.Addin.PartData\\Vortex.Addin.PartData.csproj": {
-                "projectPath": "S:\\PROJETOS\\PROJETO (ESTUDO PARA NOVA ORGANIZACAO)\\USUARIOS\\THALYSSON\\ESTUDOS C#\\Vortex.Addin.PartData\\Vortex.Addin.PartData\\Vortex.Addin.PartData.csproj"
+              "C:\\Users\\ia.cardall\\Documents\\GitHub\\Vortex.Addin.PartData\\Vortex.Addin.PartData\\Vortex.Addin.PartData.csproj": {
+                "projectPath": "C:\\Users\\ia.cardall\\Documents\\GitHub\\Vortex.Addin.PartData\\Vortex.Addin.PartData\\Vortex.Addin.PartData.csproj"
               }
             }
           }
@@ -64,10 +64,11 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.300"
+        "SdkAnalysisLevel": "10.0.300"
       },
       "frameworks": {
         "net8.0": {
+          "framework": "net8.0",
           "targetAlias": "net8.0",
           "dependencies": {
             "Microsoft.NET.Test.Sdk": {
@@ -111,7 +112,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.302/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.300/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

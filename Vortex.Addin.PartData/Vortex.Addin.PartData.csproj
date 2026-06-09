@@ -98,6 +98,7 @@
       <DependentUpon>Cadastro_main.cs</DependentUpon>
     </Compile>
     <Compile Include="Core\EPDMHandler.cs" />
+    <Compile Include="Core\PartValidator.cs" />
     <Compile Include="Core\SolidWorksMouseHandler.cs" />
     <Compile Include="Core\SQLCommands.cs" />
     <Compile Include="Core\SwDocHandler.cs" />
