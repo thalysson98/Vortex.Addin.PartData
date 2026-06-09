@@ -100,6 +100,8 @@
     <Compile Include="Core\EPDMHandler.cs" />
     <Compile Include="Core\PartValidator.cs" />
     <Compile Include="Core\SolidWorksMouseHandler.cs" />
+    <Compile Include="Migration\MigrationForm.cs" />
+    <Compile Include="Migration\MigrationService.cs" />
     <Compile Include="Core\SQLCommands.cs" />
     <Compile Include="Core\SwDocHandler.cs" />
     <Compile Include="MainForm.cs">
@@ -130,6 +132,7 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+    <None Include="Scripts\Create_PDB_BANCO_V2.sql" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

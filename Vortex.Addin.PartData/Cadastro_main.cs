@@ -9,6 +9,7 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Vortex.Addin.PartData.Core;
+using Vortex.Addin.PartData.Migration;
 
 namespace Vortex.Addin.PartData
 {
@@ -25,6 +26,27 @@ namespace Vortex.Addin.PartData
             swApp = app;
             PdmEvents = new EPDMHandler();
             sqlCommand = sql_comm;
+            AddMigrationButton();
+        }
+
+        private void AddMigrationButton()
+        {
+            var btn = new System.Windows.Forms.Button
+            {
+                Text      = "Migrar Banco",
+                Size      = new System.Drawing.Size(110, 26),
+                Anchor    = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right,
+                FlatStyle = System.Windows.Forms.FlatStyle.Flat,
+                BackColor = System.Drawing.Color.FromArgb(240, 240, 240),
+                Cursor    = System.Windows.Forms.Cursors.Hand,
+                TabStop   = false
+            };
+            btn.Location = new System.Drawing.Point(
+                this.ClientSize.Width  - btn.Width  - 8,
+                this.ClientSize.Height - btn.Height - 8);
+            btn.Click += (s, e) => new MigrationForm().Show();
+            this.Controls.Add(btn);
+            btn.BringToFront();
         }
 
         public void Cadastro_main_Load(object sender, EventArgs e)
