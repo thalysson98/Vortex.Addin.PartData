@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -23,29 +24,74 @@ namespace Vortex.Addin.PartData.Core
         {
             var builder = new SqlConnectionStringBuilder
             {
-                DataSource = "192.168.2.248\\ERASQL",
-                UserID = "pdb_user",
-                Password = "eng.2003",
-                InitialCatalog = "PDB_BANCO"
+                DataSource     = "192.168.2.248\\ERASQL",
+                UserID         = "pdb_user",
+                Password       = "eng.2003",
+                InitialCatalog = "PDB_BANCO_V2"
             };
             return new SqlConnection(builder.ConnectionString);
         }
 
+        // ── Queries do cache ─────────────────────────────────────────────────────
+        // Aliases preservam os nomes antigos de coluna para que os formulários
+        // não precisem ser alterados.
+
+        private static readonly Dictionary<string, string> _cacheQueries =
+            new Dictionary<string, string>
+        {
+            ["TIPOS"] = @"
+                SELECT Id AS TIPO,
+                       M1, M2, M3,
+                       ISNULL(M4, '-') AS M4
+                FROM TIPOS",
+
+            ["CATEGORIAS"] = @"
+                SELECT Id,
+                       NOME    AS MATERIAL,
+                       TIPO_ID AS TIPO
+                FROM CATEGORIAS",
+
+            ["USERS"] = @"
+                SELECT Id, IDPDM, PERMISSAO FROM USERS",
+
+            ["MEDIDAS"] = @"
+                SELECT d.Id,
+                       c.NOME AS CATEGORIA,
+                       d.M1, d.M2, d.M3, d.M4
+                FROM MEDIDAS d
+                JOIN CATEGORIAS c ON d.CATEGORIA_ID = c.Id",
+
+            ["MATERIAIS"] = @"
+                SELECT m.Id,
+                       c.NOME                                  AS CATEGORIA,
+                       CAST(m.M1 AS VARCHAR(50))               AS DIAMETRO,
+                       CAST(m.M2 AS VARCHAR(50))               AS ESPESSURA,
+                       CAST(m.M3 AS VARCHAR(50))               AS COMPRIMENTO,
+                       ISNULL(CAST(m.M4 AS VARCHAR(50)), '0')  AS M4,
+                       m.COD1, m.COD2, m.COD3,
+                       u.IDPDM                                 AS CAD_POR,
+                       CONVERT(VARCHAR(10), m.DATE_PROJ, 103)  AS DATE_PROJ
+                FROM MATERIAIS m
+                JOIN CATEGORIAS c ON m.CATEGORIA_ID = c.Id
+                JOIN USERS      u ON m.CAD_POR      = u.Id"
+        };
+
+        // ── Carregamento ─────────────────────────────────────────────────────────
+
         public void CarregarDadosIniciais()
         {
-            string[] tabelas = { "CATEGORIAS", "MATERIAIS", "MEDIDAS", "TIPOS", "USERS" };
             try
             {
                 using (var conn = Connect())
                 {
                     conn.Open();
-                    foreach (var tabela in tabelas)
+                    foreach (var kv in _cacheQueries)
                     {
-                        using (var adapter = new SqlDataAdapter($"SELECT * FROM {tabela}", conn))
+                        using (var adapter = new SqlDataAdapter(kv.Value, conn))
                         {
                             var dt = new DataTable();
                             adapter.Fill(dt);
-                            dadosEmMemoria[tabela] = dt;
+                            dadosEmMemoria[kv.Key] = dt;
                         }
                     }
                 }
@@ -57,16 +103,14 @@ namespace Vortex.Addin.PartData.Core
             }
         }
 
-        public DataTable ObterTabela(string nomeTabela)
-        {
-            return dadosEmMemoria.TryGetValue(nomeTabela, out var dt) ? dt : null;
-        }
+        public DataTable ObterTabela(string nomeTabela) =>
+            dadosEmMemoria.TryGetValue(nomeTabela, out var dt) ? dt : null;
 
         public async Task AtualizarMemoriaAsync(string tabela)
         {
-            if (!dadosEmMemoria.ContainsKey(tabela))
+            if (!_cacheQueries.TryGetValue(tabela, out string query))
             {
-                MessageBox.Show($"Tabela {tabela} não encontrada em memória!", "Aviso",
+                MessageBox.Show($"Tabela {tabela} não encontrada.", "Aviso",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
@@ -75,7 +119,7 @@ namespace Vortex.Addin.PartData.Core
                 using (var conn = Connect())
                 {
                     await conn.OpenAsync();
-                    using (var adapter = new SqlDataAdapter($"SELECT * FROM {tabela}", conn))
+                    using (var adapter = new SqlDataAdapter(query, conn))
                     {
                         var dt = new DataTable();
                         adapter.Fill(dt);
@@ -85,28 +129,62 @@ namespace Vortex.Addin.PartData.Core
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Erro ao atualizar dados da tabela {tabela}: {ex.Message}", "Erro",
+                MessageBox.Show($"Erro ao atualizar {tabela}: {ex.Message}", "Erro",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         public bool CanConnect()
         {
-            try
-            {
-                using (var conn = Connect())
-                {
-                    conn.Open();
-                    return true;
-                }
-            }
-            catch
-            {
-                return false;
-            }
+            try { using (var conn = Connect()) { conn.Open(); return true; } }
+            catch { return false; }
         }
 
-        // ── INSERT ──────────────────────────────────────────────────────────────
+        // ── Helpers de cache ─────────────────────────────────────────────────────
+
+        private int? GetCategoriaId(string nome)
+        {
+            if (!dadosEmMemoria.TryGetValue("CATEGORIAS", out var dt)) return null;
+            var row = dt.AsEnumerable().FirstOrDefault(r =>
+                string.Equals(r["MATERIAL"]?.ToString().Trim(), nome,
+                    StringComparison.OrdinalIgnoreCase));
+            return row == null ? (int?)null : Convert.ToInt32(row["Id"]);
+        }
+
+        private int? GetUserId(string idpdm)
+        {
+            if (!dadosEmMemoria.TryGetValue("USERS", out var dt)) return null;
+            var row = dt.AsEnumerable().FirstOrDefault(r =>
+                string.Equals(r["IDPDM"]?.ToString().Trim(), idpdm,
+                    StringComparison.OrdinalIgnoreCase));
+            return row == null ? (int?)null : Convert.ToInt32(row["Id"]);
+        }
+
+        private async Task<int> GetOrCreateUserAsync(SqlConnection conn, string idpdm)
+        {
+            int? cached = GetUserId(idpdm);
+            if (cached != null) return cached.Value;
+
+            var check = new SqlCommand("SELECT Id FROM USERS WHERE IDPDM = @u", conn);
+            check.Parameters.AddWithValue("@u", idpdm);
+            object r = await check.ExecuteScalarAsync();
+            if (r != null && r != DBNull.Value) return Convert.ToInt32(r);
+
+            var ins = new SqlCommand(
+                "INSERT INTO USERS (IDPDM, PERMISSAO) OUTPUT INSERTED.Id VALUES (@u, 'user')", conn);
+            ins.Parameters.AddWithValue("@u", idpdm);
+            int newId = Convert.ToInt32(await ins.ExecuteScalarAsync());
+
+            if (dadosEmMemoria.ContainsKey("USERS"))
+            {
+                var row = dadosEmMemoria["USERS"].NewRow();
+                row["Id"] = newId; row["IDPDM"] = idpdm; row["PERMISSAO"] = "user";
+                dadosEmMemoria["USERS"].Rows.Add(row);
+            }
+            return newId;
+        }
+
+        // ── INSERT ───────────────────────────────────────────────────────────────
 
         public async Task<bool> InsertCategoriaAsync(string categoria, string tipo)
         {
@@ -114,11 +192,12 @@ namespace Vortex.Addin.PartData.Core
             {
                 using (var conn = Connect())
                 {
-                    const string query = "INSERT INTO CATEGORIAS (MATERIAL, TIPO) VALUES (@material, @tipo)";
-                    using (var cmd = new SqlCommand(query, conn))
+                    const string sql = "INSERT INTO CATEGORIAS (NOME, TIPO_ID) VALUES (@nome, @tipo)";
+                    using (var cmd = new SqlCommand(sql, conn))
                     {
-                        cmd.Parameters.AddWithValue("@material", categoria ?? "");
-                        cmd.Parameters.AddWithValue("@tipo", tipo ?? "");
+                        cmd.Parameters.AddWithValue("@nome", categoria ?? "");
+                        cmd.Parameters.AddWithValue("@tipo",
+                            int.TryParse(tipo, out int t) ? (object)t : DBNull.Value);
                         await conn.OpenAsync();
                         await cmd.ExecuteNonQueryAsync();
                     }
@@ -126,10 +205,10 @@ namespace Vortex.Addin.PartData.Core
 
                 if (dadosEmMemoria.ContainsKey("CATEGORIAS"))
                 {
-                    var newRow = dadosEmMemoria["CATEGORIAS"].NewRow();
-                    newRow["MATERIAL"] = categoria;
-                    newRow["TIPO"] = tipo;
-                    dadosEmMemoria["CATEGORIAS"].Rows.Add(newRow);
+                    var row = dadosEmMemoria["CATEGORIAS"].NewRow();
+                    row["MATERIAL"] = categoria;
+                    row["TIPO"]     = tipo;
+                    dadosEmMemoria["CATEGORIAS"].Rows.Add(row);
                 }
                 return true;
             }
@@ -148,39 +227,49 @@ namespace Vortex.Addin.PartData.Core
                 using (var conn = Connect())
                 {
                     await conn.OpenAsync();
-                    using (var transaction = conn.BeginTransaction())
+                    int userId = await GetOrCreateUserAsync(conn, user);
+
+                    using (var tx = conn.BeginTransaction())
                     {
-                        const string query = @"INSERT INTO MATERIAIS
-                            (CATEGORIA, DIAMETRO, ESPESSURA, COMPRIMENTO, M4, COD1, COD2, COD3, CAD_POR, DATE_PROJ, PATH_FILE, NAME_FILE)
-                            VALUES (@CATEGORIA, @DIAMETRO, @ESPESSURA, @COMPRIMENTO, @M4, @COD1, @COD2, @COD3, @CAD_POR, @DATE_PROJ, @PATH_FILE, @NAME_FILE)";
+                        const string sql = @"
+                            INSERT INTO MATERIAIS
+                                (CATEGORIA_ID, M1, M2, M3, M4, COD1, COD2, COD3, CAD_POR, DATE_PROJ)
+                            VALUES
+                                (@catId, @m1, @m2, @m3, @m4, @c1, @c2, @c3, @cad, @dt)";
 
                         foreach (DataGridViewRow row in dataGrid.Rows)
                         {
                             if (row.IsNewRow) continue;
-                            using (var cmd = new SqlCommand(query, conn, transaction))
-                            {
-                                string c1 = row.Cells[6].Value?.ToString() ?? "";
-                                string c2 = row.Cells[7].Value?.ToString() ?? "";
-                                string c3 = row.Cells[8].Value?.ToString() ?? "";
-                                string codigo = $"{c1}.{c2}.{c3}";
-                                string path = $"C:\\Cardall\\PROJETOS\\{c1}\\{c1}.{c2}\\{codigo}.sldprt";
 
-                                cmd.Parameters.AddWithValue("@CATEGORIA", row.Cells[1].Value?.ToString() ?? "");
-                                cmd.Parameters.AddWithValue("@DIAMETRO", row.Cells[2].Value?.ToString() ?? "");
-                                cmd.Parameters.AddWithValue("@ESPESSURA", row.Cells[3].Value?.ToString() ?? "");
-                                cmd.Parameters.AddWithValue("@COMPRIMENTO", row.Cells[4].Value?.ToString() ?? "");
-                                cmd.Parameters.AddWithValue("@M4", row.Cells[5].Value?.ToString() ?? "");
-                                cmd.Parameters.AddWithValue("@COD1", c1);
-                                cmd.Parameters.AddWithValue("@COD2", c2);
-                                cmd.Parameters.AddWithValue("@COD3", c3);
-                                cmd.Parameters.AddWithValue("@CAD_POR", user ?? "");
-                                cmd.Parameters.AddWithValue("@DATE_PROJ", DateTime.Now.ToString("dd/MM/yyyy"));
-                                cmd.Parameters.AddWithValue("@PATH_FILE", path);
-                                cmd.Parameters.AddWithValue("@NAME_FILE", codigo);
+                            string catNome = row.Cells[1].Value?.ToString() ?? "";
+                            int catId = GetCategoriaId(catNome)
+                                ?? throw new Exception($"Categoria '{catNome}' não encontrada.");
+
+                            string c1 = row.Cells[6].Value?.ToString() ?? "";
+                            string c2 = row.Cells[7].Value?.ToString() ?? "";
+                            string c3 = row.Cells[8].Value?.ToString() ?? "";
+
+                            decimal  m1 = ToDecimal(row.Cells[2].Value?.ToString());
+                            decimal  m2 = ToDecimal(row.Cells[3].Value?.ToString());
+                            decimal  m3 = ToDecimal(row.Cells[4].Value?.ToString());
+                            decimal? m4 = ToDecimalNull(row.Cells[5].Value?.ToString());
+
+                            using (var cmd = new SqlCommand(sql, conn, tx))
+                            {
+                                cmd.Parameters.AddWithValue("@catId", catId);
+                                cmd.Parameters.AddWithValue("@m1",   m1);
+                                cmd.Parameters.AddWithValue("@m2",   m2);
+                                cmd.Parameters.AddWithValue("@m3",   m3);
+                                cmd.Parameters.Add(DecimalParam("@m4", m4));
+                                cmd.Parameters.AddWithValue("@c1",   c1);
+                                cmd.Parameters.AddWithValue("@c2",   c2);
+                                cmd.Parameters.AddWithValue("@c3",   c3);
+                                cmd.Parameters.AddWithValue("@cad",  userId);
+                                cmd.Parameters.AddWithValue("@dt",   DateTime.Today);
                                 await cmd.ExecuteNonQueryAsync();
                             }
                         }
-                        transaction.Commit();
+                        tx.Commit();
                     }
                 }
                 return true;
@@ -193,7 +282,7 @@ namespace Vortex.Addin.PartData.Core
             }
         }
 
-        // ── UPDATE ──────────────────────────────────────────────────────────────
+        // ── UPDATE ───────────────────────────────────────────────────────────────
 
         public async Task<bool> UpdateMaterialAsync(string cod1, string cod2, string cod3,
             string categoria, string diametro, string espessura, string comprimento, string m4)
@@ -202,24 +291,26 @@ namespace Vortex.Addin.PartData.Core
             {
                 using (var conn = Connect())
                 {
-                    const string query = @"UPDATE MATERIAIS
-                        SET CATEGORIA=@cat, DIAMETRO=@diam, ESPESSURA=@esp, COMPRIMENTO=@comp, M4=@m4
-                        WHERE COD1=@cod1 AND COD2=@cod2 AND COD3=@cod3";
+                    const string sql = @"
+                        UPDATE MATERIAIS
+                        SET CATEGORIA_ID = (SELECT Id FROM CATEGORIAS WHERE NOME = @cat),
+                            M1 = @m1, M2 = @m2, M3 = @m3, M4 = @m4
+                        WHERE COD1 = @cod1 AND COD2 = @cod2 AND COD3 = @cod3";
 
-                    using (var cmd = new SqlCommand(query, conn))
+                    using (var cmd = new SqlCommand(sql, conn))
                     {
-                        cmd.Parameters.AddWithValue("@cat", categoria ?? "");
-                        cmd.Parameters.AddWithValue("@diam", diametro ?? "");
-                        cmd.Parameters.AddWithValue("@esp", espessura ?? "");
-                        cmd.Parameters.AddWithValue("@comp", comprimento ?? "");
-                        cmd.Parameters.AddWithValue("@m4", m4 ?? "");
+                        cmd.Parameters.AddWithValue("@cat",  categoria ?? "");
+                        cmd.Parameters.AddWithValue("@m1",   ToDecimal(diametro));
+                        cmd.Parameters.AddWithValue("@m2",   ToDecimal(espessura));
+                        cmd.Parameters.AddWithValue("@m3",   ToDecimal(comprimento));
+                        cmd.Parameters.Add(DecimalParam("@m4", ToDecimalNull(m4)));
                         cmd.Parameters.AddWithValue("@cod1", cod1);
                         cmd.Parameters.AddWithValue("@cod2", cod2);
                         cmd.Parameters.AddWithValue("@cod3", cod3);
                         await conn.OpenAsync();
                         int rows = await cmd.ExecuteNonQueryAsync();
-
-                        if (rows > 0) SyncUpdateMaterialCache(cod1, cod2, cod3, categoria, diametro, espessura, comprimento, m4);
+                        if (rows > 0)
+                            SyncMaterialCache(cod1, cod2, cod3, categoria, diametro, espessura, comprimento, m4);
                         return rows > 0;
                     }
                 }
@@ -232,22 +323,20 @@ namespace Vortex.Addin.PartData.Core
             }
         }
 
-        private void SyncUpdateMaterialCache(string cod1, string cod2, string cod3,
+        private void SyncMaterialCache(string cod1, string cod2, string cod3,
             string categoria, string diametro, string espessura, string comprimento, string m4)
         {
             if (!dadosEmMemoria.ContainsKey("MATERIAIS")) return;
-
             var row = dadosEmMemoria["MATERIAIS"].AsEnumerable().FirstOrDefault(r =>
                 r["COD1"]?.ToString().Trim() == cod1 &&
                 r["COD2"]?.ToString().Trim() == cod2 &&
                 r["COD3"]?.ToString().Trim() == cod3);
-
             if (row == null) return;
-            row["CATEGORIA"] = categoria;
-            row["DIAMETRO"] = diametro;
-            row["ESPESSURA"] = espessura;
+            row["CATEGORIA"]   = categoria;
+            row["DIAMETRO"]    = diametro;
+            row["ESPESSURA"]   = espessura;
             row["COMPRIMENTO"] = comprimento;
-            row["M4"] = m4;
+            row["M4"]          = m4 ?? "0";
         }
 
         public async Task<bool> UpdateCategoriaAsync(string materialAtual, string novoMaterial, string novoTipo)
@@ -256,11 +345,13 @@ namespace Vortex.Addin.PartData.Core
             {
                 using (var conn = Connect())
                 {
-                    const string query = "UPDATE CATEGORIAS SET MATERIAL=@novo, TIPO=@tipo WHERE MATERIAL=@atual";
-                    using (var cmd = new SqlCommand(query, conn))
+                    const string sql =
+                        "UPDATE CATEGORIAS SET NOME = @novo, TIPO_ID = @tipo WHERE NOME = @atual";
+                    using (var cmd = new SqlCommand(sql, conn))
                     {
-                        cmd.Parameters.AddWithValue("@novo", novoMaterial ?? "");
-                        cmd.Parameters.AddWithValue("@tipo", novoTipo ?? "");
+                        cmd.Parameters.AddWithValue("@novo",  novoMaterial ?? "");
+                        cmd.Parameters.AddWithValue("@tipo",
+                            int.TryParse(novoTipo, out int t) ? (object)t : DBNull.Value);
                         cmd.Parameters.AddWithValue("@atual", materialAtual);
                         await conn.OpenAsync();
                         int rows = await cmd.ExecuteNonQueryAsync();
@@ -269,11 +360,7 @@ namespace Vortex.Addin.PartData.Core
                         {
                             var row = dadosEmMemoria["CATEGORIAS"].AsEnumerable()
                                 .FirstOrDefault(r => r["MATERIAL"]?.ToString().Trim() == materialAtual);
-                            if (row != null)
-                            {
-                                row["MATERIAL"] = novoMaterial;
-                                row["TIPO"] = novoTipo;
-                            }
+                            if (row != null) { row["MATERIAL"] = novoMaterial; row["TIPO"] = novoTipo; }
                         }
                         return rows > 0;
                     }
@@ -287,39 +374,38 @@ namespace Vortex.Addin.PartData.Core
             }
         }
 
-        // ── DELETE ──────────────────────────────────────────────────────────────
+        // ── DELETE ───────────────────────────────────────────────────────────────
 
         public async Task<bool> DeleteItemAsync(string tabela, string item, string columnTable)
         {
+            // Mapeia aliases para nomes reais (os forms passam o alias, o banco precisa do nome real)
+            string realCol = (tabela == "CATEGORIAS" && columnTable == "MATERIAL") ? "NOME" : columnTable;
+
             try
             {
                 using (var conn = Connect())
                 {
-                    string query = $"DELETE FROM {tabela} WHERE {columnTable} = @item";
-                    using (var cmd = new SqlCommand(query, conn))
+                    using (var cmd = new SqlCommand(
+                        $"DELETE FROM {tabela} WHERE {realCol} = @item", conn))
                     {
                         cmd.Parameters.AddWithValue("@item", item);
                         await conn.OpenAsync();
                         int rows = await cmd.ExecuteNonQueryAsync();
 
-                        if (rows > 0)
+                        if (rows > 0 && dadosEmMemoria.ContainsKey(tabela))
                         {
-                            if (dadosEmMemoria.ContainsKey(tabela))
-                            {
-                                var dt = dadosEmMemoria[tabela];
-                                var toDelete = dt.AsEnumerable()
-                                    .Where(r => r[columnTable]?.ToString().Trim() == item).ToList();
-                                foreach (var row in toDelete) dt.Rows.Remove(row);
-                                dt.AcceptChanges();
-                            }
-                            return true;
+                            var dt = dadosEmMemoria[tabela];
+                            foreach (var row in dt.AsEnumerable()
+                                .Where(r => r[columnTable]?.ToString().Trim() == item).ToList())
+                                dt.Rows.Remove(row);
+                            dt.AcceptChanges();
                         }
-                        else
+                        else if (rows == 0)
                         {
                             MessageBox.Show("Nenhum item encontrado para exclusão!", "Aviso",
                                 MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                            return false;
                         }
+                        return rows > 0;
                     }
                 }
             }
@@ -337,22 +423,25 @@ namespace Vortex.Addin.PartData.Core
             {
                 using (var conn = Connect())
                 {
-                    const string query = "DELETE FROM MATERIAIS WHERE CATEGORIA = @CATEGORIA";
-                    using (var cmd = new SqlCommand(query, conn))
+                    const string sql = @"
+                        DELETE FROM MATERIAIS
+                        WHERE CATEGORIA_ID = (SELECT Id FROM CATEGORIAS WHERE NOME = @cat)";
+
+                    using (var cmd = new SqlCommand(sql, conn))
                     {
-                        cmd.Parameters.AddWithValue("@CATEGORIA", categoria);
+                        cmd.Parameters.AddWithValue("@cat", categoria);
                         await conn.OpenAsync();
                         int rows = await cmd.ExecuteNonQueryAsync();
 
-                        MessageBox.Show($"{rows} materiais da categoria '{categoria}' foram excluídos.",
+                        MessageBox.Show($"{rows} materiais da categoria '{categoria}' excluídos.",
                             "Exclusão Concluída", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                         if (dadosEmMemoria.ContainsKey("MATERIAIS"))
                         {
                             var dt = dadosEmMemoria["MATERIAIS"];
-                            var toDelete = dt.AsEnumerable()
-                                .Where(r => r["CATEGORIA"]?.ToString().Trim() == categoria).ToList();
-                            foreach (var row in toDelete) dt.Rows.Remove(row);
+                            foreach (var row in dt.AsEnumerable()
+                                .Where(r => r["CATEGORIA"]?.ToString().Trim() == categoria).ToList())
+                                dt.Rows.Remove(row);
                             dt.AcceptChanges();
                         }
                     }
@@ -360,34 +449,29 @@ namespace Vortex.Addin.PartData.Core
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Erro ao excluir materiais da categoria: {ex.Message}", "Erro",
+                MessageBox.Show($"Erro ao excluir materiais: {ex.Message}", "Erro",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         public async Task RemoverDuplicatasAsync(string tableName, string idColumn, List<string> colunas)
         {
-            string colunasJoin = string.Join(", ", colunas);
-            string query = $@"
-                WITH CTE_Duplicates AS (
+            string cols = string.Join(", ", colunas);
+            string sql  = $@"
+                WITH CTE AS (
                     SELECT {idColumn},
-                        ROW_NUMBER() OVER (
-                            PARTITION BY {colunasJoin}
-                            ORDER BY {idColumn}
-                        ) AS row_num
+                           ROW_NUMBER() OVER (PARTITION BY {cols} ORDER BY {idColumn}) rn
                     FROM {tableName}
                 )
                 DELETE FROM {tableName} WHERE {idColumn} IN (
-                    SELECT {idColumn} FROM CTE_Duplicates WHERE row_num > 1
+                    SELECT {idColumn} FROM CTE WHERE rn > 1
                 );";
 
             using (var conn = Connect())
+            using (var cmd  = new SqlCommand(sql, conn))
             {
-                using (var cmd = new SqlCommand(query, conn))
-                {
-                    await conn.OpenAsync();
-                    await cmd.ExecuteNonQueryAsync();
-                }
+                await conn.OpenAsync();
+                await cmd.ExecuteNonQueryAsync();
             }
         }
 
@@ -395,18 +479,18 @@ namespace Vortex.Addin.PartData.Core
 
         public List<List<string>> GetAllValues(List<string> colunasDesejadas, string tabela)
         {
-            var resultado = new List<List<string>>();
+            var result = new List<List<string>>();
             if (dadosEmMemoria.TryGetValue(tabela, out var dt))
             {
                 foreach (DataRow row in dt.Rows)
-                    resultado.Add(colunasDesejadas.Select(col => row[col]?.ToString().Trim()).ToList());
+                    result.Add(colunasDesejadas.Select(c => row[c]?.ToString().Trim()).ToList());
             }
             else
             {
                 MessageBox.Show($"Tabela {tabela} não carregada em memória.", "Aviso",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-            return resultado;
+            return result;
         }
 
         public List<string> GetValColumn(string coluna, string tabela)
@@ -414,7 +498,7 @@ namespace Vortex.Addin.PartData.Core
             if (dadosEmMemoria.TryGetValue(tabela, out var dt))
             {
                 return dt.AsEnumerable()
-                    .Select(row => row[coluna]?.ToString().Trim())
+                    .Select(r => r[coluna]?.ToString().Trim())
                     .Where(v => !string.IsNullOrEmpty(v))
                     .Distinct()
                     .ToList();
@@ -427,29 +511,68 @@ namespace Vortex.Addin.PartData.Core
         public List<string> GetRowValues(Dictionary<string, object> filtros,
             List<string> colunasDesejadas, string tabela)
         {
-            var valoresLinha = new HashSet<string>();
-            if (dadosEmMemoria.TryGetValue(tabela, out var dt))
-            {
-                var query = dt.AsEnumerable();
-                foreach (var filtro in filtros)
-                    query = query.Where(row => row[filtro.Key]?.ToString().Trim() == filtro.Value.ToString());
-
-                foreach (var row in query)
-                {
-                    foreach (var coluna in colunasDesejadas)
-                    {
-                        string valor = row[coluna]?.ToString().Trim();
-                        if (!string.IsNullOrEmpty(valor) && valor != "0.0")
-                            valoresLinha.Add(valor);
-                    }
-                }
-            }
-            else
+            var resultado = new HashSet<string>();
+            if (!dadosEmMemoria.TryGetValue(tabela, out var dt))
             {
                 MessageBox.Show($"Tabela {tabela} não carregada em memória.", "Aviso",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return resultado.ToList();
             }
-            return valoresLinha.ToList();
+
+            var query = dt.AsEnumerable();
+            foreach (var filtro in filtros)
+            {
+                string key       = filtro.Key;
+                string filterVal = filtro.Value.ToString();
+
+                query = query.Where(row =>
+                {
+                    string rowVal = row[key]?.ToString().Trim() ?? "";
+                    // Comparação decimal: "50.800" == "50.8" sem depender de formato
+                    if (decimal.TryParse(rowVal.Replace(",", "."),
+                            NumberStyles.Any, CultureInfo.InvariantCulture, out decimal rv) &&
+                        decimal.TryParse(filterVal.Replace(",", "."),
+                            NumberStyles.Any, CultureInfo.InvariantCulture, out decimal fv))
+                        return rv == fv;
+                    return string.Equals(rowVal, filterVal, StringComparison.OrdinalIgnoreCase);
+                });
+            }
+
+            foreach (var row in query)
+                foreach (var col in colunasDesejadas)
+                {
+                    string val = row[col]?.ToString().Trim();
+                    if (!string.IsNullOrEmpty(val) && val != "0.0" && val != "0")
+                        resultado.Add(val);
+                }
+
+            return resultado.ToList();
         }
+
+        // ── Conversões ───────────────────────────────────────────────────────────
+
+        private static decimal ToDecimal(string v)
+        {
+            if (string.IsNullOrWhiteSpace(v)) return 0m;
+            return decimal.TryParse(v.Replace(",", "."), NumberStyles.Any,
+                CultureInfo.InvariantCulture, out decimal r) ? r : 0m;
+        }
+
+        private static decimal? ToDecimalNull(string v)
+        {
+            string s = v?.Trim();
+            if (string.IsNullOrEmpty(s)) return null;
+            if (!decimal.TryParse(s.Replace(",", "."), NumberStyles.Any,
+                CultureInfo.InvariantCulture, out decimal r)) return null;
+            return r == 0m ? (decimal?)null : r;
+        }
+
+        private static SqlParameter DecimalParam(string name, decimal? value) =>
+            new SqlParameter(name, SqlDbType.Decimal)
+            {
+                Value     = (object)value ?? DBNull.Value,
+                Precision = 10,
+                Scale     = 3
+            };
     }
 }

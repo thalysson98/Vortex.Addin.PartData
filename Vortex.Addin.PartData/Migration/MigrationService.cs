@@ -20,7 +20,7 @@ namespace Vortex.Addin.PartData.Migration
             var b = new SqlConnectionStringBuilder
             {
                 DataSource = "192.168.2.248\\ERASQL",
-                UserID = "pdb_user",
+                UserID = "pdb_admin",
                 Password = "eng.2003"
             };
 
@@ -282,9 +282,16 @@ namespace Vortex.Addin.PartData.Migration
                         await cmd.ExecuteNonQueryAsync();
                         ok++;
                     }
+                    catch (SqlException ex) when (ex.Number == 2627 || ex.Number == 2601)
+                    {
+                        // Chave duplicada — não deveria acontecer com a query deduplicada,
+                        // mas registra caso haja outro motivo de unicidade.
+                        _log($"  ⚠ {cod}: duplicata ignorada.");
+                        skip++;
+                    }
                     catch (Exception ex)
                     {
-                        _log($"  ✗ {cod}: {ex.Message}");
+                        _log($"  ✗ {cod}: {ex.GetType().Name} — {ex.Message}");
                         skip++;
                     }
                 }

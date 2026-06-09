@@ -68,7 +68,9 @@
       <HintPath>..\packages\Xarial.XCad.SolidWorks.0.8.1\lib\net461\SolidWorks.Interop.swpublished.dll</HintPath>
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
-    <Reference Include="System" />
+    <Reference Include="System">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.dll</HintPath>
+    </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
@@ -100,7 +102,9 @@
     <Compile Include="Core\EPDMHandler.cs" />
     <Compile Include="Core\PartValidator.cs" />
     <Compile Include="Core\SolidWorksMouseHandler.cs" />
-    <Compile Include="Migration\MigrationForm.cs" />
+    <Compile Include="Migration\MigrationForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Migration\MigrationService.cs" />
     <Compile Include="Core\SQLCommands.cs" />
     <Compile Include="Core\SwDocHandler.cs" />

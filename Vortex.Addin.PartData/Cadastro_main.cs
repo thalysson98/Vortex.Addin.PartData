@@ -145,8 +145,9 @@ namespace Vortex.Addin.PartData
 
         private async void ExcluiDUP_bt_Click(object sender, EventArgs e)
         {
-            List<string> colunas = new List<string> { "CATEGORIA", "DIAMETRO", "ESPESSURA", "COMPRIMENTO", "M4", "COD1", "COD2", "COD3" };
-            await sqlCommand.RemoverDuplicatasAsync("MATERIAIS", "ID", colunas);
+            // Nomes reais das colunas no PDB_BANCO_V2
+            List<string> colunas = new List<string> { "CATEGORIA_ID", "M1", "M2", "M3", "M4", "COD1", "COD2", "COD3" };
+            await sqlCommand.RemoverDuplicatasAsync("MATERIAIS", "Id", colunas);
             Buscar_bt_Click(sender, e);
         }
 
