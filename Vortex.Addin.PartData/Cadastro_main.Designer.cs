@@ -84,6 +84,13 @@
             this.LB4 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.m1_txt = new System.Windows.Forms.TextBox();
+            this.incremento_check = new System.Windows.Forms.RadioButton();
+            this.IncrementoPane_pn = new System.Windows.Forms.Panel();
+            this.gerarSeq_bt = new System.Windows.Forms.Button();
+            this.maxInc_txt = new System.Windows.Forms.TextBox();
+            this.lblMaxInc = new System.Windows.Forms.Label();
+            this.incremento_txt = new System.Windows.Forms.TextBox();
+            this.lblIncremento = new System.Windows.Forms.Label();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.Validate_bt = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
@@ -121,20 +128,19 @@
             this.FCategoria_cb = new System.Windows.Forms.ComboBox();
             this.label10 = new System.Windows.Forms.Label();
             this.ExcluiDUP_bt = new System.Windows.Forms.Button();
-            this.Buscar_bt = new System.Windows.Forms.Button();
             this.tabPage5 = new System.Windows.Forms.TabPage();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.Altertype4_chk = new System.Windows.Forms.RadioButton();
             this.altertype = new System.Windows.Forms.Button();
+            this.Altertype3_chk = new System.Windows.Forms.RadioButton();
             this.EditCatName_txt = new System.Windows.Forms.TextBox();
+            this.Altertype2_chk = new System.Windows.Forms.RadioButton();
             this.lblEditCatNome = new System.Windows.Forms.Label();
+            this.Altertype1_chk = new System.Windows.Forms.RadioButton();
+            this.label19 = new System.Windows.Forms.Label();
             this.EditCat_cb = new System.Windows.Forms.ComboBox();
             this.lblEditCatSel = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.Altertype4_chk = new System.Windows.Forms.RadioButton();
-            this.Altertype3_chk = new System.Windows.Forms.RadioButton();
-            this.Altertype2_chk = new System.Windows.Forms.RadioButton();
-            this.Altertype1_chk = new System.Windows.Forms.RadioButton();
-            this.label19 = new System.Windows.Forms.Label();
             this.Allitems_ch = new System.Windows.Forms.CheckBox();
             this.label20 = new System.Windows.Forms.Label();
             this.ExcCategoria_cb = new System.Windows.Forms.ComboBox();
@@ -175,6 +181,7 @@
             this.tabControl.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.AutomaticoPane_pn.SuspendLayout();
+            this.IncrementoPane_pn.SuspendLayout();
             this.tabPage4.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -458,6 +465,8 @@
             this.tabPage3.Controls.Add(this.LB4);
             this.tabPage3.Controls.Add(this.label4);
             this.tabPage3.Controls.Add(this.m1_txt);
+            this.tabPage3.Controls.Add(this.incremento_check);
+            this.tabPage3.Controls.Add(this.IncrementoPane_pn);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
@@ -477,7 +486,7 @@
             this.AutomaticoPane_pn.Controls.Add(this.label6);
             this.AutomaticoPane_pn.Controls.Add(this.label7);
             this.AutomaticoPane_pn.Controls.Add(this.label8);
-            this.AutomaticoPane_pn.Location = new System.Drawing.Point(248, 50);
+            this.AutomaticoPane_pn.Location = new System.Drawing.Point(252, 50);
             this.AutomaticoPane_pn.Name = "AutomaticoPane_pn";
             this.AutomaticoPane_pn.Size = new System.Drawing.Size(391, 57);
             this.AutomaticoPane_pn.TabIndex = 217;
@@ -563,7 +572,7 @@
             // automatico_check
             // 
             this.automatico_check.AutoSize = true;
-            this.automatico_check.Location = new System.Drawing.Point(617, 23);
+            this.automatico_check.Location = new System.Drawing.Point(610, 28);
             this.automatico_check.Name = "automatico_check";
             this.automatico_check.Size = new System.Drawing.Size(78, 17);
             this.automatico_check.TabIndex = 216;
@@ -574,7 +583,7 @@
             // manual_check
             // 
             this.manual_check.AutoSize = true;
-            this.manual_check.Location = new System.Drawing.Point(551, 23);
+            this.manual_check.Location = new System.Drawing.Point(610, 8);
             this.manual_check.Name = "manual_check";
             this.manual_check.Size = new System.Drawing.Size(60, 17);
             this.manual_check.TabIndex = 215;
@@ -722,6 +731,71 @@
             this.m1_txt.Size = new System.Drawing.Size(67, 20);
             this.m1_txt.TabIndex = 4;
             // 
+            // incremento_check
+            // 
+            this.incremento_check.AutoSize = true;
+            this.incremento_check.Location = new System.Drawing.Point(610, 48);
+            this.incremento_check.Name = "incremento_check";
+            this.incremento_check.Size = new System.Drawing.Size(78, 17);
+            this.incremento_check.TabIndex = 220;
+            this.incremento_check.Text = "Incremento";
+            this.incremento_check.UseVisualStyleBackColor = true;
+            // 
+            // IncrementoPane_pn
+            // 
+            this.IncrementoPane_pn.Controls.Add(this.gerarSeq_bt);
+            this.IncrementoPane_pn.Controls.Add(this.maxInc_txt);
+            this.IncrementoPane_pn.Controls.Add(this.lblMaxInc);
+            this.IncrementoPane_pn.Controls.Add(this.incremento_txt);
+            this.IncrementoPane_pn.Controls.Add(this.lblIncremento);
+            this.IncrementoPane_pn.Location = new System.Drawing.Point(186, 74);
+            this.IncrementoPane_pn.Name = "IncrementoPane_pn";
+            this.IncrementoPane_pn.Size = new System.Drawing.Size(391, 30);
+            this.IncrementoPane_pn.TabIndex = 221;
+            this.IncrementoPane_pn.Visible = false;
+            // 
+            // gerarSeq_bt
+            // 
+            this.gerarSeq_bt.Location = new System.Drawing.Point(265, 2);
+            this.gerarSeq_bt.Name = "gerarSeq_bt";
+            this.gerarSeq_bt.Size = new System.Drawing.Size(110, 23);
+            this.gerarSeq_bt.TabIndex = 4;
+            this.gerarSeq_bt.Text = "Gerar Sequência";
+            this.gerarSeq_bt.UseVisualStyleBackColor = true;
+            // 
+            // maxInc_txt
+            // 
+            this.maxInc_txt.Location = new System.Drawing.Point(185, 4);
+            this.maxInc_txt.Name = "maxInc_txt";
+            this.maxInc_txt.Size = new System.Drawing.Size(70, 20);
+            this.maxInc_txt.TabIndex = 3;
+            // 
+            // lblMaxInc
+            // 
+            this.lblMaxInc.AutoSize = true;
+            this.lblMaxInc.Location = new System.Drawing.Point(130, 7);
+            this.lblMaxInc.Name = "lblMaxInc";
+            this.lblMaxInc.Size = new System.Drawing.Size(43, 13);
+            this.lblMaxInc.TabIndex = 2;
+            this.lblMaxInc.Text = "Máximo";
+            // 
+            // incremento_txt
+            // 
+            this.incremento_txt.Location = new System.Drawing.Point(70, 4);
+            this.incremento_txt.Name = "incremento_txt";
+            this.incremento_txt.Size = new System.Drawing.Size(50, 20);
+            this.incremento_txt.TabIndex = 1;
+            this.incremento_txt.Text = "10";
+            // 
+            // lblIncremento
+            // 
+            this.lblIncremento.AutoSize = true;
+            this.lblIncremento.Location = new System.Drawing.Point(0, 7);
+            this.lblIncremento.Name = "lblIncremento";
+            this.lblIncremento.Size = new System.Drawing.Size(60, 13);
+            this.lblIncremento.TabIndex = 0;
+            this.lblIncremento.Text = "Incremento";
+            // 
             // tabPage4
             // 
             this.tabPage4.Controls.Add(this.textBox1);
@@ -736,12 +810,15 @@
             // Validate_bt
             // 
             this.Validate_bt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.Validate_bt.BackColor = System.Drawing.Color.DarkSlateGray;
+            this.Validate_bt.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Validate_bt.ForeColor = System.Drawing.Color.White;
             this.Validate_bt.Location = new System.Drawing.Point(520, 550);
             this.Validate_bt.Name = "Validate_bt";
             this.Validate_bt.Size = new System.Drawing.Size(75, 23);
             this.Validate_bt.TabIndex = 9;
             this.Validate_bt.Text = "Validar Itens";
-            this.Validate_bt.UseVisualStyleBackColor = true;
+            this.Validate_bt.UseVisualStyleBackColor = false;
             this.Validate_bt.Click += new System.EventHandler(this.Validate_bt_Click);
             // 
             // tabControl1
@@ -781,34 +858,43 @@
             // excluir_bt
             // 
             this.excluir_bt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.excluir_bt.BackColor = System.Drawing.Color.Brown;
+            this.excluir_bt.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.excluir_bt.ForeColor = System.Drawing.Color.White;
             this.excluir_bt.Location = new System.Drawing.Point(6, 550);
             this.excluir_bt.Name = "excluir_bt";
             this.excluir_bt.Size = new System.Drawing.Size(85, 23);
             this.excluir_bt.TabIndex = 1000;
             this.excluir_bt.Text = "Excluir Linha";
-            this.excluir_bt.UseVisualStyleBackColor = true;
+            this.excluir_bt.UseVisualStyleBackColor = false;
             this.excluir_bt.Click += new System.EventHandler(this.excluir_bt_Click);
             // 
             // Add2_bt
             // 
             this.Add2_bt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.Add2_bt.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.Add2_bt.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Add2_bt.ForeColor = System.Drawing.Color.White;
             this.Add2_bt.Location = new System.Drawing.Point(97, 550);
             this.Add2_bt.Name = "Add2_bt";
             this.Add2_bt.Size = new System.Drawing.Size(93, 23);
             this.Add2_bt.TabIndex = 8;
             this.Add2_bt.Text = "Adicionar Linha";
-            this.Add2_bt.UseVisualStyleBackColor = true;
+            this.Add2_bt.UseVisualStyleBackColor = false;
             this.Add2_bt.Click += new System.EventHandler(this.Add2_bt_Click);
             // 
             // Cadastrar_bt
             // 
             this.Cadastrar_bt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.Cadastrar_bt.BackColor = System.Drawing.Color.YellowGreen;
+            this.Cadastrar_bt.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Cadastrar_bt.ForeColor = System.Drawing.Color.White;
             this.Cadastrar_bt.Location = new System.Drawing.Point(601, 550);
             this.Cadastrar_bt.Name = "Cadastrar_bt";
             this.Cadastrar_bt.Size = new System.Drawing.Size(125, 23);
             this.Cadastrar_bt.TabIndex = 10;
             this.Cadastrar_bt.Text = "Cadastrar Itens";
-            this.Cadastrar_bt.UseVisualStyleBackColor = true;
+            this.Cadastrar_bt.UseVisualStyleBackColor = false;
             this.Cadastrar_bt.Click += new System.EventHandler(this.Cadastrar_bt_Click);
             // 
             // tabPage2
@@ -842,7 +928,6 @@
             this.tabPage2.Controls.Add(this.FCategoria_cb);
             this.tabPage2.Controls.Add(this.label10);
             this.tabPage2.Controls.Add(this.ExcluiDUP_bt);
-            this.tabPage2.Controls.Add(this.Buscar_bt);
             this.tabPage2.Controls.Add(this.DataListGrid);
             this.tabPage2.Location = new System.Drawing.Point(4, 4);
             this.tabPage2.Name = "tabPage2";
@@ -859,7 +944,7 @@
             this.BancoSalvar_bt.Enabled = false;
             this.BancoSalvar_bt.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.BancoSalvar_bt.ForeColor = System.Drawing.Color.White;
-            this.BancoSalvar_bt.Location = new System.Drawing.Point(200, 540);
+            this.BancoSalvar_bt.Location = new System.Drawing.Point(592, 540);
             this.BancoSalvar_bt.Name = "BancoSalvar_bt";
             this.BancoSalvar_bt.Size = new System.Drawing.Size(130, 23);
             this.BancoSalvar_bt.TabIndex = 311;
@@ -1123,25 +1208,17 @@
             // ExcluiDUP_bt
             // 
             this.ExcluiDUP_bt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.ExcluiDUP_bt.BackColor = System.Drawing.Color.Brown;
             this.ExcluiDUP_bt.Enabled = false;
+            this.ExcluiDUP_bt.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ExcluiDUP_bt.ForeColor = System.Drawing.Color.White;
             this.ExcluiDUP_bt.Location = new System.Drawing.Point(6, 540);
             this.ExcluiDUP_bt.Name = "ExcluiDUP_bt";
-            this.ExcluiDUP_bt.Size = new System.Drawing.Size(109, 23);
+            this.ExcluiDUP_bt.Size = new System.Drawing.Size(130, 23);
             this.ExcluiDUP_bt.TabIndex = 11;
             this.ExcluiDUP_bt.Text = "Excluir duplicatas";
-            this.ExcluiDUP_bt.UseVisualStyleBackColor = true;
+            this.ExcluiDUP_bt.UseVisualStyleBackColor = false;
             this.ExcluiDUP_bt.Click += new System.EventHandler(this.ExcluiDUP_bt_Click);
-            // 
-            // Buscar_bt
-            // 
-            this.Buscar_bt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.Buscar_bt.Location = new System.Drawing.Point(647, 540);
-            this.Buscar_bt.Name = "Buscar_bt";
-            this.Buscar_bt.Size = new System.Drawing.Size(75, 23);
-            this.Buscar_bt.TabIndex = 11;
-            this.Buscar_bt.Text = "Atualizar";
-            this.Buscar_bt.UseVisualStyleBackColor = true;
-            this.Buscar_bt.Click += new System.EventHandler(this.Buscar_bt_Click);
             // 
             // tabPage5
             // 
@@ -1178,14 +1255,39 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Editar categoria";
             // 
+            // Altertype4_chk
+            // 
+            this.Altertype4_chk.AutoSize = true;
+            this.Altertype4_chk.Location = new System.Drawing.Point(192, 77);
+            this.Altertype4_chk.Name = "Altertype4_chk";
+            this.Altertype4_chk.Size = new System.Drawing.Size(55, 17);
+            this.Altertype4_chk.TabIndex = 197;
+            this.Altertype4_chk.TabStop = true;
+            this.Altertype4_chk.Text = "Tipo 4";
+            this.Altertype4_chk.UseVisualStyleBackColor = true;
+            // 
             // altertype
             // 
+            this.altertype.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.altertype.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.altertype.ForeColor = System.Drawing.Color.White;
             this.altertype.Location = new System.Drawing.Point(453, 34);
             this.altertype.Name = "altertype";
-            this.altertype.Size = new System.Drawing.Size(130, 23);
+            this.altertype.Size = new System.Drawing.Size(118, 23);
             this.altertype.TabIndex = 4;
             this.altertype.Text = "Alterar Categoria";
-            this.altertype.UseVisualStyleBackColor = true;
+            this.altertype.UseVisualStyleBackColor = false;
+            // 
+            // Altertype3_chk
+            // 
+            this.Altertype3_chk.AutoSize = true;
+            this.Altertype3_chk.Location = new System.Drawing.Point(131, 77);
+            this.Altertype3_chk.Name = "Altertype3_chk";
+            this.Altertype3_chk.Size = new System.Drawing.Size(55, 17);
+            this.Altertype3_chk.TabIndex = 198;
+            this.Altertype3_chk.TabStop = true;
+            this.Altertype3_chk.Text = "Tipo 3";
+            this.Altertype3_chk.UseVisualStyleBackColor = true;
             // 
             // EditCatName_txt
             // 
@@ -1193,6 +1295,17 @@
             this.EditCatName_txt.Name = "EditCatName_txt";
             this.EditCatName_txt.Size = new System.Drawing.Size(200, 20);
             this.EditCatName_txt.TabIndex = 3;
+            // 
+            // Altertype2_chk
+            // 
+            this.Altertype2_chk.AutoSize = true;
+            this.Altertype2_chk.Location = new System.Drawing.Point(70, 77);
+            this.Altertype2_chk.Name = "Altertype2_chk";
+            this.Altertype2_chk.Size = new System.Drawing.Size(55, 17);
+            this.Altertype2_chk.TabIndex = 199;
+            this.Altertype2_chk.TabStop = true;
+            this.Altertype2_chk.Text = "Tipo 2";
+            this.Altertype2_chk.UseVisualStyleBackColor = true;
             // 
             // lblEditCatNome
             // 
@@ -1202,6 +1315,27 @@
             this.lblEditCatNome.Size = new System.Drawing.Size(62, 13);
             this.lblEditCatNome.TabIndex = 2;
             this.lblEditCatNome.Text = "Novo nome";
+            // 
+            // Altertype1_chk
+            // 
+            this.Altertype1_chk.AutoSize = true;
+            this.Altertype1_chk.Location = new System.Drawing.Point(9, 77);
+            this.Altertype1_chk.Name = "Altertype1_chk";
+            this.Altertype1_chk.Size = new System.Drawing.Size(55, 17);
+            this.Altertype1_chk.TabIndex = 200;
+            this.Altertype1_chk.TabStop = true;
+            this.Altertype1_chk.Text = "Tipo 1";
+            this.Altertype1_chk.UseVisualStyleBackColor = true;
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label19.Location = new System.Drawing.Point(6, 107);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(344, 16);
+            this.label19.TabIndex = 196;
+            this.label19.Text = "Largura; Espessura; Comprimento; Comprimento;";
             // 
             // EditCat_cb
             // 
@@ -1238,60 +1372,6 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Excluir categoria";
             // 
-            // Altertype4_chk
-            // 
-            this.Altertype4_chk.AutoSize = true;
-            this.Altertype4_chk.Location = new System.Drawing.Point(192, 77);
-            this.Altertype4_chk.Name = "Altertype4_chk";
-            this.Altertype4_chk.Size = new System.Drawing.Size(55, 17);
-            this.Altertype4_chk.TabIndex = 197;
-            this.Altertype4_chk.TabStop = true;
-            this.Altertype4_chk.Text = "Tipo 4";
-            this.Altertype4_chk.UseVisualStyleBackColor = true;
-            // 
-            // Altertype3_chk
-            // 
-            this.Altertype3_chk.AutoSize = true;
-            this.Altertype3_chk.Location = new System.Drawing.Point(131, 77);
-            this.Altertype3_chk.Name = "Altertype3_chk";
-            this.Altertype3_chk.Size = new System.Drawing.Size(55, 17);
-            this.Altertype3_chk.TabIndex = 198;
-            this.Altertype3_chk.TabStop = true;
-            this.Altertype3_chk.Text = "Tipo 3";
-            this.Altertype3_chk.UseVisualStyleBackColor = true;
-            // 
-            // Altertype2_chk
-            // 
-            this.Altertype2_chk.AutoSize = true;
-            this.Altertype2_chk.Location = new System.Drawing.Point(70, 77);
-            this.Altertype2_chk.Name = "Altertype2_chk";
-            this.Altertype2_chk.Size = new System.Drawing.Size(55, 17);
-            this.Altertype2_chk.TabIndex = 199;
-            this.Altertype2_chk.TabStop = true;
-            this.Altertype2_chk.Text = "Tipo 2";
-            this.Altertype2_chk.UseVisualStyleBackColor = true;
-            // 
-            // Altertype1_chk
-            // 
-            this.Altertype1_chk.AutoSize = true;
-            this.Altertype1_chk.Location = new System.Drawing.Point(9, 77);
-            this.Altertype1_chk.Name = "Altertype1_chk";
-            this.Altertype1_chk.Size = new System.Drawing.Size(55, 17);
-            this.Altertype1_chk.TabIndex = 200;
-            this.Altertype1_chk.TabStop = true;
-            this.Altertype1_chk.Text = "Tipo 1";
-            this.Altertype1_chk.UseVisualStyleBackColor = true;
-            // 
-            // label19
-            // 
-            this.label19.AutoSize = true;
-            this.label19.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label19.Location = new System.Drawing.Point(6, 107);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(344, 16);
-            this.label19.TabIndex = 196;
-            this.label19.Text = "Largura; Espessura; Comprimento; Comprimento;";
-            // 
             // Allitems_ch
             // 
             this.Allitems_ch.AutoSize = true;
@@ -1322,12 +1402,15 @@
             // 
             // ExcluiCat_bt
             // 
+            this.ExcluiCat_bt.BackColor = System.Drawing.Color.Brown;
+            this.ExcluiCat_bt.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ExcluiCat_bt.ForeColor = System.Drawing.Color.White;
             this.ExcluiCat_bt.Location = new System.Drawing.Point(253, 45);
             this.ExcluiCat_bt.Name = "ExcluiCat_bt";
             this.ExcluiCat_bt.Size = new System.Drawing.Size(118, 23);
             this.ExcluiCat_bt.TabIndex = 0;
             this.ExcluiCat_bt.Text = "Excluir Categoria";
-            this.ExcluiCat_bt.UseVisualStyleBackColor = true;
+            this.ExcluiCat_bt.UseVisualStyleBackColor = false;
             this.ExcluiCat_bt.Click += new System.EventHandler(this.ExcluiCat_bt_Click);
             // 
             // groupBox1
@@ -1426,12 +1509,15 @@
             // 
             // CadCat_bt
             // 
+            this.CadCat_bt.BackColor = System.Drawing.Color.YellowGreen;
+            this.CadCat_bt.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.CadCat_bt.ForeColor = System.Drawing.Color.White;
             this.CadCat_bt.Location = new System.Drawing.Point(253, 39);
             this.CadCat_bt.Name = "CadCat_bt";
             this.CadCat_bt.Size = new System.Drawing.Size(118, 23);
             this.CadCat_bt.TabIndex = 0;
             this.CadCat_bt.Text = "Cadastrar Categoria";
-            this.CadCat_bt.UseVisualStyleBackColor = true;
+            this.CadCat_bt.UseVisualStyleBackColor = false;
             this.CadCat_bt.Click += new System.EventHandler(this.CadCat_bt_Click);
             // 
             // tabPage6
@@ -1461,34 +1547,43 @@
             // MedDel_bt
             // 
             this.MedDel_bt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.MedDel_bt.BackColor = System.Drawing.Color.Brown;
             this.MedDel_bt.Enabled = false;
-            this.MedDel_bt.Location = new System.Drawing.Point(675, 453);
+            this.MedDel_bt.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.MedDel_bt.ForeColor = System.Drawing.Color.White;
+            this.MedDel_bt.Location = new System.Drawing.Point(666, 454);
             this.MedDel_bt.Name = "MedDel_bt";
-            this.MedDel_bt.Size = new System.Drawing.Size(55, 23);
+            this.MedDel_bt.Size = new System.Drawing.Size(60, 23);
             this.MedDel_bt.TabIndex = 22;
             this.MedDel_bt.Text = "Excluir";
-            this.MedDel_bt.UseVisualStyleBackColor = true;
+            this.MedDel_bt.UseVisualStyleBackColor = false;
             // 
             // MedEdit_bt
             // 
             this.MedEdit_bt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.MedEdit_bt.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.MedEdit_bt.Enabled = false;
-            this.MedEdit_bt.Location = new System.Drawing.Point(615, 453);
+            this.MedEdit_bt.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.MedEdit_bt.ForeColor = System.Drawing.Color.White;
+            this.MedEdit_bt.Location = new System.Drawing.Point(598, 454);
             this.MedEdit_bt.Name = "MedEdit_bt";
-            this.MedEdit_bt.Size = new System.Drawing.Size(55, 23);
+            this.MedEdit_bt.Size = new System.Drawing.Size(60, 23);
             this.MedEdit_bt.TabIndex = 21;
             this.MedEdit_bt.Text = "Alterar";
-            this.MedEdit_bt.UseVisualStyleBackColor = true;
+            this.MedEdit_bt.UseVisualStyleBackColor = false;
             // 
             // MedAdd_bt
             // 
             this.MedAdd_bt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.MedAdd_bt.Location = new System.Drawing.Point(530, 453);
+            this.MedAdd_bt.BackColor = System.Drawing.Color.YellowGreen;
+            this.MedAdd_bt.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.MedAdd_bt.ForeColor = System.Drawing.Color.White;
+            this.MedAdd_bt.Location = new System.Drawing.Point(530, 454);
             this.MedAdd_bt.Name = "MedAdd_bt";
-            this.MedAdd_bt.Size = new System.Drawing.Size(80, 23);
+            this.MedAdd_bt.Size = new System.Drawing.Size(60, 23);
             this.MedAdd_bt.TabIndex = 20;
             this.MedAdd_bt.Text = "Adicionar";
-            this.MedAdd_bt.UseVisualStyleBackColor = true;
+            this.MedAdd_bt.UseVisualStyleBackColor = false;
             // 
             // MedM4_txt
             // 
@@ -1651,6 +1746,7 @@
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button1.Enabled = false;
             this.button1.Location = new System.Drawing.Point(626, 27);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(122, 23);
@@ -1684,6 +1780,8 @@
             this.tabPage3.PerformLayout();
             this.AutomaticoPane_pn.ResumeLayout(false);
             this.AutomaticoPane_pn.PerformLayout();
+            this.IncrementoPane_pn.ResumeLayout(false);
+            this.IncrementoPane_pn.PerformLayout();
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
             this.tabControl1.ResumeLayout(false);
@@ -1725,7 +1823,6 @@
         private System.Windows.Forms.TextBox m2_txt;
         private System.Windows.Forms.TextBox m1_txt;
         private System.Windows.Forms.Button Cadastrar_bt;
-        private System.Windows.Forms.Button Buscar_bt;
         private System.Windows.Forms.Button ExcluiDUP_bt;
         private System.Windows.Forms.Button Validate_bt;
         private System.Windows.Forms.Label label5;
@@ -1805,6 +1902,14 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn cod3;
         private System.Windows.Forms.DataGridViewTextBoxColumn Cadastro;
         private System.Windows.Forms.DataGridViewTextBoxColumn Data;
+        // Incremento
+        private System.Windows.Forms.RadioButton incremento_check;
+        private System.Windows.Forms.Panel       IncrementoPane_pn;
+        private System.Windows.Forms.Label       lblIncremento;
+        private System.Windows.Forms.TextBox     incremento_txt;
+        private System.Windows.Forms.Label       lblMaxInc;
+        private System.Windows.Forms.TextBox     maxInc_txt;
+        private System.Windows.Forms.Button      gerarSeq_bt;
         private System.Windows.Forms.RadioButton Altertype4_chk;
         private System.Windows.Forms.RadioButton Altertype3_chk;
         private System.Windows.Forms.RadioButton Altertype2_chk;

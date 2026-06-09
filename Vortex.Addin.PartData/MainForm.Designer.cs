@@ -81,12 +81,15 @@ namespace Vortex.Addin.PartData
             // 
             // Inserir_bt
             // 
+            this.Inserir_bt.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.Inserir_bt.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Inserir_bt.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.Inserir_bt.Location = new System.Drawing.Point(106, 343);
             this.Inserir_bt.Name = "Inserir_bt";
             this.Inserir_bt.Size = new System.Drawing.Size(75, 23);
             this.Inserir_bt.TabIndex = 5;
             this.Inserir_bt.Text = "Inserir";
-            this.Inserir_bt.UseVisualStyleBackColor = true;
+            this.Inserir_bt.UseVisualStyleBackColor = false;
             this.Inserir_bt.Click += new System.EventHandler(this.Inserir_bt_Click);
             // 
             // LB1
@@ -189,11 +192,11 @@ namespace Vortex.Addin.PartData
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("TT Supermolot Neue Exp DBold", 32F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 32F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.MidnightBlue;
             this.label1.Location = new System.Drawing.Point(66, 35);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(165, 50);
+            this.label1.Size = new System.Drawing.Size(157, 51);
             this.label1.TabIndex = 123;
             this.label1.Text = "cardall";
             // 

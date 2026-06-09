@@ -71,6 +71,10 @@ namespace Vortex.Addin.PartData
             MedEdit_bt.Click += OnMedAlterarAsync;
             MedDel_bt .Click += OnMedExcluirAsync;
 
+            // Incremento
+            incremento_check.CheckedChanged += incremento_check_CheckedChanged;
+            gerarSeq_bt.Click += GerarSequencia_bt_Click;
+
             // Lazy load ao trocar de aba
             tabControl1.SelectedIndexChanged += TabControl1_SelectedIndexChanged;
         }
@@ -331,11 +335,16 @@ namespace Vortex.Addin.PartData
                 { MedEdit_bt.Enabled = false; MedDel_bt.Enabled = false; return; }
             var r = MedidasGrid.SelectedRows[0];
             int.TryParse(r.Cells["medColId"].Value?.ToString(), out _selectedMedidaId);
-            MedCat_cb.Text  = r.Cells["medColCat"].Value?.ToString() ?? "";
-            MedM1_txt.Text  = r.Cells["medColM1"].Value?.ToString() ?? "";
-            MedM2_txt.Text  = r.Cells["medColM2"].Value?.ToString() ?? "";
-            MedM3_txt.Text  = r.Cells["medColM3"].Value?.ToString() ?? "";
-            MedM4_txt.Text  = r.Cells["medColM4"].Value?.ToString() ?? "";
+
+            // DropDownList exige SelectedIndex — Text= não funciona para selecionar
+            string catName = r.Cells["medColCat"].Value?.ToString() ?? "";
+            int idx = MedCat_cb.Items.IndexOf(catName);
+            if (idx >= 0) MedCat_cb.SelectedIndex = idx;
+
+            MedM1_txt.Text = r.Cells["medColM1"].Value?.ToString() ?? "";
+            MedM2_txt.Text = r.Cells["medColM2"].Value?.ToString() ?? "";
+            MedM3_txt.Text = r.Cells["medColM3"].Value?.ToString() ?? "";
+            MedM4_txt.Text = r.Cells["medColM4"].Value?.ToString() ?? "";
             MedEdit_bt.Enabled = MedDel_bt.Enabled = true;
         }
 
@@ -466,38 +475,11 @@ namespace Vortex.Addin.PartData
             }
         }
 
-        public void Buscar_bt_Click(object sender, EventArgs e)
-        {
-            if (PdmEvents.Connect())
-            {
-                List<string> colunas = new List<string> { "CATEGORIA", "DIAMETRO", "ESPESSURA", "COMPRIMENTO", "M4", "COD1", "COD2", "COD3", "CAD_POR", "DATE_PROJ" };
-                List<List<string>> items = sqlCommand.GetAllValues(colunas, "MATERIAIS");
-                DataListGrid.Rows.Clear();
-
-                if (items.Count > 0)
-                {
-                    int contador = 1;
-                    foreach (var row in items)
-                    {
-                        List<object> novaLinha = new List<object> { contador };
-                        novaLinha.AddRange(row);
-                        DataListGrid.Rows.Add(novaLinha.ToArray());
-                        contador++;
-                    }
-                }
-                DestacarLinhasDuplicadas(DataListGrid);
-            }
-            else
-            {
-                MessageBox.Show("Usuário não conectado, por favor realize o login no PDM", "Login inválido", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
 
         private async void ExcluiDUP_bt_Click(object sender, EventArgs e)
         {
             List<string> colunas = new List<string> { "CATEGORIA_ID", "M1", "M2", "M3", "M4", "COD1", "COD2", "COD3" };
             await sqlCommand.RemoverDuplicatasAsync("MATERIAIS", "Id", colunas);
-            Buscar_bt_Click(sender, e);
         }
 
         private void Validate_bt_Click(object sender, EventArgs e)
@@ -705,8 +687,84 @@ namespace Vortex.Addin.PartData
 
         private void sk2_txt_TextChanged(object sender, EventArgs e) { }
 
-        private void manual_check_CheckedChanged(object sender, EventArgs e)    { AutomaticoPane_pn.Visible = false; }
-        private void automatico_check_CheckedChanged(object sender, EventArgs e) { AutomaticoPane_pn.Visible = true; }
+        private void manual_check_CheckedChanged(object sender, EventArgs e)
+        {
+            AutomaticoPane_pn.Visible = false;
+            IncrementoPane_pn.Visible = false;
+        }
+
+        private void automatico_check_CheckedChanged(object sender, EventArgs e)
+        {
+            AutomaticoPane_pn.Visible = true;
+            IncrementoPane_pn.Visible = false;
+        }
+
+        private void incremento_check_CheckedChanged(object sender, EventArgs e)
+        {
+            AutomaticoPane_pn.Visible = false;
+            IncrementoPane_pn.Visible = incremento_check.Checked;
+        }
+
+        // ─────────────────────────────────────────────────────────────────────────
+        // MODO INCREMENTO — gera sequência de linhas no DataGrid
+        // ─────────────────────────────────────────────────────────────────────────
+
+        private void GerarSequencia_bt_Click(object sender, EventArgs e)
+        {
+            string categoria = Categoria_CBox.Text.Trim();
+            string m1 = m1_txt.Text.Trim();
+            string m2 = m2_txt.Text.Trim();
+            string m4 = m4_txt.Visible ? m4_txt.Text.Trim() : "0";
+            string cod1 = Name1_txt.Text.Trim();
+            string cod2 = Name2_txt.Text.Trim();
+
+            if (!decimal.TryParse(m3_txt.Text.Replace(",", "."),
+                    System.Globalization.NumberStyles.Any,
+                    System.Globalization.CultureInfo.InvariantCulture, out decimal m3Start))
+            {
+                MessageBox.Show("Valor de Medida 3 inválido.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (!int.TryParse(Name3_txt.Text.Trim(), out int cod3Start) ||
+                !decimal.TryParse(incremento_txt.Text.Replace(",", "."),
+                    System.Globalization.NumberStyles.Any,
+                    System.Globalization.CultureInfo.InvariantCulture, out decimal inc) ||
+                inc <= 0 ||
+                !decimal.TryParse(maxInc_txt.Text.Replace(",", "."),
+                    System.Globalization.NumberStyles.Any,
+                    System.Globalization.CultureInfo.InvariantCulture, out decimal maxVal))
+            {
+                MessageBox.Show("Preencha Código 3 inicial, Incremento e Valor máximo corretamente.",
+                    "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            int added = 0;
+            decimal cod3Current = cod3Start;
+            decimal m3Current   = m3Start;
+
+            while (cod3Current <= maxVal)
+            {
+                // COD3 formatado com 4 dígitos
+                string cod3Str = ((int)cod3Current).ToString().PadLeft(4, '0');
+                string m3Str   = m3Current.ToString("0.###",
+                    System.Globalization.CultureInfo.InvariantCulture);
+
+                dataGridView1.Rows.Add(
+                    (dataGridView1.RowCount + 1).ToString(),
+                    categoria, m1, m2, m3Str, m4, cod1, cod2, cod3Str);
+
+                cod3Current += inc;
+                m3Current   += inc;
+                added++;
+
+                if (added > 5000) break; // guarda contra loop infinito
+            }
+
+            if (RowMask(dataGridView1) && DestacarLinhasDuplicadas(dataGridView1))
+                Cadastrar_bt.Enabled = true;
+        }
 
         private void coletarEsboco()
         {
@@ -805,14 +863,32 @@ namespace Vortex.Addin.PartData
 
         private void AtualizarListaCategorias()
         {
+            var cats = sqlCommand.GetValColumn("MATERIAL", "CATEGORIAS");
+
+            // Aba Cadastro
             Categoria_CBox.Items.Clear();
             ExcCategoria_cb.Text = "";
             ExcCategoria_cb.Items.Clear();
-            foreach (string categoria in sqlCommand.GetValColumn("MATERIAL", "CATEGORIAS"))
+
+            // Aba Banco de dados
+            BancoCat_cb.Items.Clear();
+            FCategoria_cb.Items.Clear();
+
+            // Aba Medidas
+            MedCat_cb.Items.Clear();
+
+            foreach (string cat in cats)
             {
-                Categoria_CBox.Items.Add(categoria.Trim());
-                ExcCategoria_cb.Items.Add(categoria.Trim());
+                string c = cat.Trim();
+                Categoria_CBox.Items.Add(c);
+                ExcCategoria_cb.Items.Add(c);
+                BancoCat_cb.Items.Add(c);
+                FCategoria_cb.Items.Add(c);
+                MedCat_cb.Items.Add(c);
             }
+
+            // Edit Categoria (Categorias tab)
+            PopulateEditCatCb();
         }
 
         private void FCategoria_cb_SelectedIndexChanged(object sender, EventArgs e) { }
