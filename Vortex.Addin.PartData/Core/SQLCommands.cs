@@ -549,6 +549,146 @@ namespace Vortex.Addin.PartData.Core
             return resultado.ToList();
         }
 
+        // ── UPDATE completo de material (permite alterar códigos) ────────────────
+
+        public async Task<bool> UpdateMaterialFullAsync(
+            string origCod1, string origCod2, string origCod3,
+            string newCod1,  string newCod2,  string newCod3,
+            string categoria, string m1, string m2, string m3, string m4)
+        {
+            try
+            {
+                using (var conn = Connect())
+                {
+                    const string sql = @"
+                        UPDATE MATERIAIS
+                        SET CATEGORIA_ID = (SELECT Id FROM CATEGORIAS WHERE NOME = @cat),
+                            M1 = @m1, M2 = @m2, M3 = @m3, M4 = @m4,
+                            COD1 = @nc1, COD2 = @nc2, COD3 = @nc3
+                        WHERE COD1 = @oc1 AND COD2 = @oc2 AND COD3 = @oc3";
+
+                    using (var cmd = new SqlCommand(sql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@cat", categoria ?? "");
+                        cmd.Parameters.AddWithValue("@m1",  ToDecimal(m1));
+                        cmd.Parameters.AddWithValue("@m2",  ToDecimal(m2));
+                        cmd.Parameters.AddWithValue("@m3",  ToDecimal(m3));
+                        cmd.Parameters.Add(DecimalParam("@m4", ToDecimalNull(m4)));
+                        cmd.Parameters.AddWithValue("@nc1", newCod1 ?? "");
+                        cmd.Parameters.AddWithValue("@nc2", newCod2 ?? "");
+                        cmd.Parameters.AddWithValue("@nc3", newCod3 ?? "");
+                        cmd.Parameters.AddWithValue("@oc1", origCod1 ?? "");
+                        cmd.Parameters.AddWithValue("@oc2", origCod2 ?? "");
+                        cmd.Parameters.AddWithValue("@oc3", origCod3 ?? "");
+                        await conn.OpenAsync();
+                        int rows = await cmd.ExecuteNonQueryAsync();
+                        if (rows > 0) await AtualizarMemoriaAsync("MATERIAIS");
+                        return rows > 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao atualizar material: {ex.Message}", "Erro",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+        }
+
+        // ── MEDIDAS CRUD ─────────────────────────────────────────────────────────
+
+        public async Task<bool> InsertMedidaAsync(
+            string categoria, string m1, string m2, string m3, string m4)
+        {
+            try
+            {
+                using (var conn = Connect())
+                {
+                    const string sql = @"
+                        INSERT INTO MEDIDAS (CATEGORIA_ID, M1, M2, M3, M4)
+                        VALUES ((SELECT Id FROM CATEGORIAS WHERE NOME = @cat),
+                                @m1, @m2, @m3, @m4)";
+                    using (var cmd = new SqlCommand(sql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@cat", categoria ?? "");
+                        cmd.Parameters.AddWithValue("@m1",  ToDecimal(m1));
+                        cmd.Parameters.AddWithValue("@m2",  ToDecimal(m2));
+                        cmd.Parameters.AddWithValue("@m3",  ToDecimal(m3));
+                        cmd.Parameters.Add(DecimalParam("@m4", ToDecimalNull(m4)));
+                        await conn.OpenAsync();
+                        await cmd.ExecuteNonQueryAsync();
+                    }
+                }
+                await AtualizarMemoriaAsync("MEDIDAS");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao inserir medida: {ex.Message}", "Erro",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+        }
+
+        public async Task<bool> UpdateMedidaAsync(
+            int id, string categoria, string m1, string m2, string m3, string m4)
+        {
+            try
+            {
+                using (var conn = Connect())
+                {
+                    const string sql = @"
+                        UPDATE MEDIDAS
+                        SET CATEGORIA_ID = (SELECT Id FROM CATEGORIAS WHERE NOME = @cat),
+                            M1 = @m1, M2 = @m2, M3 = @m3, M4 = @m4
+                        WHERE Id = @id";
+                    using (var cmd = new SqlCommand(sql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@cat", categoria ?? "");
+                        cmd.Parameters.AddWithValue("@m1",  ToDecimal(m1));
+                        cmd.Parameters.AddWithValue("@m2",  ToDecimal(m2));
+                        cmd.Parameters.AddWithValue("@m3",  ToDecimal(m3));
+                        cmd.Parameters.Add(DecimalParam("@m4", ToDecimalNull(m4)));
+                        cmd.Parameters.AddWithValue("@id",  id);
+                        await conn.OpenAsync();
+                        int rows = await cmd.ExecuteNonQueryAsync();
+                        if (rows > 0) await AtualizarMemoriaAsync("MEDIDAS");
+                        return rows > 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao atualizar medida: {ex.Message}", "Erro",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+        }
+
+        public async Task<bool> DeleteMedidaAsync(int id)
+        {
+            try
+            {
+                using (var conn = Connect())
+                {
+                    using (var cmd = new SqlCommand("DELETE FROM MEDIDAS WHERE Id = @id", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@id", id);
+                        await conn.OpenAsync();
+                        int rows = await cmd.ExecuteNonQueryAsync();
+                        if (rows > 0) await AtualizarMemoriaAsync("MEDIDAS");
+                        return rows > 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao excluir medida: {ex.Message}", "Erro",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+        }
+
         // ── Conversões ───────────────────────────────────────────────────────────
 
         private static decimal ToDecimal(string v)

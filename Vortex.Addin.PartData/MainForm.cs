@@ -152,20 +152,40 @@ namespace Vortex.Addin.PartData
             return null; // Retorno seguro se houver erro
         }
 
+        // Armazena valores brutos (ex: "50.800") e exibe formatados (ex: "50.8")
+        // O SelectedItem.ToString() retorna o valor bruto → comparação exata com o cache
         private void PreencherComboBoxOrdenado(ComboBox comboBox, List<string> valores)
         {
-            comboBox.Items.Clear(); // Limpa os itens existentes
+            comboBox.Items.Clear();
+            comboBox.FormattingEnabled = true;
+            comboBox.Format -= OnDecimalComboBoxFormat;
+            comboBox.Format += OnDecimalComboBoxFormat;
 
             if (valores.Count > 0)
             {
-                List<string> valoresOrdenados = valores
-                    .Select(v => FormatDecimalForComboBox(v)) // Converte corretamente
-                    .Where(v => v != null) // Filtra valores inválidos
-                    .OrderBy(v => double.Parse(v, System.Globalization.CultureInfo.InvariantCulture)) // Ordena em ordem crescente
-                    .ToList();
+                var sorted = valores
+                    .Where(v => !string.IsNullOrEmpty(v))
+                    .Distinct()
+                    .OrderBy(v =>
+                    {
+                        double.TryParse(v.Replace(",", "."),
+                            System.Globalization.NumberStyles.Any,
+                            System.Globalization.CultureInfo.InvariantCulture, out double d);
+                        return d;
+                    })
+                    .ToArray();
 
-                // Adiciona os valores ordenados ao ComboBox
-                comboBox.Items.AddRange(valoresOrdenados.ToArray());
+                comboBox.Items.AddRange(sorted.Cast<object>().ToArray());
+            }
+        }
+
+        // Formata para exibição (o value interno continua o valor bruto do cache)
+        private void OnDecimalComboBoxFormat(object sender, ListControlConvertEventArgs e)
+        {
+            if (e.Value is string v)
+            {
+                string fmt = FormatDecimalForComboBox(v);
+                if (fmt != null) e.Value = fmt;
             }
         }
 

@@ -20,6 +20,26 @@ namespace Vortex.Addin.PartData
         SldWorks swApp;
         private ModelDoc2 swModel;
 
+        // ── Banco de dados tab — cascade filter + salvar ─────────────────────────
+        private ComboBox _bancoCatCb, _bancoM1Cb, _bancoM2Cb, _bancoM3Cb, _bancoM4Cb;
+        private Button   _salvarBt;
+        private string   _editOrigCod1, _editOrigCod2, _editOrigCod3;
+
+        // ── Medidas tab ──────────────────────────────────────────────────────────
+        private TabPage      _tabMedidas;
+        private DataGridView _medidasGrid;
+        private ComboBox     _medCatCb;
+        private TextBox      _medM1Txt, _medM2Txt, _medM3Txt, _medM4Txt;
+        private Button       _medAddBt, _medEditBt, _medDelBt;
+        private int          _selectedMedidaId = -1;
+
+        // ── Edit Category (groupBox3) ────────────────────────────────────────────
+        private ComboBox     _editCatCb;
+        private TextBox      _editCatNameTxt;
+        private RadioButton  _editType1, _editType2, _editType3, _editType4;
+        private Button       _alterTypeBt;
+        private string       _editTipo = "1";
+
         public Cadastro_main(SldWorks app, SQLCommands sql_comm)
         {
             InitializeComponent();
@@ -27,6 +47,426 @@ namespace Vortex.Addin.PartData
             PdmEvents = new EPDMHandler();
             sqlCommand = sql_comm;
             AddMigrationButton();
+            InitializeExtraControls();
+        }
+
+        // ─────────────────────────────────────────────────────────────────────────
+        // CONTROLES CRIADOS EM CÓDIGO (não no Designer)
+        // ─────────────────────────────────────────────────────────────────────────
+
+        private void InitializeExtraControls()
+        {
+            InitializeBancoDadosTab();
+            InitializeEditCatSection();
+            InitializeMedidasTab();
+            tabControl1.SelectedIndexChanged += TabControl1_SelectedIndexChanged;
+        }
+
+        private void TabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var tab = tabControl1.SelectedTab;
+            if      (tab == tabPage2)     PopulateBancoCascade();
+            else if (tab == tabPage5)     PopulateEditCatCb();
+            else if (tab == _tabMedidas)  CarregarMedidasGrid();
+        }
+
+        // ── ABA: BANCO DE DADOS — cascade + salvar ───────────────────────────────
+
+        private void InitializeBancoDadosTab()
+        {
+            // Move o grid para baixo para abrir espaço para os filtros
+            DataListGrid.Location = new Point(3, 48);
+            DataListGrid.Size     = new Size(726, 407);
+
+            _bancoCatCb = MakeLabeledCb("Categoria", 3,   190, tabPage2);
+            _bancoM1Cb  = MakeLabeledCb("Medida 1",  198,  80, tabPage2);
+            _bancoM2Cb  = MakeLabeledCb("Medida 2",  283,  80, tabPage2);
+            _bancoM3Cb  = MakeLabeledCb("Medida 3",  368,  80, tabPage2);
+            _bancoM4Cb  = MakeLabeledCb("Medida 4",  453,  80, tabPage2);
+
+            var btnLimpar = new Button { Text = "Limpar", Location = new Point(538, 22), Size = new Size(55, 21) };
+            btnLimpar.Click += (s, ev) => LimparFiltrosBanco();
+            tabPage2.Controls.Add(btnLimpar);
+
+            _salvarBt = new Button
+            {
+                Text      = "Salvar Alteração",
+                Location  = new Point(200, 540),
+                Size      = new Size(130, 23),
+                Enabled   = false,
+                BackColor = Color.FromArgb(0, 120, 215),
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat
+            };
+            _salvarBt.FlatAppearance.BorderSize = 0;
+            _salvarBt.Click += OnSalvarMaterial;
+            tabPage2.Controls.Add(_salvarBt);
+
+            _bancoCatCb.SelectedIndexChanged += OnBancoCatChanged;
+            _bancoM1Cb .SelectedIndexChanged += OnBancoM1Changed;
+            _bancoM2Cb .SelectedIndexChanged += OnBancoM2Changed;
+            _bancoM3Cb .SelectedIndexChanged += OnBancoM3Changed;
+            _bancoM4Cb .SelectedIndexChanged += OnBancoM4Changed;
+        }
+
+        private ComboBox MakeLabeledCb(string label, int x, int w, Control parent)
+        {
+            parent.Controls.Add(new Label { Text = label, Location = new Point(x, 5), AutoSize = true });
+            var cb = new ComboBox
+            {
+                Location          = new Point(x, 22),
+                Size              = new Size(w, 21),
+                FormattingEnabled = true,
+                DropDownStyle     = ComboBoxStyle.DropDownList
+            };
+            cb.Format += OnDecimalCbFormat;
+            parent.Controls.Add(cb);
+            return cb;
+        }
+
+        private void OnDecimalCbFormat(object sender, ListControlConvertEventArgs e)
+        {
+            if (e.Value is string v && decimal.TryParse(v.Replace(",", "."),
+                    System.Globalization.NumberStyles.Any,
+                    System.Globalization.CultureInfo.InvariantCulture, out decimal d))
+                e.Value = d.ToString("0.###",
+                    System.Globalization.CultureInfo.InvariantCulture).TrimEnd('0').TrimEnd('.');
+        }
+
+        private void PopulateBancoCascade()
+        {
+            if (_bancoCatCb.Items.Count > 0) return;
+            _bancoCatCb.Items.Clear();
+            foreach (var cat in sqlCommand.GetValColumn("CATEGORIA", "MATERIAIS"))
+                _bancoCatCb.Items.Add(cat);
+            // Popula também o FCategoria_cb (painel de edição) se ainda vazio
+            if (FCategoria_cb.Items.Count == 0)
+                foreach (var cat in sqlCommand.GetValColumn("MATERIAL", "CATEGORIAS"))
+                    FCategoria_cb.Items.Add(cat.Trim());
+        }
+
+        private void OnBancoCatChanged(object sender, EventArgs e)
+        {
+            ClearCbs(_bancoM1Cb, _bancoM2Cb, _bancoM3Cb, _bancoM4Cb);
+            DataListGrid.Rows.Clear();
+            _salvarBt.Enabled = false;
+            if (_bancoCatCb.SelectedItem == null) return;
+            PopulateDecimalCb(_bancoM1Cb,
+                sqlCommand.GetRowValues(
+                    new Dictionary<string, object> { { "CATEGORIA", _bancoCatCb.SelectedItem.ToString() } },
+                    new List<string> { "DIAMETRO" }, "MATERIAIS"));
+        }
+
+        private void OnBancoM1Changed(object sender, EventArgs e)
+        {
+            ClearCbs(_bancoM2Cb, _bancoM3Cb, _bancoM4Cb);
+            FiltrarBancoDados();
+            if (_bancoM1Cb.SelectedItem == null) return;
+            PopulateDecimalCb(_bancoM2Cb,
+                sqlCommand.GetRowValues(BuildBancoFiltros(1),
+                    new List<string> { "ESPESSURA" }, "MATERIAIS"));
+        }
+
+        private void OnBancoM2Changed(object sender, EventArgs e)
+        {
+            ClearCbs(_bancoM3Cb, _bancoM4Cb);
+            FiltrarBancoDados();
+            if (_bancoM2Cb.SelectedItem == null) return;
+            PopulateDecimalCb(_bancoM3Cb,
+                sqlCommand.GetRowValues(BuildBancoFiltros(2),
+                    new List<string> { "COMPRIMENTO" }, "MATERIAIS"));
+        }
+
+        private void OnBancoM3Changed(object sender, EventArgs e)
+        {
+            ClearCbs(_bancoM4Cb);
+            FiltrarBancoDados();
+            if (_bancoM3Cb.SelectedItem == null) return;
+            PopulateDecimalCb(_bancoM4Cb,
+                sqlCommand.GetRowValues(BuildBancoFiltros(3),
+                    new List<string> { "M4" }, "MATERIAIS"));
+        }
+
+        private void OnBancoM4Changed(object sender, EventArgs e) => FiltrarBancoDados();
+
+        private Dictionary<string, object> BuildBancoFiltros(int max = 4)
+        {
+            var f = new Dictionary<string, object>();
+            if (max >= 0 && _bancoCatCb.SelectedItem != null) f["CATEGORIA"]   = _bancoCatCb.SelectedItem.ToString();
+            if (max >= 1 && _bancoM1Cb .SelectedItem != null) f["DIAMETRO"]    = _bancoM1Cb.SelectedItem.ToString();
+            if (max >= 2 && _bancoM2Cb .SelectedItem != null) f["ESPESSURA"]   = _bancoM2Cb.SelectedItem.ToString();
+            if (max >= 3 && _bancoM3Cb .SelectedItem != null) f["COMPRIMENTO"] = _bancoM3Cb.SelectedItem.ToString();
+            if (max >= 4 && _bancoM4Cb .SelectedItem != null) f["M4"]          = _bancoM4Cb.SelectedItem.ToString();
+            return f;
+        }
+
+        private void FiltrarBancoDados()
+        {
+            DataListGrid.Rows.Clear();
+            _salvarBt.Enabled = false;
+            if (_bancoCatCb.SelectedItem == null || _bancoM1Cb.SelectedItem == null) return;
+
+            var dt = sqlCommand.ObterTabela("MATERIAIS");
+            if (dt == null) return;
+
+            var filtros = BuildBancoFiltros();
+            var query   = dt.AsEnumerable();
+
+            foreach (var kv in filtros)
+            {
+                string key = kv.Key, fval = kv.Value.ToString();
+                query = query.Where(r =>
+                {
+                    string rval = r[key]?.ToString().Trim() ?? "";
+                    if (decimal.TryParse(rval.Replace(",", "."), System.Globalization.NumberStyles.Any,
+                            System.Globalization.CultureInfo.InvariantCulture, out decimal rv) &&
+                        decimal.TryParse(fval.Replace(",", "."), System.Globalization.NumberStyles.Any,
+                            System.Globalization.CultureInfo.InvariantCulture, out decimal fv))
+                        return rv == fv;
+                    return string.Equals(rval, fval, StringComparison.OrdinalIgnoreCase);
+                });
+            }
+
+            var cols = new[] { "CATEGORIA","DIAMETRO","ESPESSURA","COMPRIMENTO","M4","COD1","COD2","COD3","CAD_POR","DATE_PROJ" };
+            int cnt = 1;
+            foreach (var row in query)
+            {
+                var cell = new List<object> { cnt++ };
+                cell.AddRange(cols.Select(c => (object)(row[c]?.ToString().Trim() ?? "")));
+                DataListGrid.Rows.Add(cell.ToArray());
+            }
+            DestacarLinhasDuplicadas(DataListGrid);
+        }
+
+        private void LimparFiltrosBanco()
+        {
+            _bancoCatCb.SelectedIndex = -1;
+            ClearCbs(_bancoM1Cb, _bancoM2Cb, _bancoM3Cb, _bancoM4Cb);
+            DataListGrid.Rows.Clear();
+            _salvarBt.Enabled = false;
+        }
+
+        private void PopulateDecimalCb(ComboBox cb, List<string> vals)
+        {
+            cb.Items.Clear();
+            foreach (var v in vals.Where(v => !string.IsNullOrEmpty(v))
+                                  .Distinct()
+                                  .OrderBy(v => {
+                                      double.TryParse(v.Replace(",", "."),
+                                          System.Globalization.NumberStyles.Any,
+                                          System.Globalization.CultureInfo.InvariantCulture, out double d);
+                                      return d; }))
+                cb.Items.Add(v);
+        }
+
+        private void ClearCbs(params ComboBox[] cbs)
+        {
+            foreach (var cb in cbs) { cb.Items.Clear(); cb.SelectedIndex = -1; }
+        }
+
+        private async void OnSalvarMaterial(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(_editOrigCod1)) return;
+            _salvarBt.Enabled = false;
+            bool ok = await sqlCommand.UpdateMaterialFullAsync(
+                _editOrigCod1, _editOrigCod2, _editOrigCod3,
+                FCod1_txt.Text.Trim(), FCod2_txt.Text.Trim(), FCod3_txt.Text.Trim(),
+                FCategoria_cb.Text.Trim(),
+                FM1_txt.Text.Trim(), FM2_txt.Text.Trim(),
+                FM3_txt.Text.Trim(), FM4_txt.Text.Trim());
+            if (ok)
+            {
+                MessageBox.Show("Material atualizado com sucesso!", "OK",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                FiltrarBancoDados();
+            }
+            _salvarBt.Enabled = true;
+        }
+
+        // ── ABA: CATEGORIAS — Edit groupBox ──────────────────────────────────────
+
+        private void InitializeEditCatSection()
+        {
+            var gb = new GroupBox
+            {
+                Text      = "Editar categoria",
+                Location  = new Point(6, 298),
+                Size      = new Size(720, 130),
+                FlatStyle = FlatStyle.Popup
+            };
+
+            gb.Controls.Add(new Label { Text = "Selecionar categoria", Location = new Point(6, 22), AutoSize = true });
+            _editCatCb = new ComboBox { Location = new Point(6, 38), Size = new Size(229, 21), DropDownStyle = ComboBoxStyle.DropDownList, Sorted = true };
+            _editCatCb.SelectedIndexChanged += EditCatCb_SelectedIndexChanged;
+            gb.Controls.Add(_editCatCb);
+
+            gb.Controls.Add(new Label { Text = "Novo nome", Location = new Point(245, 22), AutoSize = true });
+            _editCatNameTxt = new TextBox { Location = new Point(245, 38), Size = new Size(200, 20) };
+            gb.Controls.Add(_editCatNameTxt);
+
+            gb.Controls.Add(new Label { Text = "Novo tipo", Location = new Point(6, 68), AutoSize = true });
+            _editType1 = new RadioButton { Text = "Tipo 1", Location = new Point(6,   85), AutoSize = true, Checked = true };
+            _editType2 = new RadioButton { Text = "Tipo 2", Location = new Point(65,  85), AutoSize = true };
+            _editType3 = new RadioButton { Text = "Tipo 3", Location = new Point(124, 85), AutoSize = true };
+            _editType4 = new RadioButton { Text = "Tipo 4", Location = new Point(183, 85), AutoSize = true };
+            _editType1.CheckedChanged += (s, ev) => { if (_editType1.Checked) _editTipo = "1"; };
+            _editType2.CheckedChanged += (s, ev) => { if (_editType2.Checked) _editTipo = "2"; };
+            _editType3.CheckedChanged += (s, ev) => { if (_editType3.Checked) _editTipo = "3"; };
+            _editType4.CheckedChanged += (s, ev) => { if (_editType4.Checked) _editTipo = "4"; };
+            gb.Controls.AddRange(new Control[] { _editType1, _editType2, _editType3, _editType4 });
+
+            _alterTypeBt = new Button { Name = "altertype", Text = "Alterar Categoria", Location = new Point(453, 35), Size = new Size(130, 23) };
+            _alterTypeBt.Click += OnAlterarCategoria;
+            gb.Controls.Add(_alterTypeBt);
+
+            tabPage5.Controls.Add(gb);
+        }
+
+        private void PopulateEditCatCb()
+        {
+            _editCatCb.Items.Clear();
+            foreach (var cat in sqlCommand.GetValColumn("MATERIAL", "CATEGORIAS"))
+                _editCatCb.Items.Add(cat.Trim());
+        }
+
+        private void EditCatCb_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (_editCatCb.SelectedItem == null) return;
+            string cat = _editCatCb.SelectedItem.ToString();
+            _editCatNameTxt.Text = cat;
+            var vals = sqlCommand.GetRowValues(
+                new Dictionary<string, object> { { "MATERIAL", cat } },
+                new List<string> { "TIPO" }, "CATEGORIAS");
+            if (vals.Count > 0)
+            {
+                switch (vals[0]) {
+                    case "1": _editType1.Checked = true; break;
+                    case "2": _editType2.Checked = true; break;
+                    case "3": _editType3.Checked = true; break;
+                    case "4": _editType4.Checked = true; break;
+                }
+            }
+        }
+
+        private async void OnAlterarCategoria(object sender, EventArgs e)
+        {
+            if (_editCatCb.SelectedItem == null || string.IsNullOrWhiteSpace(_editCatNameTxt.Text))
+            {
+                MessageBox.Show("Selecione uma categoria e informe o novo nome.", "Aviso",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            string atual = _editCatCb.SelectedItem.ToString();
+            string novo  = _editCatNameTxt.Text.Trim().ToUpper();
+            bool ok = await sqlCommand.UpdateCategoriaAsync(atual, novo, _editTipo);
+            if (ok)
+            {
+                MessageBox.Show($"Categoria '{atual}' → '{novo}' (Tipo {_editTipo}).", "OK",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                AtualizarListaCategorias();
+                PopulateEditCatCb();
+            }
+        }
+
+        // ── ABA: MEDIDAS — CRUD ───────────────────────────────────────────────────
+
+        private void InitializeMedidasTab()
+        {
+            _tabMedidas = new TabPage { Text = "Medidas", Name = "tabMedidas" };
+            tabControl1.Controls.Add(_tabMedidas);
+
+            _medidasGrid = new DataGridView
+            {
+                Location = new Point(3, 3), Size = new Size(726, 430),
+                AllowUserToAddRows = false, AllowUserToDeleteRows = false,
+                ReadOnly = true, SelectionMode = DataGridViewSelectionMode.FullRowSelect, MultiSelect = false
+            };
+            var medCols = new[] {
+                new[] {"medId","Id","40"}, new[] {"medCat","Categoria","200"},
+                new[] {"medM1","M1","70"}, new[] {"medM2","M2","70"},
+                new[] {"medM3","M3","70"}, new[] {"medM4","M4","70"} };
+            foreach (var col in medCols)
+                _medidasGrid.Columns.Add(new DataGridViewTextBoxColumn
+                    { Name = col[0], HeaderText = col[1], Width = int.Parse(col[2]) });
+            _medidasGrid.SelectionChanged += MedidasGrid_SelectionChanged;
+            _tabMedidas.Controls.Add(_medidasGrid);
+
+            int y = 440;
+            _tabMedidas.Controls.Add(new Label { Text = "Categoria", Location = new Point(3, y), AutoSize = true });
+            _medCatCb = new ComboBox { Location = new Point(3, y+14), Size = new Size(200, 21), DropDownStyle = ComboBoxStyle.DropDownList, Sorted = true };
+            _tabMedidas.Controls.Add(_medCatCb);
+
+            int mx = 210;
+            int[] medOffsets = { 0, 80, 160, 240 };
+            string[] medLbls = { "M1", "M2", "M3", "M4" };
+            for (int i = 0; i < 4; i++)
+                _tabMedidas.Controls.Add(new Label { Text = medLbls[i], Location = new Point(mx + medOffsets[i], y), AutoSize = true });
+
+            _medM1Txt = new TextBox { Location = new Point(mx,      y+14), Size = new Size(70,20) };
+            _medM2Txt = new TextBox { Location = new Point(mx+80,   y+14), Size = new Size(70,20) };
+            _medM3Txt = new TextBox { Location = new Point(mx+160,  y+14), Size = new Size(70,20) };
+            _medM4Txt = new TextBox { Location = new Point(mx+240,  y+14), Size = new Size(70,20) };
+            _tabMedidas.Controls.AddRange(new Control[] { _medM1Txt, _medM2Txt, _medM3Txt, _medM4Txt });
+
+            _medAddBt  = new Button { Text="Adicionar", Location=new Point(480, y+10), Size=new Size(80,23) };
+            _medEditBt = new Button { Text="Alterar",   Location=new Point(565, y+10), Size=new Size(80,23), Enabled=false };
+            _medDelBt  = new Button { Text="Excluir",   Location=new Point(650, y+10), Size=new Size(70,23), Enabled=false };
+            _medAddBt .Click += OnMedAdicionarAsync;
+            _medEditBt.Click += OnMedAlterarAsync;
+            _medDelBt .Click += OnMedExcluirAsync;
+            _tabMedidas.Controls.AddRange(new Control[] { _medAddBt, _medEditBt, _medDelBt });
+        }
+
+        private void CarregarMedidasGrid()
+        {
+            if (_medCatCb.Items.Count == 0)
+                foreach (var cat in sqlCommand.GetValColumn("MATERIAL", "CATEGORIAS"))
+                    _medCatCb.Items.Add(cat.Trim());
+
+            _medidasGrid.Rows.Clear();
+            var dt = sqlCommand.ObterTabela("MEDIDAS");
+            if (dt == null) return;
+            foreach (DataRow row in dt.Rows)
+                _medidasGrid.Rows.Add(row["Id"], row["CATEGORIA"]?.ToString()?.Trim(),
+                    row["M1"], row["M2"], row["M3"], row["M4"]);
+        }
+
+        private void MedidasGrid_SelectionChanged(object sender, EventArgs e)
+        {
+            if (_medidasGrid.SelectedRows.Count == 0)
+                { _medEditBt.Enabled = false; _medDelBt.Enabled = false; return; }
+            var r = _medidasGrid.SelectedRows[0];
+            int.TryParse(r.Cells["medId"].Value?.ToString(), out _selectedMedidaId);
+            _medCatCb.Text = r.Cells["medCat"].Value?.ToString() ?? "";
+            _medM1Txt.Text = r.Cells["medM1"].Value?.ToString() ?? "";
+            _medM2Txt.Text = r.Cells["medM2"].Value?.ToString() ?? "";
+            _medM3Txt.Text = r.Cells["medM3"].Value?.ToString() ?? "";
+            _medM4Txt.Text = r.Cells["medM4"].Value?.ToString() ?? "";
+            _medEditBt.Enabled = _medDelBt.Enabled = true;
+        }
+
+        private async void OnMedAdicionarAsync(object sender, EventArgs e)
+        {
+            if (_medCatCb.SelectedItem == null) { MessageBox.Show("Selecione uma categoria.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning); return; }
+            if (await sqlCommand.InsertMedidaAsync(_medCatCb.SelectedItem.ToString(),
+                    _medM1Txt.Text, _medM2Txt.Text, _medM3Txt.Text, _medM4Txt.Text))
+                CarregarMedidasGrid();
+        }
+
+        private async void OnMedAlterarAsync(object sender, EventArgs e)
+        {
+            if (_selectedMedidaId < 0 || _medCatCb.SelectedItem == null) return;
+            if (await sqlCommand.UpdateMedidaAsync(_selectedMedidaId, _medCatCb.SelectedItem.ToString(),
+                    _medM1Txt.Text, _medM2Txt.Text, _medM3Txt.Text, _medM4Txt.Text))
+                CarregarMedidasGrid();
+        }
+
+        private async void OnMedExcluirAsync(object sender, EventArgs e)
+        {
+            if (_selectedMedidaId < 0) return;
+            if (MessageBox.Show("Excluir esta medida?", "Confirmar", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                if (await sqlCommand.DeleteMedidaAsync(_selectedMedidaId))
+                    { _selectedMedidaId = -1; CarregarMedidasGrid(); }
         }
 
         private void AddMigrationButton()
@@ -114,7 +554,18 @@ namespace Vortex.Addin.PartData
 
         private void dataGridView_SelectionChanged(object sender, EventArgs e)
         {
-            PreencherTextBoxComLinhaSelecionada((DataGridView)sender);
+            var grid = (DataGridView)sender;
+            PreencherTextBoxComLinhaSelecionada(grid);
+
+            // Armazena os códigos originais para a operação de Salvar Alteração
+            if (grid == DataListGrid && grid.SelectedRows.Count > 0)
+            {
+                var row = grid.SelectedRows[0];
+                _editOrigCod1     = row.Cells[6].Value?.ToString() ?? "";
+                _editOrigCod2     = row.Cells[7].Value?.ToString() ?? "";
+                _editOrigCod3     = row.Cells[8].Value?.ToString() ?? "";
+                if (_salvarBt != null) _salvarBt.Enabled = true;
+            }
         }
         public void Buscar_bt_Click(object sender, EventArgs e)
         {
@@ -161,10 +612,10 @@ namespace Vortex.Addin.PartData
             else { MessageBox.Show("Usuario não conectado, por favor realize o login no PDM", "Login invalido", MessageBoxButtons.OK, MessageBoxIcon.Error); }
         }
 
-        private void Add2_bt_Click(object sender, EventArgs e)
+        private async void Add2_bt_Click(object sender, EventArgs e)
         {
             AddLine(dataGridView1);
-            PreencherDataGrid(dataGridView1, textBox1);
+            await PreencherDataGrid(dataGridView1, textBox1);
             if (RowMask(dataGridView1) && DestacarLinhasDuplicadas(dataGridView1)) { Cadastrar_bt.Enabled = true; }
             else { Cadastrar_bt.Enabled = false; }
         }

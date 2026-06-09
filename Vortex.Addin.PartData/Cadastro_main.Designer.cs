@@ -126,6 +126,11 @@
             this.NewCatName_txt = new System.Windows.Forms.TextBox();
             this.CadCat_bt = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
+            this.Altertype4_chk = new System.Windows.Forms.RadioButton();
+            this.Altertype3_chk = new System.Windows.Forms.RadioButton();
+            this.Altertype2_chk = new System.Windows.Forms.RadioButton();
+            this.Altertype1_chk = new System.Windows.Forms.RadioButton();
+            this.label19 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.DataListGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.tabControl.SuspendLayout();
@@ -985,6 +990,11 @@
             // 
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox2.Controls.Add(this.Altertype4_chk);
+            this.groupBox2.Controls.Add(this.Altertype3_chk);
+            this.groupBox2.Controls.Add(this.Altertype2_chk);
+            this.groupBox2.Controls.Add(this.Altertype1_chk);
+            this.groupBox2.Controls.Add(this.label19);
             this.groupBox2.Controls.Add(this.Allitems_ch);
             this.groupBox2.Controls.Add(this.label20);
             this.groupBox2.Controls.Add(this.ExcCategoria_cb);
@@ -992,7 +1002,7 @@
             this.groupBox2.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.groupBox2.Location = new System.Drawing.Point(6, 166);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(720, 126);
+            this.groupBox2.Size = new System.Drawing.Size(720, 172);
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Excluir categoria";
@@ -1150,6 +1160,60 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // Altertype4_chk
+            // 
+            this.Altertype4_chk.AutoSize = true;
+            this.Altertype4_chk.Location = new System.Drawing.Point(192, 105);
+            this.Altertype4_chk.Name = "Altertype4_chk";
+            this.Altertype4_chk.Size = new System.Drawing.Size(55, 17);
+            this.Altertype4_chk.TabIndex = 197;
+            this.Altertype4_chk.TabStop = true;
+            this.Altertype4_chk.Text = "Tipo 4";
+            this.Altertype4_chk.UseVisualStyleBackColor = true;
+            // 
+            // Altertype3_chk
+            // 
+            this.Altertype3_chk.AutoSize = true;
+            this.Altertype3_chk.Location = new System.Drawing.Point(131, 105);
+            this.Altertype3_chk.Name = "Altertype3_chk";
+            this.Altertype3_chk.Size = new System.Drawing.Size(55, 17);
+            this.Altertype3_chk.TabIndex = 198;
+            this.Altertype3_chk.TabStop = true;
+            this.Altertype3_chk.Text = "Tipo 3";
+            this.Altertype3_chk.UseVisualStyleBackColor = true;
+            // 
+            // Altertype2_chk
+            // 
+            this.Altertype2_chk.AutoSize = true;
+            this.Altertype2_chk.Location = new System.Drawing.Point(70, 105);
+            this.Altertype2_chk.Name = "Altertype2_chk";
+            this.Altertype2_chk.Size = new System.Drawing.Size(55, 17);
+            this.Altertype2_chk.TabIndex = 199;
+            this.Altertype2_chk.TabStop = true;
+            this.Altertype2_chk.Text = "Tipo 2";
+            this.Altertype2_chk.UseVisualStyleBackColor = true;
+            // 
+            // Altertype1_chk
+            // 
+            this.Altertype1_chk.AutoSize = true;
+            this.Altertype1_chk.Location = new System.Drawing.Point(9, 105);
+            this.Altertype1_chk.Name = "Altertype1_chk";
+            this.Altertype1_chk.Size = new System.Drawing.Size(55, 17);
+            this.Altertype1_chk.TabIndex = 200;
+            this.Altertype1_chk.TabStop = true;
+            this.Altertype1_chk.Text = "Tipo 1";
+            this.Altertype1_chk.UseVisualStyleBackColor = true;
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label19.Location = new System.Drawing.Point(6, 135);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(344, 16);
+            this.label19.TabIndex = 196;
+            this.label19.Text = "Largura; Espessura; Comprimento; Comprimento;";
+            // 
             // Cadastro_main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1291,5 +1355,10 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn cod3;
         private System.Windows.Forms.DataGridViewTextBoxColumn Cadastro;
         private System.Windows.Forms.DataGridViewTextBoxColumn Data;
+        private System.Windows.Forms.RadioButton Altertype4_chk;
+        private System.Windows.Forms.RadioButton Altertype3_chk;
+        private System.Windows.Forms.RadioButton Altertype2_chk;
+        private System.Windows.Forms.RadioButton Altertype1_chk;
+        private System.Windows.Forms.Label label19;
     }
 }
