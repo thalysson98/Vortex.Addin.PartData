@@ -24,6 +24,7 @@ namespace Vortex.Addin.PartData
         private string _editOrigCod1, _editOrigCod2, _editOrigCod3;
         private int    _selectedMedidaId = -1;
         private string _editTipo = "1";
+        private string _userPermissao = "leitor";
 
         public Cadastro_main(SldWorks app, SQLCommands sql_comm)
         {
@@ -75,6 +76,12 @@ namespace Vortex.Addin.PartData
             incremento_check.CheckedChanged += incremento_check_CheckedChanged;
             gerarSeq_bt.Click += GerarSequencia_bt_Click;
 
+            // Usuários
+            UsersGrid.SelectionChanged += UsersGrid_SelectionChanged;
+            UserAdd_bt .Click += OnUserAdicionarAsync;
+            UserEdit_bt.Click += OnUserAlterarAsync;
+            UserDel_bt .Click += OnUserExcluirAsync;
+
             // Lazy load ao trocar de aba
             tabControl1.SelectedIndexChanged += TabControl1_SelectedIndexChanged;
         }
@@ -85,6 +92,7 @@ namespace Vortex.Addin.PartData
             if      (tab == tabPage2)  PopulateBancoCascade();
             else if (tab == tabPage5)  PopulateEditCatCb();
             else if (tab == tabPage6)  CarregarMedidasGrid();
+            else if (tab == tabPage7)  CarregarUsersGrid();
         }
 
         // ─────────────────────────────────────────────────────────────────────────
@@ -403,10 +411,29 @@ namespace Vortex.Addin.PartData
 
         public void Cadastro_main_Load(object sender, EventArgs e)
         {
-            //if (PdmEvents.Connect())
-            //{
-                //User_PDM_lb.Text = PdmEvents.GetUser();
-                data_lb.Text = DateTime.Now.ToString("dd/MM/yyyy");
+            data_lb.Text = DateTime.Now.ToString("dd/MM/yyyy");
+
+            if (PdmEvents.Connect())
+            {
+                string idpdm = PdmEvents.GetUser();
+                User_PDM_lb.Text = idpdm;
+                _userPermissao = sqlCommand.GetUserPermissao(idpdm);
+            }
+            else
+            {
+                // PDM indisponível — permite acesso como usuario padrão
+                _userPermissao = "admin";
+            }
+            if (_userPermissao == "leitor")
+            {
+                MessageBox.Show("Você não tem permissão para acessar o cadastro.",
+                    "Acesso Negado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                // BeginInvoke adia o Close para depois do Load terminar,
+                // evitando fechar a aplicação inteira durante o evento de carga
+                this.BeginInvoke(new Action(() => this.Close()));
+            }
+            else
+            {
                 List<string> categorias = sqlCommand.GetValColumn("MATERIAL", "CATEGORIAS");
                 foreach (string categoria in categorias)
                 {
@@ -416,7 +443,96 @@ namespace Vortex.Addin.PartData
                 Cadastrar_bt.Enabled = false;
                 manual_check.Checked = true;
                 type1_chk.Checked = true;
-            //}
+
+                AplicarPermissoes();
+            }
+
+
+
+        }
+
+        private void AplicarPermissoes()
+        {
+            bool isAdmin = _userPermissao == "admin";
+
+            // Excluir duplicatas e excluir categoria/medida são funções exclusivas de admin
+            ExcluiDUP_bt.Enabled = isAdmin;
+            ExcluiCat_bt.Enabled = isAdmin;
+            MedDel_bt.Enabled    = isAdmin;
+
+            // Aba Usuários só visível para admin
+            if (!isAdmin)
+                tabControl1.TabPages.Remove(tabPage7);
+        }
+
+        // ─────────────────────────────────────────────────────────────────────────
+        // ABA: USUÁRIOS (admin only)
+        // ─────────────────────────────────────────────────────────────────────────
+
+        private int _selectedUserId = -1;
+
+        private void CarregarUsersGrid()
+        {
+            UsersGrid.Rows.Clear();
+            var dt = sqlCommand.ObterTabela("USERS");
+            if (dt == null) return;
+            foreach (System.Data.DataRow row in dt.Rows)
+            {
+                UsersGrid.Rows.Add(
+                    row["Id"]?.ToString(),
+                    row["IDPDM"]?.ToString(),
+                    row["PERMISSAO"]?.ToString());
+            }
+        }
+
+        private void UsersGrid_SelectionChanged(object sender, EventArgs e)
+        {
+            if (UsersGrid.SelectedRows.Count == 0) { _selectedUserId = -1; UserEdit_bt.Enabled = false; UserDel_bt.Enabled = false; return; }
+            var row = UsersGrid.SelectedRows[0];
+            int.TryParse(row.Cells["usrColId"].Value?.ToString(), out _selectedUserId);
+            UserIdpdm_txt.Text = row.Cells["usrColIdpdm"].Value?.ToString() ?? "";
+            string perm = row.Cells["usrColPerm"].Value?.ToString() ?? "usuario";
+            int idx = UserPerm_cb.Items.IndexOf(perm);
+            if (idx >= 0) UserPerm_cb.SelectedIndex = idx;
+            UserEdit_bt.Enabled = true;
+            UserDel_bt.Enabled  = true;
+        }
+
+        private async void OnUserAdicionarAsync(object sender, EventArgs e)
+        {
+            string idpdm = UserIdpdm_txt.Text.Trim();
+            string perm  = UserPerm_cb.SelectedItem?.ToString() ?? "usuario";
+            if (string.IsNullOrEmpty(idpdm)) { MessageBox.Show("Informe o usuário PDM.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning); return; }
+            if (await sqlCommand.InsertUserAsync(idpdm, perm))
+            {
+                CarregarUsersGrid();
+                UserIdpdm_txt.Clear();
+            }
+        }
+
+        private async void OnUserAlterarAsync(object sender, EventArgs e)
+        {
+            if (_selectedUserId < 0) return;
+            string perm = UserPerm_cb.SelectedItem?.ToString() ?? "usuario";
+            if (await sqlCommand.UpdateUserPermissaoAsync(_selectedUserId, perm))
+                CarregarUsersGrid();
+        }
+
+        private async void OnUserExcluirAsync(object sender, EventArgs e)
+        {
+            if (_selectedUserId < 0) return;
+            string nome = UsersGrid.SelectedRows[0].Cells["usrColIdpdm"].Value?.ToString() ?? "";
+            var confirm = MessageBox.Show($"Excluir o usuário '{nome}'?", "Confirmação",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            if (confirm != DialogResult.Yes) return;
+            if (await sqlCommand.DeleteUserAsync(_selectedUserId))
+            {
+                _selectedUserId = -1;
+                UserEdit_bt.Enabled = false;
+                UserDel_bt.Enabled  = false;
+                UserIdpdm_txt.Clear();
+                CarregarUsersGrid();
+            }
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e) { }

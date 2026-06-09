@@ -47,15 +47,32 @@ CREATE TABLE CATEGORIAS (
 GO
 
 -- =============================================================
+-- PERMISSOES
+-- Níveis de acesso: admin, usuario, leitor.
+-- =============================================================
+CREATE TABLE PERMISSOES (
+    Id   INT          IDENTITY(1,1) PRIMARY KEY,
+    NOME NVARCHAR(20) NOT NULL,
+    CONSTRAINT UQ_PERMISSOES_NOME UNIQUE (NOME)
+);
+GO
+
+INSERT INTO PERMISSOES (NOME) VALUES ('admin');   -- Id 1
+INSERT INTO PERMISSOES (NOME) VALUES ('usuario'); -- Id 2
+INSERT INTO PERMISSOES (NOME) VALUES ('leitor');  -- Id 3
+GO
+
+-- =============================================================
 -- USERS
--- Usuários do sistema. PERMISSAO restrita a 'admin' ou 'user'.
+-- Usuários do sistema. PERMISSAO_ID aponta para PERMISSOES.
+-- Novos usuários entram como 'usuario' (Id 2) por padrão.
 -- =============================================================
 CREATE TABLE USERS (
-    Id        INT           IDENTITY(1,1) PRIMARY KEY,
-    IDPDM     NVARCHAR(100) NOT NULL,
-    PERMISSAO NVARCHAR(10)  NOT NULL DEFAULT 'user',
-    CONSTRAINT UQ_USERS_IDPDM     UNIQUE (IDPDM),
-    CONSTRAINT CK_USERS_PERMISSAO CHECK (PERMISSAO IN ('admin', 'user'))
+    Id           INT           IDENTITY(1,1) PRIMARY KEY,
+    IDPDM        NVARCHAR(100) NOT NULL,
+    PERMISSAO_ID INT           NOT NULL DEFAULT 2,
+    CONSTRAINT UQ_USERS_IDPDM       UNIQUE (IDPDM),
+    CONSTRAINT FK_USERS_PERMISSOES  FOREIGN KEY (PERMISSAO_ID) REFERENCES PERMISSOES(Id)
 );
 GO
 

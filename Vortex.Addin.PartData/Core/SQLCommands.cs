@@ -52,7 +52,8 @@ namespace Vortex.Addin.PartData.Core
                 FROM CATEGORIAS",
 
             ["USERS"] = @"
-                SELECT Id, IDPDM, PERMISSAO FROM USERS",
+                SELECT u.Id, u.IDPDM, p.NOME AS PERMISSAO
+                FROM USERS u JOIN PERMISSOES p ON u.PERMISSAO_ID = p.Id",
 
             ["MEDIDAS"] = @"
                 SELECT d.Id,
@@ -160,6 +161,15 @@ namespace Vortex.Addin.PartData.Core
             return row == null ? (int?)null : Convert.ToInt32(row["Id"]);
         }
 
+        public string GetUserPermissao(string idpdm)
+        {
+            if (!dadosEmMemoria.TryGetValue("USERS", out var dt)) return "leitor";
+            var row = dt.AsEnumerable().FirstOrDefault(r =>
+                string.Equals(r["IDPDM"]?.ToString().Trim(), idpdm,
+                    StringComparison.OrdinalIgnoreCase));
+            return row == null ? "leitor" : (row["PERMISSAO"]?.ToString() ?? "leitor");
+        }
+
         private async Task<int> GetOrCreateUserAsync(SqlConnection conn, string idpdm)
         {
             int? cached = GetUserId(idpdm);
@@ -171,17 +181,99 @@ namespace Vortex.Addin.PartData.Core
             if (r != null && r != DBNull.Value) return Convert.ToInt32(r);
 
             var ins = new SqlCommand(
-                "INSERT INTO USERS (IDPDM, PERMISSAO) OUTPUT INSERTED.Id VALUES (@u, 'user')", conn);
+                "INSERT INTO USERS (IDPDM, PERMISSAO_ID) OUTPUT INSERTED.Id VALUES (@u, 2)", conn);
             ins.Parameters.AddWithValue("@u", idpdm);
             int newId = Convert.ToInt32(await ins.ExecuteScalarAsync());
 
             if (dadosEmMemoria.ContainsKey("USERS"))
             {
                 var row = dadosEmMemoria["USERS"].NewRow();
-                row["Id"] = newId; row["IDPDM"] = idpdm; row["PERMISSAO"] = "user";
+                row["Id"] = newId; row["IDPDM"] = idpdm; row["PERMISSAO"] = "usuario";
                 dadosEmMemoria["USERS"].Rows.Add(row);
             }
             return newId;
+        }
+
+        // ── USERS CRUD ───────────────────────────────────────────────────────────
+
+        public async Task<bool> InsertUserAsync(string idpdm, string permissao)
+        {
+            try
+            {
+                using (var conn = Connect())
+                {
+                    await conn.OpenAsync();
+                    int permId = await GetPermissaoIdAsync(conn, permissao);
+                    var cmd = new SqlCommand(
+                        "INSERT INTO USERS (IDPDM, PERMISSAO_ID) VALUES (@u, @p)", conn);
+                    cmd.Parameters.AddWithValue("@u", idpdm ?? "");
+                    cmd.Parameters.AddWithValue("@p", permId);
+                    await cmd.ExecuteNonQueryAsync();
+                }
+                await AtualizarMemoriaAsync("USERS");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao adicionar usuário: {ex.Message}", "Erro",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+        }
+
+        public async Task<bool> UpdateUserPermissaoAsync(int userId, string permissao)
+        {
+            try
+            {
+                using (var conn = Connect())
+                {
+                    await conn.OpenAsync();
+                    int permId = await GetPermissaoIdAsync(conn, permissao);
+                    var cmd = new SqlCommand(
+                        "UPDATE USERS SET PERMISSAO_ID = @p WHERE Id = @id", conn);
+                    cmd.Parameters.AddWithValue("@p", permId);
+                    cmd.Parameters.AddWithValue("@id", userId);
+                    await cmd.ExecuteNonQueryAsync();
+                }
+                await AtualizarMemoriaAsync("USERS");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao alterar permissão: {ex.Message}", "Erro",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+        }
+
+        public async Task<bool> DeleteUserAsync(int userId)
+        {
+            try
+            {
+                using (var conn = Connect())
+                {
+                    await conn.OpenAsync();
+                    var cmd = new SqlCommand("DELETE FROM USERS WHERE Id = @id", conn);
+                    cmd.Parameters.AddWithValue("@id", userId);
+                    await cmd.ExecuteNonQueryAsync();
+                }
+                await AtualizarMemoriaAsync("USERS");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao excluir usuário: {ex.Message}", "Erro",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+        }
+
+        private async Task<int> GetPermissaoIdAsync(SqlConnection conn, string nome)
+        {
+            var cmd = new SqlCommand("SELECT Id FROM PERMISSOES WHERE NOME = @n", conn);
+            cmd.Parameters.AddWithValue("@n", nome ?? "usuario");
+            object r = await cmd.ExecuteScalarAsync();
+            return (r != null && r != DBNull.Value) ? Convert.ToInt32(r) : 2;
         }
 
         // ── INSERT ───────────────────────────────────────────────────────────────

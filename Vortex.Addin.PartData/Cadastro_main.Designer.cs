@@ -175,6 +175,18 @@
             this.medColM2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.medColM3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.medColM4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.tabPage7 = new System.Windows.Forms.TabPage();
+            this.UsersGrid = new System.Windows.Forms.DataGridView();
+            this.usrColId = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.usrColIdpdm = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.usrColPerm = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.lblUserIdpdm = new System.Windows.Forms.Label();
+            this.UserIdpdm_txt = new System.Windows.Forms.TextBox();
+            this.lblUserPerm = new System.Windows.Forms.Label();
+            this.UserPerm_cb = new System.Windows.Forms.ComboBox();
+            this.UserAdd_bt = new System.Windows.Forms.Button();
+            this.UserEdit_bt = new System.Windows.Forms.Button();
+            this.UserDel_bt = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.DataListGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -192,6 +204,8 @@
             this.groupBox1.SuspendLayout();
             this.tabPage6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MedidasGrid)).BeginInit();
+            this.tabPage7.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.UsersGrid)).BeginInit();
             this.SuspendLayout();
             // 
             // DataListGrid
@@ -217,6 +231,7 @@
             this.DataListGrid.Location = new System.Drawing.Point(3, 48);
             this.DataListGrid.Name = "DataListGrid";
             this.DataListGrid.ReadOnly = true;
+            this.DataListGrid.RowHeadersVisible = false;
             this.DataListGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.DataListGrid.Size = new System.Drawing.Size(726, 406);
             this.DataListGrid.TabIndex = 100;
@@ -352,6 +367,7 @@
             this.dataGridViewTextBoxColumn8});
             this.dataGridView1.Location = new System.Drawing.Point(3, 3);
             this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.RowHeadersVisible = false;
             this.dataGridView1.Size = new System.Drawing.Size(726, 395);
             this.dataGridView1.TabIndex = 73;
             this.dataGridView1.TabStop = false;
@@ -486,7 +502,7 @@
             this.AutomaticoPane_pn.Controls.Add(this.label6);
             this.AutomaticoPane_pn.Controls.Add(this.label7);
             this.AutomaticoPane_pn.Controls.Add(this.label8);
-            this.AutomaticoPane_pn.Location = new System.Drawing.Point(252, 50);
+            this.AutomaticoPane_pn.Location = new System.Drawing.Point(186, 51);
             this.AutomaticoPane_pn.Name = "AutomaticoPane_pn";
             this.AutomaticoPane_pn.Size = new System.Drawing.Size(391, 57);
             this.AutomaticoPane_pn.TabIndex = 217;
@@ -831,6 +847,7 @@
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage5);
             this.tabControl1.Controls.Add(this.tabPage6);
+            this.tabControl1.Controls.Add(this.tabPage7);
             this.tabControl1.Location = new System.Drawing.Point(12, 54);
             this.tabControl1.Multiline = true;
             this.tabControl1.Name = "tabControl1";
@@ -1743,6 +1760,149 @@
             this.medColM4.ReadOnly = true;
             this.medColM4.Width = 70;
             // 
+            // tabPage7
+            // 
+            this.tabPage7.Controls.Add(this.UsersGrid);
+            this.tabPage7.Controls.Add(this.lblUserIdpdm);
+            this.tabPage7.Controls.Add(this.UserIdpdm_txt);
+            this.tabPage7.Controls.Add(this.lblUserPerm);
+            this.tabPage7.Controls.Add(this.UserPerm_cb);
+            this.tabPage7.Controls.Add(this.UserAdd_bt);
+            this.tabPage7.Controls.Add(this.UserEdit_bt);
+            this.tabPage7.Controls.Add(this.UserDel_bt);
+            this.tabPage7.Location = new System.Drawing.Point(4, 4);
+            this.tabPage7.Name = "tabPage7";
+            this.tabPage7.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage7.Size = new System.Drawing.Size(732, 579);
+            this.tabPage7.TabIndex = 4;
+            this.tabPage7.Text = "Usuários";
+            this.tabPage7.UseVisualStyleBackColor = true;
+            // 
+            // UsersGrid
+            // 
+            this.UsersGrid.AllowUserToAddRows = false;
+            this.UsersGrid.AllowUserToDeleteRows = false;
+            this.UsersGrid.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.UsersGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.UsersGrid.BackgroundColor = System.Drawing.SystemColors.Window;
+            this.UsersGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.UsersGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.usrColId,
+            this.usrColIdpdm,
+            this.usrColPerm});
+            this.UsersGrid.Location = new System.Drawing.Point(3, 3);
+            this.UsersGrid.MultiSelect = false;
+            this.UsersGrid.Name = "UsersGrid";
+            this.UsersGrid.ReadOnly = true;
+            this.UsersGrid.RowHeadersVisible = false;
+            this.UsersGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.UsersGrid.Size = new System.Drawing.Size(726, 430);
+            this.UsersGrid.TabIndex = 0;
+            // 
+            // usrColId
+            // 
+            this.usrColId.FillWeight = 30F;
+            this.usrColId.HeaderText = "Id";
+            this.usrColId.Name = "usrColId";
+            this.usrColId.ReadOnly = true;
+            // 
+            // usrColIdpdm
+            // 
+            this.usrColIdpdm.FillWeight = 200F;
+            this.usrColIdpdm.HeaderText = "Usuário PDM";
+            this.usrColIdpdm.Name = "usrColIdpdm";
+            this.usrColIdpdm.ReadOnly = true;
+            // 
+            // usrColPerm
+            // 
+            this.usrColPerm.HeaderText = "Permissão";
+            this.usrColPerm.Name = "usrColPerm";
+            this.usrColPerm.ReadOnly = true;
+            // 
+            // lblUserIdpdm
+            // 
+            this.lblUserIdpdm.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.lblUserIdpdm.AutoSize = true;
+            this.lblUserIdpdm.Location = new System.Drawing.Point(6, 438);
+            this.lblUserIdpdm.Name = "lblUserIdpdm";
+            this.lblUserIdpdm.Size = new System.Drawing.Size(70, 13);
+            this.lblUserIdpdm.TabIndex = 10;
+            this.lblUserIdpdm.Text = "Usuário PDM";
+            // 
+            // UserIdpdm_txt
+            // 
+            this.UserIdpdm_txt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.UserIdpdm_txt.Location = new System.Drawing.Point(6, 454);
+            this.UserIdpdm_txt.Name = "UserIdpdm_txt";
+            this.UserIdpdm_txt.Size = new System.Drawing.Size(180, 20);
+            this.UserIdpdm_txt.TabIndex = 11;
+            // 
+            // lblUserPerm
+            // 
+            this.lblUserPerm.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.lblUserPerm.AutoSize = true;
+            this.lblUserPerm.Location = new System.Drawing.Point(194, 438);
+            this.lblUserPerm.Name = "lblUserPerm";
+            this.lblUserPerm.Size = new System.Drawing.Size(55, 13);
+            this.lblUserPerm.TabIndex = 12;
+            this.lblUserPerm.Text = "Permissão";
+            // 
+            // UserPerm_cb
+            // 
+            this.UserPerm_cb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.UserPerm_cb.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.UserPerm_cb.FormattingEnabled = true;
+            this.UserPerm_cb.Items.AddRange(new object[] {
+            "admin",
+            "usuario",
+            "leitor"});
+            this.UserPerm_cb.Location = new System.Drawing.Point(194, 454);
+            this.UserPerm_cb.Name = "UserPerm_cb";
+            this.UserPerm_cb.Size = new System.Drawing.Size(120, 21);
+            this.UserPerm_cb.TabIndex = 13;
+            // 
+            // UserAdd_bt
+            // 
+            this.UserAdd_bt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.UserAdd_bt.BackColor = System.Drawing.Color.YellowGreen;
+            this.UserAdd_bt.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.UserAdd_bt.ForeColor = System.Drawing.Color.White;
+            this.UserAdd_bt.Location = new System.Drawing.Point(322, 452);
+            this.UserAdd_bt.Name = "UserAdd_bt";
+            this.UserAdd_bt.Size = new System.Drawing.Size(70, 23);
+            this.UserAdd_bt.TabIndex = 14;
+            this.UserAdd_bt.Text = "Adicionar";
+            this.UserAdd_bt.UseVisualStyleBackColor = false;
+            // 
+            // UserEdit_bt
+            // 
+            this.UserEdit_bt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.UserEdit_bt.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.UserEdit_bt.Enabled = false;
+            this.UserEdit_bt.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.UserEdit_bt.ForeColor = System.Drawing.Color.White;
+            this.UserEdit_bt.Location = new System.Drawing.Point(400, 452);
+            this.UserEdit_bt.Name = "UserEdit_bt";
+            this.UserEdit_bt.Size = new System.Drawing.Size(70, 23);
+            this.UserEdit_bt.TabIndex = 15;
+            this.UserEdit_bt.Text = "Alterar";
+            this.UserEdit_bt.UseVisualStyleBackColor = false;
+            // 
+            // UserDel_bt
+            // 
+            this.UserDel_bt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.UserDel_bt.BackColor = System.Drawing.Color.Brown;
+            this.UserDel_bt.Enabled = false;
+            this.UserDel_bt.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.UserDel_bt.ForeColor = System.Drawing.Color.White;
+            this.UserDel_bt.Location = new System.Drawing.Point(478, 452);
+            this.UserDel_bt.Name = "UserDel_bt";
+            this.UserDel_bt.Size = new System.Drawing.Size(70, 23);
+            this.UserDel_bt.TabIndex = 16;
+            this.UserDel_bt.Text = "Excluir";
+            this.UserDel_bt.UseVisualStyleBackColor = false;
+            // 
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -1798,6 +1958,9 @@
             this.tabPage6.ResumeLayout(false);
             this.tabPage6.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MedidasGrid)).EndInit();
+            this.tabPage7.ResumeLayout(false);
+            this.tabPage7.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.UsersGrid)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1957,5 +2120,18 @@
         private System.Windows.Forms.Button MedAdd_bt;
         private System.Windows.Forms.Button MedEdit_bt;
         private System.Windows.Forms.Button MedDel_bt;
+        // Aba Usuários
+        private System.Windows.Forms.TabPage tabPage7;
+        private System.Windows.Forms.DataGridView UsersGrid;
+        private System.Windows.Forms.DataGridViewTextBoxColumn usrColId;
+        private System.Windows.Forms.DataGridViewTextBoxColumn usrColIdpdm;
+        private System.Windows.Forms.DataGridViewTextBoxColumn usrColPerm;
+        private System.Windows.Forms.Label lblUserIdpdm;
+        private System.Windows.Forms.TextBox UserIdpdm_txt;
+        private System.Windows.Forms.Label lblUserPerm;
+        private System.Windows.Forms.ComboBox UserPerm_cb;
+        private System.Windows.Forms.Button UserAdd_bt;
+        private System.Windows.Forms.Button UserEdit_bt;
+        private System.Windows.Forms.Button UserDel_bt;
     }
 }

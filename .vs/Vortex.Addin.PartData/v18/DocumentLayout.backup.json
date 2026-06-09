@@ -3,28 +3,20 @@
   "WorkspaceRootPath": "C:\\Users\\ia.cardall\\Documents\\GitHub\\Vortex.Addin.PartData\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{B74E1178-0E6C-4ACB-9EFA-0997FE7D3380}|Vortex.Addin.PartData\\Vortex.Addin.PartData.csproj|c:\\users\\ia.cardall\\documents\\github\\vortex.addin.partdata\\vortex.addin.partdata\\cadastro_main.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B74E1178-0E6C-4ACB-9EFA-0997FE7D3380}|Vortex.Addin.PartData\\Vortex.Addin.PartData.csproj|solutionrelative:vortex.addin.partdata\\cadastro_main.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{B74E1178-0E6C-4ACB-9EFA-0997FE7D3380}|Vortex.Addin.PartData\\Vortex.Addin.PartData.csproj|C:\\Users\\ia.cardall\\Documents\\GitHub\\Vortex.Addin.PartData\\vortex.addin.partdata\\cadastro_main.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{B74E1178-0E6C-4ACB-9EFA-0997FE7D3380}|Vortex.Addin.PartData\\Vortex.Addin.PartData.csproj|solutionrelative:vortex.addin.partdata\\cadastro_main.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     },
     {
       "AbsoluteMoniker": "D:0:0:{B74E1178-0E6C-4ACB-9EFA-0997FE7D3380}|Vortex.Addin.PartData\\Vortex.Addin.PartData.csproj|C:\\Users\\ia.cardall\\Documents\\GitHub\\Vortex.Addin.PartData\\vortex.addin.partdata\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
       "RelativeMoniker": "D:0:0:{B74E1178-0E6C-4ACB-9EFA-0997FE7D3380}|Vortex.Addin.PartData\\Vortex.Addin.PartData.csproj|solutionrelative:vortex.addin.partdata\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{B74E1178-0E6C-4ACB-9EFA-0997FE7D3380}|Vortex.Addin.PartData\\Vortex.Addin.PartData.csproj|C:\\Users\\ia.cardall\\Documents\\GitHub\\Vortex.Addin.PartData\\vortex.addin.partdata\\cadastro_main.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
-      "RelativeMoniker": "D:0:0:{B74E1178-0E6C-4ACB-9EFA-0997FE7D3380}|Vortex.Addin.PartData\\Vortex.Addin.PartData.csproj|solutionrelative:vortex.addin.partdata\\cadastro_main.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{B74E1178-0E6C-4ACB-9EFA-0997FE7D3380}|Vortex.Addin.PartData\\Vortex.Addin.PartData.csproj|c:\\users\\ia.cardall\\documents\\github\\vortex.addin.partdata\\vortex.addin.partdata\\cadastro_main.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B74E1178-0E6C-4ACB-9EFA-0997FE7D3380}|Vortex.Addin.PartData\\Vortex.Addin.PartData.csproj|solutionrelative:vortex.addin.partdata\\cadastro_main.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{B74E1178-0E6C-4ACB-9EFA-0997FE7D3380}|Vortex.Addin.PartData\\Vortex.Addin.PartData.csproj|c:\\users\\ia.cardall\\documents\\github\\vortex.addin.partdata\\vortex.addin.partdata\\cadastro_main.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B74E1178-0E6C-4ACB-9EFA-0997FE7D3380}|Vortex.Addin.PartData\\Vortex.Addin.PartData.csproj|solutionrelative:vortex.addin.partdata\\cadastro_main.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{B74E1178-0E6C-4ACB-9EFA-0997FE7D3380}|Vortex.Addin.PartData\\Vortex.Addin.PartData.csproj|C:\\Users\\ia.cardall\\Documents\\GitHub\\Vortex.Addin.PartData\\vortex.addin.partdata\\migration\\migrationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{B74E1178-0E6C-4ACB-9EFA-0997FE7D3380}|Vortex.Addin.PartData\\Vortex.Addin.PartData.csproj|solutionrelative:vortex.addin.partdata\\migration\\migrationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{B74E1178-0E6C-4ACB-9EFA-0997FE7D3380}|Vortex.Addin.PartData\\Vortex.Addin.PartData.csproj|C:\\Users\\ia.cardall\\Documents\\GitHub\\Vortex.Addin.PartData\\vortex.addin.partdata\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B74E1178-0E6C-4ACB-9EFA-0997FE7D3380}|Vortex.Addin.PartData\\Vortex.Addin.PartData.csproj|solutionrelative:vortex.addin.partdata\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{B74E1178-0E6C-4ACB-9EFA-0997FE7D3380}|Vortex.Addin.PartData\\Vortex.Addin.PartData.csproj|C:\\Users\\ia.cardall\\Documents\\GitHub\\Vortex.Addin.PartData\\vortex.addin.partdata\\core\\sqlcommands.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -53,7 +45,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 203,
-          "SelectedChildIndex": 13,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Bookmark",
@@ -77,20 +69,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Cadastro_main.Designer.cs",
-              "DocumentMoniker": "C:\\Users\\ia.cardall\\Documents\\GitHub\\Vortex.Addin.PartData\\Vortex.Addin.PartData\\Cadastro_main.Designer.cs",
-              "RelativeDocumentMoniker": "Vortex.Addin.PartData\\Cadastro_main.Designer.cs",
-              "ToolTip": "C:\\Users\\ia.cardall\\Documents\\GitHub\\Vortex.Addin.PartData\\Vortex.Addin.PartData\\Cadastro_main.Designer.cs",
-              "RelativeToolTip": "Vortex.Addin.PartData\\Cadastro_main.Designer.cs",
-              "ViewState": "AgIAALgEAAAAAAAAAAAwwMYEAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-06-09T18:20:17.149Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
               "Title": "Cadastro_main.cs [Design]",
               "DocumentMoniker": "C:\\Users\\ia.cardall\\Documents\\GitHub\\Vortex.Addin.PartData\\Vortex.Addin.PartData\\Cadastro_main.cs",
               "RelativeDocumentMoniker": "Vortex.Addin.PartData\\Cadastro_main.cs",
@@ -114,7 +93,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 3,
               "Title": "MigrationService.cs",
               "DocumentMoniker": "C:\\Users\\ia.cardall\\Documents\\GitHub\\Vortex.Addin.PartData\\Vortex.Addin.PartData\\Migration\\MigrationService.cs",
               "RelativeDocumentMoniker": "Vortex.Addin.PartData\\Migration\\MigrationService.cs",
@@ -126,7 +105,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 6,
               "Title": "SwDocHandler.cs",
               "DocumentMoniker": "C:\\Users\\ia.cardall\\Documents\\GitHub\\Vortex.Addin.PartData\\Vortex.Addin.PartData\\Core\\SwDocHandler.cs",
               "RelativeDocumentMoniker": "Vortex.Addin.PartData\\Core\\SwDocHandler.cs",
@@ -138,7 +117,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 7,
               "Title": "Vortex.Addin.PartData",
               "DocumentMoniker": "C:\\Users\\ia.cardall\\Documents\\GitHub\\Vortex.Addin.PartData\\Vortex.Addin.PartData\\Vortex.Addin.PartData.csproj",
               "RelativeDocumentMoniker": "Vortex.Addin.PartData\\Vortex.Addin.PartData.csproj",
@@ -149,20 +128,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "MainForm.cs",
-              "DocumentMoniker": "C:\\Users\\ia.cardall\\Documents\\GitHub\\Vortex.Addin.PartData\\Vortex.Addin.PartData\\MainForm.cs",
-              "RelativeDocumentMoniker": "Vortex.Addin.PartData\\MainForm.cs",
-              "ToolTip": "C:\\Users\\ia.cardall\\Documents\\GitHub\\Vortex.Addin.PartData\\Vortex.Addin.PartData\\MainForm.cs",
-              "RelativeToolTip": "Vortex.Addin.PartData\\MainForm.cs",
-              "ViewState": "AgIAAFMAAAAAAAAAAAAowHMAAAAhAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-06-09T13:17:26.031Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 8,
               "Title": "SwAddin.cs",
               "DocumentMoniker": "C:\\Users\\ia.cardall\\Documents\\GitHub\\Vortex.Addin.PartData\\Vortex.Addin.PartData\\SwAddin.cs",
               "RelativeDocumentMoniker": "Vortex.Addin.PartData\\SwAddin.cs",
@@ -174,20 +140,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "Cadastro_main.cs",
               "DocumentMoniker": "C:\\Users\\ia.cardall\\Documents\\GitHub\\Vortex.Addin.PartData\\Vortex.Addin.PartData\\Cadastro_main.cs",
               "RelativeDocumentMoniker": "Vortex.Addin.PartData\\Cadastro_main.cs",
               "ToolTip": "C:\\Users\\ia.cardall\\Documents\\GitHub\\Vortex.Addin.PartData\\Vortex.Addin.PartData\\Cadastro_main.cs",
               "RelativeToolTip": "Vortex.Addin.PartData\\Cadastro_main.cs",
-              "ViewState": "AgIAAM8BAAAAAAAAAAAQwOABAABPAAAAAAAAAA==",
+              "ViewState": "AgIAAJEBAAAAAAAAAAAAAKoBAAArAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-06-09T13:12:33.233Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 4,
               "Title": "SQLCommands.cs",
               "DocumentMoniker": "C:\\Users\\ia.cardall\\Documents\\GitHub\\Vortex.Addin.PartData\\Vortex.Addin.PartData\\Core\\SQLCommands.cs",
               "RelativeDocumentMoniker": "Vortex.Addin.PartData\\Core\\SQLCommands.cs",
@@ -199,7 +165,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 5,
               "Title": "CadastroMainTests.cs",
               "DocumentMoniker": "C:\\Users\\ia.cardall\\Documents\\GitHub\\Vortex.Addin.PartData\\Vortex.Tests\\CadastroMainTests.cs",
               "RelativeDocumentMoniker": "Vortex.Tests\\CadastroMainTests.cs",
