@@ -114,6 +114,7 @@ namespace Vortex.Addin.PartData
 
                 // Chama a função para preencher o ComboBox em ordem decrescente
                 PreencherComboBoxOrdenado(Diametro_CBox, valoresLinha);
+                if (Diametro_CBox.Items.Count > 0) Diametro_CBox.SelectedIndex = 0;
 
                 SelectTipo(categoriaSelecionada);
                 Diametro_CBox.Focus();
@@ -154,6 +155,15 @@ namespace Vortex.Addin.PartData
 
         // Armazena valores brutos (ex: "50.800") e exibe formatados (ex: "50.8")
         // O SelectedItem.ToString() retorna o valor bruto → comparação exata com o cache
+        private static double ToSortDouble(string v)
+        {
+            double d;
+            double.TryParse((v ?? "").Replace(",", "."),
+                System.Globalization.NumberStyles.Any,
+                System.Globalization.CultureInfo.InvariantCulture, out d);
+            return d;
+        }
+
         private void PreencherComboBoxOrdenado(ComboBox comboBox, List<string> valores)
         {
             comboBox.Items.Clear();
@@ -163,19 +173,9 @@ namespace Vortex.Addin.PartData
 
             if (valores.Count > 0)
             {
-                var sorted = valores
-                    .Where(v => !string.IsNullOrEmpty(v))
-                    .Distinct()
-                    .OrderBy(v =>
-                    {
-                        double.TryParse(v.Replace(",", "."),
-                            System.Globalization.NumberStyles.Any,
-                            System.Globalization.CultureInfo.InvariantCulture, out double d);
-                        return d;
-                    })
-                    .ToArray();
-
-                comboBox.Items.AddRange(sorted.Cast<object>().ToArray());
+                var items = valores.Where(v => !string.IsNullOrEmpty(v)).Distinct().ToList();
+                items.Sort((a, b) => ToSortDouble(a).CompareTo(ToSortDouble(b)));
+                comboBox.Items.AddRange(items.Cast<object>().ToArray());
             }
         }
 
@@ -209,6 +209,7 @@ namespace Vortex.Addin.PartData
                 List<string> valoresLinha = sql_comm.GetRowValues(filtros, colunasDesejadas, "MATERIAIS");
 
                 PreencherComboBoxOrdenado(Espessura_Cbox, valoresLinha);
+                if (Espessura_Cbox.Items.Count > 0) Espessura_Cbox.SelectedIndex = 0;
                 Espessura_Cbox.Focus();
             }
         }
@@ -235,6 +236,7 @@ namespace Vortex.Addin.PartData
                 List<string> valoresLinha = sql_comm.GetRowValues(filtros, colunasDesejadas, "MATERIAIS");
 
                 PreencherComboBoxOrdenado(Comprimento_Cbox, valoresLinha);
+                if (Comprimento_Cbox.Items.Count > 0) Comprimento_Cbox.SelectedIndex = 0;
                 Comprimento_Cbox.Focus();
             }
         }
@@ -265,6 +267,7 @@ namespace Vortex.Addin.PartData
                 if (valoresLinha.Count > 0)
                 {
                     PreencherComboBoxOrdenado(M4_Cbox, valoresLinha);
+                    if (M4_Cbox.Items.Count > 0) M4_Cbox.SelectedIndex = 0;
                     M4_Cbox.Focus();
                 }
                 else

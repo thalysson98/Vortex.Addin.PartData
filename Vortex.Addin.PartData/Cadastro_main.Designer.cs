@@ -92,6 +92,18 @@
             this.Add2_bt = new System.Windows.Forms.Button();
             this.Cadastrar_bt = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.BancoSalvar_bt = new System.Windows.Forms.Button();
+            this.BancoLimpar_bt = new System.Windows.Forms.Button();
+            this.BancoM4_cb = new System.Windows.Forms.ComboBox();
+            this.lblBancoM4 = new System.Windows.Forms.Label();
+            this.BancoM3_cb = new System.Windows.Forms.ComboBox();
+            this.lblBancoM3 = new System.Windows.Forms.Label();
+            this.BancoM2_cb = new System.Windows.Forms.ComboBox();
+            this.lblBancoM2 = new System.Windows.Forms.Label();
+            this.BancoM1_cb = new System.Windows.Forms.ComboBox();
+            this.lblBancoM1 = new System.Windows.Forms.Label();
+            this.BancoCat_cb = new System.Windows.Forms.ComboBox();
+            this.lblBancoCat = new System.Windows.Forms.Label();
             this.FCod3_txt = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
             this.FCod2_txt = new System.Windows.Forms.TextBox();
@@ -111,7 +123,18 @@
             this.ExcluiDUP_bt = new System.Windows.Forms.Button();
             this.Buscar_bt = new System.Windows.Forms.Button();
             this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.altertype = new System.Windows.Forms.Button();
+            this.EditCatName_txt = new System.Windows.Forms.TextBox();
+            this.lblEditCatNome = new System.Windows.Forms.Label();
+            this.EditCat_cb = new System.Windows.Forms.ComboBox();
+            this.lblEditCatSel = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.Altertype4_chk = new System.Windows.Forms.RadioButton();
+            this.Altertype3_chk = new System.Windows.Forms.RadioButton();
+            this.Altertype2_chk = new System.Windows.Forms.RadioButton();
+            this.Altertype1_chk = new System.Windows.Forms.RadioButton();
+            this.label19 = new System.Windows.Forms.Label();
             this.Allitems_ch = new System.Windows.Forms.CheckBox();
             this.label20 = new System.Windows.Forms.Label();
             this.ExcCategoria_cb = new System.Windows.Forms.ComboBox();
@@ -125,12 +148,28 @@
             this.label18 = new System.Windows.Forms.Label();
             this.NewCatName_txt = new System.Windows.Forms.TextBox();
             this.CadCat_bt = new System.Windows.Forms.Button();
+            this.tabPage6 = new System.Windows.Forms.TabPage();
+            this.MedDel_bt = new System.Windows.Forms.Button();
+            this.MedEdit_bt = new System.Windows.Forms.Button();
+            this.MedAdd_bt = new System.Windows.Forms.Button();
+            this.MedM4_txt = new System.Windows.Forms.TextBox();
+            this.MedM3_txt = new System.Windows.Forms.TextBox();
+            this.MedM2_txt = new System.Windows.Forms.TextBox();
+            this.MedM1_txt = new System.Windows.Forms.TextBox();
+            this.lblMedM4 = new System.Windows.Forms.Label();
+            this.lblMedM3 = new System.Windows.Forms.Label();
+            this.lblMedM2 = new System.Windows.Forms.Label();
+            this.lblMedM1 = new System.Windows.Forms.Label();
+            this.MedCat_cb = new System.Windows.Forms.ComboBox();
+            this.lblMedCat = new System.Windows.Forms.Label();
+            this.MedidasGrid = new System.Windows.Forms.DataGridView();
+            this.medColId = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.medColCat = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.medColM1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.medColM2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.medColM3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.medColM4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.button1 = new System.Windows.Forms.Button();
-            this.Altertype4_chk = new System.Windows.Forms.RadioButton();
-            this.Altertype3_chk = new System.Windows.Forms.RadioButton();
-            this.Altertype2_chk = new System.Windows.Forms.RadioButton();
-            this.Altertype1_chk = new System.Windows.Forms.RadioButton();
-            this.label19 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.DataListGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.tabControl.SuspendLayout();
@@ -141,8 +180,11 @@
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage5.SuspendLayout();
+            this.groupBox3.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            this.tabPage6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.MedidasGrid)).BeginInit();
             this.SuspendLayout();
             // 
             // DataListGrid
@@ -165,10 +207,11 @@
             this.cod3,
             this.Cadastro,
             this.Data});
-            this.DataListGrid.Location = new System.Drawing.Point(3, 3);
+            this.DataListGrid.Location = new System.Drawing.Point(3, 48);
             this.DataListGrid.Name = "DataListGrid";
             this.DataListGrid.ReadOnly = true;
-            this.DataListGrid.Size = new System.Drawing.Size(726, 451);
+            this.DataListGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.DataListGrid.Size = new System.Drawing.Size(726, 406);
             this.DataListGrid.TabIndex = 100;
             this.DataListGrid.SelectionChanged += new System.EventHandler(this.dataGridView_SelectionChanged);
             // 
@@ -710,6 +753,7 @@
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage5);
+            this.tabControl1.Controls.Add(this.tabPage6);
             this.tabControl1.Location = new System.Drawing.Point(12, 54);
             this.tabControl1.Multiline = true;
             this.tabControl1.Name = "tabControl1";
@@ -769,6 +813,18 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.BancoSalvar_bt);
+            this.tabPage2.Controls.Add(this.BancoLimpar_bt);
+            this.tabPage2.Controls.Add(this.BancoM4_cb);
+            this.tabPage2.Controls.Add(this.lblBancoM4);
+            this.tabPage2.Controls.Add(this.BancoM3_cb);
+            this.tabPage2.Controls.Add(this.lblBancoM3);
+            this.tabPage2.Controls.Add(this.BancoM2_cb);
+            this.tabPage2.Controls.Add(this.lblBancoM2);
+            this.tabPage2.Controls.Add(this.BancoM1_cb);
+            this.tabPage2.Controls.Add(this.lblBancoM1);
+            this.tabPage2.Controls.Add(this.BancoCat_cb);
+            this.tabPage2.Controls.Add(this.lblBancoCat);
             this.tabPage2.Controls.Add(this.FCod3_txt);
             this.tabPage2.Controls.Add(this.label11);
             this.tabPage2.Controls.Add(this.FCod2_txt);
@@ -795,6 +851,119 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Banco de dados";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // BancoSalvar_bt
+            // 
+            this.BancoSalvar_bt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.BancoSalvar_bt.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.BancoSalvar_bt.Enabled = false;
+            this.BancoSalvar_bt.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.BancoSalvar_bt.ForeColor = System.Drawing.Color.White;
+            this.BancoSalvar_bt.Location = new System.Drawing.Point(200, 540);
+            this.BancoSalvar_bt.Name = "BancoSalvar_bt";
+            this.BancoSalvar_bt.Size = new System.Drawing.Size(130, 23);
+            this.BancoSalvar_bt.TabIndex = 311;
+            this.BancoSalvar_bt.Text = "Salvar Alteração";
+            this.BancoSalvar_bt.UseVisualStyleBackColor = false;
+            // 
+            // BancoLimpar_bt
+            // 
+            this.BancoLimpar_bt.Location = new System.Drawing.Point(538, 22);
+            this.BancoLimpar_bt.Name = "BancoLimpar_bt";
+            this.BancoLimpar_bt.Size = new System.Drawing.Size(55, 21);
+            this.BancoLimpar_bt.TabIndex = 310;
+            this.BancoLimpar_bt.Text = "Limpar";
+            this.BancoLimpar_bt.UseVisualStyleBackColor = true;
+            // 
+            // BancoM4_cb
+            // 
+            this.BancoM4_cb.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.BancoM4_cb.FormattingEnabled = true;
+            this.BancoM4_cb.Location = new System.Drawing.Point(453, 22);
+            this.BancoM4_cb.Name = "BancoM4_cb";
+            this.BancoM4_cb.Size = new System.Drawing.Size(80, 21);
+            this.BancoM4_cb.TabIndex = 309;
+            // 
+            // lblBancoM4
+            // 
+            this.lblBancoM4.AutoSize = true;
+            this.lblBancoM4.Location = new System.Drawing.Point(453, 5);
+            this.lblBancoM4.Name = "lblBancoM4";
+            this.lblBancoM4.Size = new System.Drawing.Size(51, 13);
+            this.lblBancoM4.TabIndex = 308;
+            this.lblBancoM4.Text = "Medida 4";
+            // 
+            // BancoM3_cb
+            // 
+            this.BancoM3_cb.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.BancoM3_cb.FormattingEnabled = true;
+            this.BancoM3_cb.Location = new System.Drawing.Point(368, 22);
+            this.BancoM3_cb.Name = "BancoM3_cb";
+            this.BancoM3_cb.Size = new System.Drawing.Size(80, 21);
+            this.BancoM3_cb.TabIndex = 307;
+            // 
+            // lblBancoM3
+            // 
+            this.lblBancoM3.AutoSize = true;
+            this.lblBancoM3.Location = new System.Drawing.Point(368, 5);
+            this.lblBancoM3.Name = "lblBancoM3";
+            this.lblBancoM3.Size = new System.Drawing.Size(51, 13);
+            this.lblBancoM3.TabIndex = 306;
+            this.lblBancoM3.Text = "Medida 3";
+            // 
+            // BancoM2_cb
+            // 
+            this.BancoM2_cb.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.BancoM2_cb.FormattingEnabled = true;
+            this.BancoM2_cb.Location = new System.Drawing.Point(283, 22);
+            this.BancoM2_cb.Name = "BancoM2_cb";
+            this.BancoM2_cb.Size = new System.Drawing.Size(80, 21);
+            this.BancoM2_cb.TabIndex = 305;
+            // 
+            // lblBancoM2
+            // 
+            this.lblBancoM2.AutoSize = true;
+            this.lblBancoM2.Location = new System.Drawing.Point(283, 5);
+            this.lblBancoM2.Name = "lblBancoM2";
+            this.lblBancoM2.Size = new System.Drawing.Size(51, 13);
+            this.lblBancoM2.TabIndex = 304;
+            this.lblBancoM2.Text = "Medida 2";
+            // 
+            // BancoM1_cb
+            // 
+            this.BancoM1_cb.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.BancoM1_cb.FormattingEnabled = true;
+            this.BancoM1_cb.Location = new System.Drawing.Point(198, 22);
+            this.BancoM1_cb.Name = "BancoM1_cb";
+            this.BancoM1_cb.Size = new System.Drawing.Size(80, 21);
+            this.BancoM1_cb.TabIndex = 303;
+            // 
+            // lblBancoM1
+            // 
+            this.lblBancoM1.AutoSize = true;
+            this.lblBancoM1.Location = new System.Drawing.Point(198, 5);
+            this.lblBancoM1.Name = "lblBancoM1";
+            this.lblBancoM1.Size = new System.Drawing.Size(51, 13);
+            this.lblBancoM1.TabIndex = 302;
+            this.lblBancoM1.Text = "Medida 1";
+            // 
+            // BancoCat_cb
+            // 
+            this.BancoCat_cb.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.BancoCat_cb.FormattingEnabled = true;
+            this.BancoCat_cb.Location = new System.Drawing.Point(3, 22);
+            this.BancoCat_cb.Name = "BancoCat_cb";
+            this.BancoCat_cb.Size = new System.Drawing.Size(190, 21);
+            this.BancoCat_cb.TabIndex = 301;
+            // 
+            // lblBancoCat
+            // 
+            this.lblBancoCat.AutoSize = true;
+            this.lblBancoCat.Location = new System.Drawing.Point(3, 5);
+            this.lblBancoCat.Name = "lblBancoCat";
+            this.lblBancoCat.Size = new System.Drawing.Size(52, 13);
+            this.lblBancoCat.TabIndex = 300;
+            this.lblBancoCat.Text = "Categoria";
             // 
             // FCod3_txt
             // 
@@ -976,6 +1145,7 @@
             // 
             // tabPage5
             // 
+            this.tabPage5.Controls.Add(this.groupBox3);
             this.tabPage5.Controls.Add(this.groupBox2);
             this.tabPage5.Controls.Add(this.groupBox1);
             this.tabPage5.Location = new System.Drawing.Point(4, 4);
@@ -986,15 +1156,76 @@
             this.tabPage5.Text = "Categorias";
             this.tabPage5.UseVisualStyleBackColor = true;
             // 
+            // groupBox3
+            // 
+            this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox3.Controls.Add(this.Altertype4_chk);
+            this.groupBox3.Controls.Add(this.altertype);
+            this.groupBox3.Controls.Add(this.Altertype3_chk);
+            this.groupBox3.Controls.Add(this.EditCatName_txt);
+            this.groupBox3.Controls.Add(this.Altertype2_chk);
+            this.groupBox3.Controls.Add(this.lblEditCatNome);
+            this.groupBox3.Controls.Add(this.Altertype1_chk);
+            this.groupBox3.Controls.Add(this.label19);
+            this.groupBox3.Controls.Add(this.EditCat_cb);
+            this.groupBox3.Controls.Add(this.lblEditCatSel);
+            this.groupBox3.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.groupBox3.Location = new System.Drawing.Point(6, 300);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(720, 153);
+            this.groupBox3.TabIndex = 2;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Editar categoria";
+            // 
+            // altertype
+            // 
+            this.altertype.Location = new System.Drawing.Point(453, 34);
+            this.altertype.Name = "altertype";
+            this.altertype.Size = new System.Drawing.Size(130, 23);
+            this.altertype.TabIndex = 4;
+            this.altertype.Text = "Alterar Categoria";
+            this.altertype.UseVisualStyleBackColor = true;
+            // 
+            // EditCatName_txt
+            // 
+            this.EditCatName_txt.Location = new System.Drawing.Point(245, 36);
+            this.EditCatName_txt.Name = "EditCatName_txt";
+            this.EditCatName_txt.Size = new System.Drawing.Size(200, 20);
+            this.EditCatName_txt.TabIndex = 3;
+            // 
+            // lblEditCatNome
+            // 
+            this.lblEditCatNome.AutoSize = true;
+            this.lblEditCatNome.Location = new System.Drawing.Point(245, 20);
+            this.lblEditCatNome.Name = "lblEditCatNome";
+            this.lblEditCatNome.Size = new System.Drawing.Size(62, 13);
+            this.lblEditCatNome.TabIndex = 2;
+            this.lblEditCatNome.Text = "Novo nome";
+            // 
+            // EditCat_cb
+            // 
+            this.EditCat_cb.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.EditCat_cb.FormattingEnabled = true;
+            this.EditCat_cb.Location = new System.Drawing.Point(9, 36);
+            this.EditCat_cb.Name = "EditCat_cb";
+            this.EditCat_cb.Size = new System.Drawing.Size(226, 21);
+            this.EditCat_cb.Sorted = true;
+            this.EditCat_cb.TabIndex = 1;
+            // 
+            // lblEditCatSel
+            // 
+            this.lblEditCatSel.AutoSize = true;
+            this.lblEditCatSel.Location = new System.Drawing.Point(6, 20);
+            this.lblEditCatSel.Name = "lblEditCatSel";
+            this.lblEditCatSel.Size = new System.Drawing.Size(104, 13);
+            this.lblEditCatSel.TabIndex = 0;
+            this.lblEditCatSel.Text = "Selecionar categoria";
+            // 
             // groupBox2
             // 
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox2.Controls.Add(this.Altertype4_chk);
-            this.groupBox2.Controls.Add(this.Altertype3_chk);
-            this.groupBox2.Controls.Add(this.Altertype2_chk);
-            this.groupBox2.Controls.Add(this.Altertype1_chk);
-            this.groupBox2.Controls.Add(this.label19);
             this.groupBox2.Controls.Add(this.Allitems_ch);
             this.groupBox2.Controls.Add(this.label20);
             this.groupBox2.Controls.Add(this.ExcCategoria_cb);
@@ -1002,10 +1233,64 @@
             this.groupBox2.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.groupBox2.Location = new System.Drawing.Point(6, 166);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(720, 172);
+            this.groupBox2.Size = new System.Drawing.Size(720, 128);
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Excluir categoria";
+            // 
+            // Altertype4_chk
+            // 
+            this.Altertype4_chk.AutoSize = true;
+            this.Altertype4_chk.Location = new System.Drawing.Point(192, 77);
+            this.Altertype4_chk.Name = "Altertype4_chk";
+            this.Altertype4_chk.Size = new System.Drawing.Size(55, 17);
+            this.Altertype4_chk.TabIndex = 197;
+            this.Altertype4_chk.TabStop = true;
+            this.Altertype4_chk.Text = "Tipo 4";
+            this.Altertype4_chk.UseVisualStyleBackColor = true;
+            // 
+            // Altertype3_chk
+            // 
+            this.Altertype3_chk.AutoSize = true;
+            this.Altertype3_chk.Location = new System.Drawing.Point(131, 77);
+            this.Altertype3_chk.Name = "Altertype3_chk";
+            this.Altertype3_chk.Size = new System.Drawing.Size(55, 17);
+            this.Altertype3_chk.TabIndex = 198;
+            this.Altertype3_chk.TabStop = true;
+            this.Altertype3_chk.Text = "Tipo 3";
+            this.Altertype3_chk.UseVisualStyleBackColor = true;
+            // 
+            // Altertype2_chk
+            // 
+            this.Altertype2_chk.AutoSize = true;
+            this.Altertype2_chk.Location = new System.Drawing.Point(70, 77);
+            this.Altertype2_chk.Name = "Altertype2_chk";
+            this.Altertype2_chk.Size = new System.Drawing.Size(55, 17);
+            this.Altertype2_chk.TabIndex = 199;
+            this.Altertype2_chk.TabStop = true;
+            this.Altertype2_chk.Text = "Tipo 2";
+            this.Altertype2_chk.UseVisualStyleBackColor = true;
+            // 
+            // Altertype1_chk
+            // 
+            this.Altertype1_chk.AutoSize = true;
+            this.Altertype1_chk.Location = new System.Drawing.Point(9, 77);
+            this.Altertype1_chk.Name = "Altertype1_chk";
+            this.Altertype1_chk.Size = new System.Drawing.Size(55, 17);
+            this.Altertype1_chk.TabIndex = 200;
+            this.Altertype1_chk.TabStop = true;
+            this.Altertype1_chk.Text = "Tipo 1";
+            this.Altertype1_chk.UseVisualStyleBackColor = true;
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label19.Location = new System.Drawing.Point(6, 107);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(344, 16);
+            this.label19.TabIndex = 196;
+            this.label19.Text = "Largura; Espessura; Comprimento; Comprimento;";
             // 
             // Allitems_ch
             // 
@@ -1149,6 +1434,220 @@
             this.CadCat_bt.UseVisualStyleBackColor = true;
             this.CadCat_bt.Click += new System.EventHandler(this.CadCat_bt_Click);
             // 
+            // tabPage6
+            // 
+            this.tabPage6.Controls.Add(this.MedDel_bt);
+            this.tabPage6.Controls.Add(this.MedEdit_bt);
+            this.tabPage6.Controls.Add(this.MedAdd_bt);
+            this.tabPage6.Controls.Add(this.MedM4_txt);
+            this.tabPage6.Controls.Add(this.MedM3_txt);
+            this.tabPage6.Controls.Add(this.MedM2_txt);
+            this.tabPage6.Controls.Add(this.MedM1_txt);
+            this.tabPage6.Controls.Add(this.lblMedM4);
+            this.tabPage6.Controls.Add(this.lblMedM3);
+            this.tabPage6.Controls.Add(this.lblMedM2);
+            this.tabPage6.Controls.Add(this.lblMedM1);
+            this.tabPage6.Controls.Add(this.MedCat_cb);
+            this.tabPage6.Controls.Add(this.lblMedCat);
+            this.tabPage6.Controls.Add(this.MedidasGrid);
+            this.tabPage6.Location = new System.Drawing.Point(4, 4);
+            this.tabPage6.Name = "tabPage6";
+            this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage6.Size = new System.Drawing.Size(732, 579);
+            this.tabPage6.TabIndex = 3;
+            this.tabPage6.Text = "Medidas";
+            this.tabPage6.UseVisualStyleBackColor = true;
+            // 
+            // MedDel_bt
+            // 
+            this.MedDel_bt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.MedDel_bt.Enabled = false;
+            this.MedDel_bt.Location = new System.Drawing.Point(675, 453);
+            this.MedDel_bt.Name = "MedDel_bt";
+            this.MedDel_bt.Size = new System.Drawing.Size(55, 23);
+            this.MedDel_bt.TabIndex = 22;
+            this.MedDel_bt.Text = "Excluir";
+            this.MedDel_bt.UseVisualStyleBackColor = true;
+            // 
+            // MedEdit_bt
+            // 
+            this.MedEdit_bt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.MedEdit_bt.Enabled = false;
+            this.MedEdit_bt.Location = new System.Drawing.Point(615, 453);
+            this.MedEdit_bt.Name = "MedEdit_bt";
+            this.MedEdit_bt.Size = new System.Drawing.Size(55, 23);
+            this.MedEdit_bt.TabIndex = 21;
+            this.MedEdit_bt.Text = "Alterar";
+            this.MedEdit_bt.UseVisualStyleBackColor = true;
+            // 
+            // MedAdd_bt
+            // 
+            this.MedAdd_bt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.MedAdd_bt.Location = new System.Drawing.Point(530, 453);
+            this.MedAdd_bt.Name = "MedAdd_bt";
+            this.MedAdd_bt.Size = new System.Drawing.Size(80, 23);
+            this.MedAdd_bt.TabIndex = 20;
+            this.MedAdd_bt.Text = "Adicionar";
+            this.MedAdd_bt.UseVisualStyleBackColor = true;
+            // 
+            // MedM4_txt
+            // 
+            this.MedM4_txt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.MedM4_txt.Location = new System.Drawing.Point(450, 456);
+            this.MedM4_txt.Name = "MedM4_txt";
+            this.MedM4_txt.Size = new System.Drawing.Size(70, 20);
+            this.MedM4_txt.TabIndex = 19;
+            // 
+            // MedM3_txt
+            // 
+            this.MedM3_txt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.MedM3_txt.Location = new System.Drawing.Point(370, 456);
+            this.MedM3_txt.Name = "MedM3_txt";
+            this.MedM3_txt.Size = new System.Drawing.Size(70, 20);
+            this.MedM3_txt.TabIndex = 17;
+            // 
+            // MedM2_txt
+            // 
+            this.MedM2_txt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.MedM2_txt.Location = new System.Drawing.Point(290, 456);
+            this.MedM2_txt.Name = "MedM2_txt";
+            this.MedM2_txt.Size = new System.Drawing.Size(70, 20);
+            this.MedM2_txt.TabIndex = 15;
+            // 
+            // MedM1_txt
+            // 
+            this.MedM1_txt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.MedM1_txt.Location = new System.Drawing.Point(210, 456);
+            this.MedM1_txt.Name = "MedM1_txt";
+            this.MedM1_txt.Size = new System.Drawing.Size(70, 20);
+            this.MedM1_txt.TabIndex = 13;
+            // 
+            // lblMedM4
+            // 
+            this.lblMedM4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.lblMedM4.AutoSize = true;
+            this.lblMedM4.Location = new System.Drawing.Point(450, 440);
+            this.lblMedM4.Name = "lblMedM4";
+            this.lblMedM4.Size = new System.Drawing.Size(22, 13);
+            this.lblMedM4.TabIndex = 18;
+            this.lblMedM4.Text = "M4";
+            // 
+            // lblMedM3
+            // 
+            this.lblMedM3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.lblMedM3.AutoSize = true;
+            this.lblMedM3.Location = new System.Drawing.Point(370, 440);
+            this.lblMedM3.Name = "lblMedM3";
+            this.lblMedM3.Size = new System.Drawing.Size(22, 13);
+            this.lblMedM3.TabIndex = 16;
+            this.lblMedM3.Text = "M3";
+            // 
+            // lblMedM2
+            // 
+            this.lblMedM2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.lblMedM2.AutoSize = true;
+            this.lblMedM2.Location = new System.Drawing.Point(290, 440);
+            this.lblMedM2.Name = "lblMedM2";
+            this.lblMedM2.Size = new System.Drawing.Size(22, 13);
+            this.lblMedM2.TabIndex = 14;
+            this.lblMedM2.Text = "M2";
+            // 
+            // lblMedM1
+            // 
+            this.lblMedM1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.lblMedM1.AutoSize = true;
+            this.lblMedM1.Location = new System.Drawing.Point(210, 440);
+            this.lblMedM1.Name = "lblMedM1";
+            this.lblMedM1.Size = new System.Drawing.Size(22, 13);
+            this.lblMedM1.TabIndex = 12;
+            this.lblMedM1.Text = "M1";
+            // 
+            // MedCat_cb
+            // 
+            this.MedCat_cb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.MedCat_cb.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.MedCat_cb.FormattingEnabled = true;
+            this.MedCat_cb.Location = new System.Drawing.Point(3, 456);
+            this.MedCat_cb.Name = "MedCat_cb";
+            this.MedCat_cb.Size = new System.Drawing.Size(200, 21);
+            this.MedCat_cb.Sorted = true;
+            this.MedCat_cb.TabIndex = 11;
+            // 
+            // lblMedCat
+            // 
+            this.lblMedCat.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.lblMedCat.AutoSize = true;
+            this.lblMedCat.Location = new System.Drawing.Point(3, 440);
+            this.lblMedCat.Name = "lblMedCat";
+            this.lblMedCat.Size = new System.Drawing.Size(52, 13);
+            this.lblMedCat.TabIndex = 10;
+            this.lblMedCat.Text = "Categoria";
+            // 
+            // MedidasGrid
+            // 
+            this.MedidasGrid.AllowUserToAddRows = false;
+            this.MedidasGrid.AllowUserToDeleteRows = false;
+            this.MedidasGrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.MedidasGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.MedidasGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.medColId,
+            this.medColCat,
+            this.medColM1,
+            this.medColM2,
+            this.medColM3,
+            this.medColM4});
+            this.MedidasGrid.Location = new System.Drawing.Point(3, 3);
+            this.MedidasGrid.MultiSelect = false;
+            this.MedidasGrid.Name = "MedidasGrid";
+            this.MedidasGrid.ReadOnly = true;
+            this.MedidasGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.MedidasGrid.Size = new System.Drawing.Size(726, 430);
+            this.MedidasGrid.TabIndex = 0;
+            // 
+            // medColId
+            // 
+            this.medColId.HeaderText = "Id";
+            this.medColId.Name = "medColId";
+            this.medColId.ReadOnly = true;
+            this.medColId.Width = 40;
+            // 
+            // medColCat
+            // 
+            this.medColCat.HeaderText = "Categoria";
+            this.medColCat.Name = "medColCat";
+            this.medColCat.ReadOnly = true;
+            this.medColCat.Width = 200;
+            // 
+            // medColM1
+            // 
+            this.medColM1.HeaderText = "M1";
+            this.medColM1.Name = "medColM1";
+            this.medColM1.ReadOnly = true;
+            this.medColM1.Width = 70;
+            // 
+            // medColM2
+            // 
+            this.medColM2.HeaderText = "M2";
+            this.medColM2.Name = "medColM2";
+            this.medColM2.ReadOnly = true;
+            this.medColM2.Width = 70;
+            // 
+            // medColM3
+            // 
+            this.medColM3.HeaderText = "M3";
+            this.medColM3.Name = "medColM3";
+            this.medColM3.ReadOnly = true;
+            this.medColM3.Width = 70;
+            // 
+            // medColM4
+            // 
+            this.medColM4.HeaderText = "M4";
+            this.medColM4.Name = "medColM4";
+            this.medColM4.ReadOnly = true;
+            this.medColM4.Width = 70;
+            // 
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -1159,60 +1658,6 @@
             this.button1.Text = "Visualizar pastas PDM";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // Altertype4_chk
-            // 
-            this.Altertype4_chk.AutoSize = true;
-            this.Altertype4_chk.Location = new System.Drawing.Point(192, 105);
-            this.Altertype4_chk.Name = "Altertype4_chk";
-            this.Altertype4_chk.Size = new System.Drawing.Size(55, 17);
-            this.Altertype4_chk.TabIndex = 197;
-            this.Altertype4_chk.TabStop = true;
-            this.Altertype4_chk.Text = "Tipo 4";
-            this.Altertype4_chk.UseVisualStyleBackColor = true;
-            // 
-            // Altertype3_chk
-            // 
-            this.Altertype3_chk.AutoSize = true;
-            this.Altertype3_chk.Location = new System.Drawing.Point(131, 105);
-            this.Altertype3_chk.Name = "Altertype3_chk";
-            this.Altertype3_chk.Size = new System.Drawing.Size(55, 17);
-            this.Altertype3_chk.TabIndex = 198;
-            this.Altertype3_chk.TabStop = true;
-            this.Altertype3_chk.Text = "Tipo 3";
-            this.Altertype3_chk.UseVisualStyleBackColor = true;
-            // 
-            // Altertype2_chk
-            // 
-            this.Altertype2_chk.AutoSize = true;
-            this.Altertype2_chk.Location = new System.Drawing.Point(70, 105);
-            this.Altertype2_chk.Name = "Altertype2_chk";
-            this.Altertype2_chk.Size = new System.Drawing.Size(55, 17);
-            this.Altertype2_chk.TabIndex = 199;
-            this.Altertype2_chk.TabStop = true;
-            this.Altertype2_chk.Text = "Tipo 2";
-            this.Altertype2_chk.UseVisualStyleBackColor = true;
-            // 
-            // Altertype1_chk
-            // 
-            this.Altertype1_chk.AutoSize = true;
-            this.Altertype1_chk.Location = new System.Drawing.Point(9, 105);
-            this.Altertype1_chk.Name = "Altertype1_chk";
-            this.Altertype1_chk.Size = new System.Drawing.Size(55, 17);
-            this.Altertype1_chk.TabIndex = 200;
-            this.Altertype1_chk.TabStop = true;
-            this.Altertype1_chk.Text = "Tipo 1";
-            this.Altertype1_chk.UseVisualStyleBackColor = true;
-            // 
-            // label19
-            // 
-            this.label19.AutoSize = true;
-            this.label19.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label19.Location = new System.Drawing.Point(6, 135);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(344, 16);
-            this.label19.TabIndex = 196;
-            this.label19.Text = "Largura; Espessura; Comprimento; Comprimento;";
             // 
             // Cadastro_main
             // 
@@ -1246,10 +1691,15 @@
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             this.tabPage5.ResumeLayout(false);
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.tabPage6.ResumeLayout(false);
+            this.tabPage6.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.MedidasGrid)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1360,5 +1810,47 @@
         private System.Windows.Forms.RadioButton Altertype2_chk;
         private System.Windows.Forms.RadioButton Altertype1_chk;
         private System.Windows.Forms.Label label19;
+        // Cascade Banco de Dados
+        private System.Windows.Forms.Label lblBancoCat;
+        private System.Windows.Forms.ComboBox BancoCat_cb;
+        private System.Windows.Forms.Label lblBancoM1;
+        private System.Windows.Forms.ComboBox BancoM1_cb;
+        private System.Windows.Forms.Label lblBancoM2;
+        private System.Windows.Forms.ComboBox BancoM2_cb;
+        private System.Windows.Forms.Label lblBancoM3;
+        private System.Windows.Forms.ComboBox BancoM3_cb;
+        private System.Windows.Forms.Label lblBancoM4;
+        private System.Windows.Forms.ComboBox BancoM4_cb;
+        private System.Windows.Forms.Button BancoLimpar_bt;
+        private System.Windows.Forms.Button BancoSalvar_bt;
+        // Editar Categoria
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.Label lblEditCatSel;
+        private System.Windows.Forms.ComboBox EditCat_cb;
+        private System.Windows.Forms.Label lblEditCatNome;
+        private System.Windows.Forms.TextBox EditCatName_txt;
+        private System.Windows.Forms.Button altertype;
+        // Aba Medidas
+        private System.Windows.Forms.TabPage tabPage6;
+        private System.Windows.Forms.DataGridView MedidasGrid;
+        private System.Windows.Forms.DataGridViewTextBoxColumn medColId;
+        private System.Windows.Forms.DataGridViewTextBoxColumn medColCat;
+        private System.Windows.Forms.DataGridViewTextBoxColumn medColM1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn medColM2;
+        private System.Windows.Forms.DataGridViewTextBoxColumn medColM3;
+        private System.Windows.Forms.DataGridViewTextBoxColumn medColM4;
+        private System.Windows.Forms.Label lblMedCat;
+        private System.Windows.Forms.ComboBox MedCat_cb;
+        private System.Windows.Forms.Label lblMedM1;
+        private System.Windows.Forms.Label lblMedM2;
+        private System.Windows.Forms.Label lblMedM3;
+        private System.Windows.Forms.Label lblMedM4;
+        private System.Windows.Forms.TextBox MedM1_txt;
+        private System.Windows.Forms.TextBox MedM2_txt;
+        private System.Windows.Forms.TextBox MedM3_txt;
+        private System.Windows.Forms.TextBox MedM4_txt;
+        private System.Windows.Forms.Button MedAdd_bt;
+        private System.Windows.Forms.Button MedEdit_bt;
+        private System.Windows.Forms.Button MedDel_bt;
     }
 }
