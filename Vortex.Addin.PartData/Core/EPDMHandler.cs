@@ -68,15 +68,19 @@ namespace Vortex.Addin.PartData.Core
                     });
                 }
 
-                // Arquivos
+                // Arquivos — apenas peça (.sldprt) e montagem (.sldasm)
                 IEdmPos5 filePos = pasta.GetFirstFilePosition();
                 while (!filePos.IsNull)
                 {
                     IEdmFile5 file = pasta.GetNextFile(filePos);
+                    string nome = file.Name;
+                    string ext = nome.ToLower();
+                    if (!ext.EndsWith(".sldprt") && !ext.EndsWith(".sldasm"))
+                        continue; // ignora desenhos e outros tipos
+
                     result.Add(new PdmItem
                     {
-                        Name        = file.Name,
-                        LocalPath   = file.GetLocalPath(pasta.ID),
+                        Name        = nome,
                         IsFolder    = false,
                         Denominacao = ObterVariavel(file, "Denominação")
                     });

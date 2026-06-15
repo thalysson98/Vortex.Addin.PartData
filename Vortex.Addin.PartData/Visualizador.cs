@@ -22,6 +22,8 @@ namespace Vortex.Addin.PartData
             pdmcommand.Connect();
             sqlcommand = sql;
             treeView1.Sorted = true;
+            // Fundo cinza claro para que o destaque branco dos arquivos cadastrados apareça
+            treeView1.BackColor = Color.Gainsboro;
         }
 
         private const string Dummy = "DUMMY";
