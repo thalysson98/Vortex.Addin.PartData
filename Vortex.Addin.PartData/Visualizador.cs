@@ -24,38 +24,29 @@ namespace Vortex.Addin.PartData
             treeView1.Sorted = true;
         }
 
-        // A busca dos arquivos é feita quando o formulário abre.
+        private const string Dummy = "DUMMY";
+
+        // Ao abrir, carrega só as pastas-pai (nível superior). Os demais níveis
+        // são carregados sob demanda quando a pasta é expandida.
         private void Visualizador_Load(object sender, EventArgs e)
         {
-            CarregarEstrutura();
+            CarregarRaiz();
         }
 
         private void btn_loadFiles_Click(object sender, EventArgs e)
         {
-            CarregarEstrutura();
+            CarregarRaiz();
         }
 
-        private void CarregarEstrutura()
+        private void CarregarRaiz()
         {
             this.Cursor = Cursors.WaitCursor;
             try
             {
                 treeView1.BeginUpdate();
                 treeView1.Nodes.Clear();
-
-                PdmItem arvore = pdmcommand.CarregarArvore(RaizPdm);
-                if (arvore == null)
-                {
-                    MessageBox.Show("Não foi possível carregar a estrutura do PDM.", "Aviso",
-                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-
-                // A raiz é a pasta PROJETOS — seus filhos viram o nível superior da árvore.
-                foreach (var filho in arvore.Children)
-                    AddNode(filho, treeView1.Nodes);
-
-                foreach (TreeNode n in treeView1.Nodes) n.Expand();
+                foreach (var item in pdmcommand.ListarConteudo(RaizPdm))
+                    AdicionarNo(item, treeView1.Nodes);
             }
             finally
             {
@@ -64,32 +55,75 @@ namespace Vortex.Addin.PartData
             }
         }
 
-        // Cria o nó e calcula o status. Retorna flags do subitem:
-        // bit 0 (1) = subárvore contém arquivo cadastrado
-        // bit 1 (2) = subárvore contém arquivo NÃO cadastrado
-        private int AddNode(PdmItem item, TreeNodeCollection parent)
+        // Carrega o conteúdo da pasta quando ela é expandida (lazy).
+        private void treeView1_BeforeExpand(object sender, TreeViewCancelEventArgs e)
+        {
+            var node = e.Node;
+            if (node.Nodes.Count != 1 || (node.Nodes[0].Tag as string) != Dummy) return;
+
+            var vn = node.Tag as VisualNode;
+            if (vn == null) return;
+
+            this.Cursor = Cursors.WaitCursor;
+            try
+            {
+                treeView1.BeginUpdate();
+                node.Nodes.Clear(); // remove o nó fictício
+                foreach (var item in pdmcommand.ListarConteudo(vn.LocalPath))
+                    AdicionarNo(item, node.Nodes);
+            }
+            finally
+            {
+                treeView1.EndUpdate();
+                this.Cursor = Cursors.Default;
+            }
+        }
+
+        // Cria um único nó (sem recursão). Pastas recebem um nó fictício para
+        // exibir a seta de expansão e são pintadas de verde se o código existir no banco.
+        private void AdicionarNo(PdmItem item, TreeNodeCollection parent)
         {
             var node = new TreeNode(item.Name);
-            var vn = new VisualNode { IsFolder = item.IsFolder, Denominacao = item.Denominacao ?? "" };
+            var vn = new VisualNode
+            {
+                IsFolder    = item.IsFolder,
+                LocalPath   = item.LocalPath,
+                Denominacao = item.Denominacao ?? ""
+            };
             node.Tag = vn;
             parent.Add(node);
 
-            if (!item.IsFolder)
+            if (item.IsFolder)
+            {
+                vn.FolderStatus = PastaCadastrada(item.Name) ? 1 : 0; // verde se código achado
+                node.Nodes.Add(new TreeNode("Carregando...") { Tag = Dummy });
+            }
+            else
             {
                 vn.FileRegistered = ArquivoCadastrado(item.Name);
-                return vn.FileRegistered ? 1 : 2;
             }
+        }
 
-            int flags = 0;
-            foreach (var child in item.Children)
-                flags |= AddNode(child, node.Nodes);
-
-            // "porém": amarelo tem prioridade quando há arquivos não cadastrados
-            if ((flags & 2) != 0)      vn.FolderStatus = 2; // amarelo
-            else if ((flags & 1) != 0) vn.FolderStatus = 1; // verde
-            else                       vn.FolderStatus = 0; // sem arquivos → normal
-
-            return flags;
+        // Confere se o código da pasta existe no banco (000 → COD1; 000.000 → COD1+COD2).
+        private bool PastaCadastrada(string nome)
+        {
+            if (Regex.IsMatch(nome, @"^\d{3}$"))
+            {
+                var vals = sqlcommand.GetRowValues(
+                    new Dictionary<string, object> { { "COD1", nome } },
+                    new List<string> { "COD1" }, "MATERIAIS");
+                return vals.Count > 0;
+            }
+            if (Regex.IsMatch(nome, @"^\d{3}\.\d{3}$"))
+            {
+                string c1 = nome.Substring(0, 3);
+                string c2 = nome.Substring(4, 3);
+                var vals = sqlcommand.GetRowValues(
+                    new Dictionary<string, object> { { "COD1", c1 }, { "COD2", c2 } },
+                    new List<string> { "COD1" }, "MATERIAIS");
+                return vals.Count > 0;
+            }
+            return false;
         }
 
         // Confere se o arquivo (000.000.0000.sldprt/.sldasm) está cadastrado no banco.
