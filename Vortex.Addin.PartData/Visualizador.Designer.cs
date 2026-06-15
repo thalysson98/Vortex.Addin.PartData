@@ -1,4 +1,4 @@
-﻿namespace Vortex.Addin.PartData
+namespace Vortex.Addin.PartData
 {
     partial class Visualizador
     {
@@ -29,62 +29,66 @@
         private void InitializeComponent()
         {
             this.treeView1 = new System.Windows.Forms.TreeView();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.headerPanel = new System.Windows.Forms.Panel();
+            this.bottomPanel = new System.Windows.Forms.Panel();
             this.btn_loadFiles = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
-            this.splitContainer1.Panel1.SuspendLayout();
-            this.splitContainer1.SuspendLayout();
+            this.bottomPanel.SuspendLayout();
             this.SuspendLayout();
-            // 
+            //
             // treeView1
-            // 
-            this.treeView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.treeView1.Location = new System.Drawing.Point(3, 3);
+            //
+            this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.treeView1.DrawMode = System.Windows.Forms.TreeViewDrawMode.OwnerDrawText;
+            this.treeView1.FullRowSelect = true;
+            this.treeView1.HideSelection = false;
+            this.treeView1.Location = new System.Drawing.Point(0, 22);
             this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(315, 483);
+            this.treeView1.Size = new System.Drawing.Size(692, 502);
             this.treeView1.TabIndex = 0;
+            this.treeView1.DrawNode += new System.Windows.Forms.DrawTreeNodeEventHandler(this.treeView1_DrawNode);
             this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
-            // 
-            // splitContainer1
-            // 
-            this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.splitContainer1.Location = new System.Drawing.Point(12, 24);
-            this.splitContainer1.Name = "splitContainer1";
-            // 
-            // splitContainer1.Panel1
-            // 
-            this.splitContainer1.Panel1.Controls.Add(this.btn_loadFiles);
-            this.splitContainer1.Panel1.Controls.Add(this.treeView1);
-            this.splitContainer1.Size = new System.Drawing.Size(672, 518);
-            this.splitContainer1.SplitterDistance = 321;
-            this.splitContainer1.TabIndex = 1;
-            // 
+            //
+            // headerPanel
+            //
+            this.headerPanel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.headerPanel.Location = new System.Drawing.Point(0, 0);
+            this.headerPanel.Name = "headerPanel";
+            this.headerPanel.Size = new System.Drawing.Size(692, 22);
+            this.headerPanel.TabIndex = 2;
+            this.headerPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.headerPanel_Paint);
+            //
+            // bottomPanel
+            //
+            this.bottomPanel.Controls.Add(this.btn_loadFiles);
+            this.bottomPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.bottomPanel.Location = new System.Drawing.Point(0, 524);
+            this.bottomPanel.Name = "bottomPanel";
+            this.bottomPanel.Size = new System.Drawing.Size(692, 30);
+            this.bottomPanel.TabIndex = 3;
+            //
             // btn_loadFiles
-            // 
-            this.btn_loadFiles.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btn_loadFiles.Location = new System.Drawing.Point(243, 492);
+            //
+            this.btn_loadFiles.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btn_loadFiles.Location = new System.Drawing.Point(605, 4);
             this.btn_loadFiles.Name = "btn_loadFiles";
             this.btn_loadFiles.Size = new System.Drawing.Size(75, 23);
-            this.btn_loadFiles.TabIndex = 1;
-            this.btn_loadFiles.Text = "Carregar";
+            this.btn_loadFiles.TabIndex = 0;
+            this.btn_loadFiles.Text = "Recarregar";
             this.btn_loadFiles.UseVisualStyleBackColor = true;
             this.btn_loadFiles.Click += new System.EventHandler(this.btn_loadFiles_Click);
-            // 
+            //
             // Visualizador
-            // 
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(692, 554);
-            this.Controls.Add(this.splitContainer1);
+            this.Controls.Add(this.treeView1);
+            this.Controls.Add(this.headerPanel);
+            this.Controls.Add(this.bottomPanel);
             this.Name = "Visualizador";
-            this.Text = "Visualizador";
-            this.splitContainer1.Panel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
-            this.splitContainer1.ResumeLayout(false);
+            this.Text = "Visualizador PDM x Banco";
+            this.Load += new System.EventHandler(this.Visualizador_Load);
+            this.bottomPanel.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -92,7 +96,8 @@
         #endregion
 
         private System.Windows.Forms.TreeView treeView1;
-        private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.Panel headerPanel;
+        private System.Windows.Forms.Panel bottomPanel;
         private System.Windows.Forms.Button btn_loadFiles;
     }
 }

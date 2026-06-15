@@ -352,7 +352,26 @@ namespace Vortex.Addin.PartData
             Mouse TheMouse;
             SolidWorksMouseHandler obj;
 
-            string path = $"C:\\Cardall\\PROJETOS\\{Cod1}\\{Cod1}.{Cod2}\\{Codigo}.SLDPRT";
+            // Resolve a extensão real do arquivo: peça (.SLDPRT) ou montagem (.SLDASM)
+            string baseDir = $"C:\\Cardall\\PROJETOS\\{Cod1}\\{Cod1}.{Cod2}";
+            string path = System.IO.Path.Combine(baseDir, Codigo + ".SLDPRT");
+            if (!System.IO.File.Exists(path))
+            {
+                string asm = System.IO.Path.Combine(baseDir, Codigo + ".SLDASM");
+                if (System.IO.File.Exists(asm))
+                {
+                    path = asm;
+                }
+                else
+                {
+                    System.Windows.Forms.MessageBox.Show(
+                        $"Arquivo não encontrado:\n{path}\nnem\n{asm}",
+                        "Arquivo inexistente", System.Windows.Forms.MessageBoxButtons.OK,
+                        System.Windows.Forms.MessageBoxIcon.Warning);
+                    return;
+                }
+            }
+
             swMathUtils = (MathUtility)swApp.GetMathUtility();
             swModel = (ModelDoc2)swApp.ActiveDoc;
 

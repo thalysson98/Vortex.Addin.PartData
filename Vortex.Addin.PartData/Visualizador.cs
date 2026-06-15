@@ -1,14 +1,9 @@
-﻿using EPDM.Interop.epdm;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Controls;
-using System.Windows;
+using System.Drawing;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Vortex.Addin.PartData.Core;
-using System.Text.RegularExpressions;
-using System.Windows.Media;
-using System.Drawing;
 
 namespace Vortex.Addin.PartData
 {
@@ -16,246 +11,181 @@ namespace Vortex.Addin.PartData
     {
         EPDMHandler pdmcommand;
         SQLCommands sqlcommand;
+
+        private const int Col1Width = 380;
+        private const string RaizPdm = "C:\\Cardall\\PROJETOS";
+
         public Visualizador(SQLCommands sql)
         {
             InitializeComponent();
             pdmcommand = new EPDMHandler();
             pdmcommand.Connect();
             sqlcommand = sql;
+            treeView1.Sorted = true;
+        }
+
+        // A busca dos arquivos é feita quando o formulário abre.
+        private void Visualizador_Load(object sender, EventArgs e)
+        {
+            CarregarEstrutura();
         }
 
         private void btn_loadFiles_Click(object sender, EventArgs e)
         {
-            treeView1.Nodes.Clear();
-            string local = "C:\\Cardall\\PROJETOS";
-            addFiles(local, treeView1.Nodes);
-
+            CarregarEstrutura();
         }
 
-        void addFiles(string local, TreeNodeCollection treeNodes)
+        private void CarregarEstrutura()
         {
-            List<string> items = new List<string>();
-            items = pdmcommand.CarregarPastasRaiz(local);
-            if(items != null)
+            this.Cursor = Cursors.WaitCursor;
+            try
             {
-                if (items.Count > 0)
+                treeView1.BeginUpdate();
+                treeView1.Nodes.Clear();
+
+                PdmItem arvore = pdmcommand.CarregarArvore(RaizPdm);
+                if (arvore == null)
                 {
-                    items.Sort();
-                    foreach (var item in items)
-                    {
-                        TreeNode newNode = treeNodes.Add(item.Replace(local+"\\", ""));
-                        newNode.Tag = item;
-                        treeView1.Tag = item;
-                        //addFiles(item, newNode.Nodes);
-                        newNode.Nodes.Add("Carregando...");
-                    }
+                    MessageBox.Show("Não foi possível carregar a estrutura do PDM.", "Aviso",
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                // A raiz é a pasta PROJETOS — seus filhos viram o nível superior da árvore.
+                foreach (var filho in arvore.Children)
+                    AddNode(filho, treeView1.Nodes);
+
+                foreach (TreeNode n in treeView1.Nodes) n.Expand();
+            }
+            finally
+            {
+                treeView1.EndUpdate();
+                this.Cursor = Cursors.Default;
+            }
+        }
+
+        // Cria o nó e calcula o status. Retorna flags do subitem:
+        // bit 0 (1) = subárvore contém arquivo cadastrado
+        // bit 1 (2) = subárvore contém arquivo NÃO cadastrado
+        private int AddNode(PdmItem item, TreeNodeCollection parent)
+        {
+            var node = new TreeNode(item.Name);
+            var vn = new VisualNode { IsFolder = item.IsFolder, Denominacao = item.Denominacao ?? "" };
+            node.Tag = vn;
+            parent.Add(node);
+
+            if (!item.IsFolder)
+            {
+                vn.FileRegistered = ArquivoCadastrado(item.Name);
+                return vn.FileRegistered ? 1 : 2;
+            }
+
+            int flags = 0;
+            foreach (var child in item.Children)
+                flags |= AddNode(child, node.Nodes);
+
+            // "porém": amarelo tem prioridade quando há arquivos não cadastrados
+            if ((flags & 2) != 0)      vn.FolderStatus = 2; // amarelo
+            else if ((flags & 1) != 0) vn.FolderStatus = 1; // verde
+            else                       vn.FolderStatus = 0; // sem arquivos → normal
+
+            return flags;
+        }
+
+        // Confere se o arquivo (000.000.0000.sldprt/.sldasm) está cadastrado no banco.
+        private bool ArquivoCadastrado(string fileName)
+        {
+            string nome = (fileName ?? "").ToLower();
+            if (nome.EndsWith(".sldprt") || nome.EndsWith(".sldasm"))
+                nome = nome.Substring(0, nome.Length - 7);
+            else
+                return false;
+
+            if (!Regex.IsMatch(nome, @"^\d{3}\.\d{3}\.\d{4}$")) return false;
+
+            string cod1 = nome.Substring(0, 3);
+            string cod2 = nome.Substring(4, 3);
+            string cod3 = nome.Substring(8, 4);
+
+            var filtros = new Dictionary<string, object>
+            {
+                { "COD1", cod1 }, { "COD2", cod2 }, { "COD3", cod3 }
+            };
+            var vals = sqlcommand.GetRowValues(filtros,
+                new List<string> { "COD1", "COD2", "COD3" }, "MATERIAIS");
+
+            // O filtro já exige COD1+COD2+COD3 — qualquer linha encontrada é a peça correta.
+            return vals.Count > 0;
+        }
+
+        // ── Desenho das duas colunas (árvore + Denominação) ──────────────────────
+        private void treeView1_DrawNode(object sender, DrawTreeNodeEventArgs e)
+        {
+            var vn = e.Node.Tag as VisualNode;
+
+            Color back = treeView1.BackColor;
+            if (vn != null)
+            {
+                if (vn.IsFolder)
+                {
+                    if (vn.FolderStatus == 2)      back = Color.Khaki;      // amarelo
+                    else if (vn.FolderStatus == 1) back = Color.LightGreen; // verde
+                }
+                else if (vn.FileRegistered)
+                {
+                    back = Color.White; // arquivo cadastrado → destaque branco
                 }
             }
 
+            bool selected = (e.State & TreeNodeStates.Selected) != 0;
+
+            // Amplia o clip para a linha inteira (col1 + col2)
+            e.Graphics.SetClip(new Rectangle(0, e.Bounds.Top,
+                treeView1.ClientRectangle.Width, e.Bounds.Height));
+
+            // Coluna 1 — do texto do nó até o limite da coluna
+            var col1 = Rectangle.FromLTRB(e.Bounds.Left, e.Bounds.Top, Col1Width, e.Bounds.Bottom);
+            using (var b = new SolidBrush(selected ? SystemColors.Highlight : back))
+                e.Graphics.FillRectangle(b, col1);
+
+            TextRenderer.DrawText(e.Graphics, e.Node.Text, treeView1.Font, col1,
+                selected ? SystemColors.HighlightText : Color.Black,
+                TextFormatFlags.Left | TextFormatFlags.VerticalCenter |
+                TextFormatFlags.NoPrefix | TextFormatFlags.EndEllipsis);
+
+            // Separador
+            e.Graphics.DrawLine(Pens.Gainsboro, Col1Width, e.Bounds.Top, Col1Width, e.Bounds.Bottom);
+
+            // Coluna 2 — Denominação
+            var col2 = Rectangle.FromLTRB(Col1Width + 4, e.Bounds.Top,
+                treeView1.ClientRectangle.Width, e.Bounds.Bottom);
+            using (var b2 = new SolidBrush(treeView1.BackColor))
+                e.Graphics.FillRectangle(b2, col2);
+
+            string denom = vn != null ? (vn.Denominacao ?? "") : "";
+            TextRenderer.DrawText(e.Graphics, denom, treeView1.Font, col2, Color.Black,
+                TextFormatFlags.Left | TextFormatFlags.VerticalCenter |
+                TextFormatFlags.NoPrefix | TextFormatFlags.EndEllipsis);
+
+            e.Graphics.ResetClip();
         }
 
-        void addFiles2(string local, TreeNodeCollection treeNodes)
+        private void headerPanel_Paint(object sender, PaintEventArgs e)
         {
-            List<string> items = new List<string>();
-            items = pdmcommand.CarregarPastasRaiz2(local);
-            if (items != null)
-            {
-                if (items.Count > 0)
-                {
-                    items.Sort();
-                    foreach (var item in items)
-                    {
-                        TreeNode newNode;
-                        //addFiles(item, newNode.Nodes);
-                        string newstring = item.Substring(item.Length - 2, 2);
-                        if(newstring != "@@") 
-                        {
-                            string PCod1 = @"^\d{3}$";
-                            string PCod2 = @"^\d{3}\.\d{3}$";
-                            newstring = item.Replace(local + "\\", "");
-                            if (Regex.IsMatch(newstring, PCod1))
-                            {
-                                if (validateFolderCod(newstring, 1))
-                                {
-                                    newNode = treeNodes.Add(item.Replace(local + "\\", ""));
-                                    newNode.BackColor = System.Drawing.Color.Green; // A propriedade BackColor deve ser acessada assim
-                                    newNode.Tag = item;
-                                    treeView1.Tag = item;
-                                    newNode.Nodes.Add("Carregando...");
-                                }
-                            }
-                            else if (Regex.IsMatch(newstring, PCod2))
-                            {
-                                if (validateFolderCod(newstring, 2))
-                                {
-                                    newNode = treeNodes.Add(item.Replace(local + "\\", ""));
-                                    newNode.BackColor = System.Drawing.Color.Green; // A propriedade BackColor deve ser acessada assim
-                                    newNode.Tag = item;
-                                    treeView1.Tag = item;
-                                    newNode.Nodes.Add("Carregando...");
-                                }
-                            }
-                            else
-                            {
-                                newNode = treeNodes.Add(item.Replace(local + "\\", ""));
-                            }
-                        }
-                        else
-                        {
-                            newstring = item.Replace(local + "\\", "");
-                            newstring = newstring.Substring(0, Math.Max(0, newstring.Length - 2)); // Evita erro caso a string tenha menos de 2 caracteres
-                            
-                            if (isPartCod(newstring,out newstring))
-                            {
-                                if (validateCOD(newstring))
-                                {
-                                    newNode = treeNodes.Add(newstring);
-                                    newNode.BackColor = System.Drawing.Color.Green; // A propriedade BackColor deve ser acessada assim
-                                }
-                                else
-                                {
-                                    newNode = treeNodes.Add(newstring);
-                                }
+            e.Graphics.Clear(SystemColors.Control);
 
-                                if (newNode != null) // Garante que newNode não seja nulo antes de acessar suas propriedades
-                                {
-                                    newNode.Tag = newstring;
-                                    treeView1.Tag = newstring;
-                                }
-                            }
+            var rect1 = Rectangle.FromLTRB(2, 0, Col1Width, headerPanel.Height);
+            var rect2 = Rectangle.FromLTRB(Col1Width + 4, 0, headerPanel.Width, headerPanel.Height);
 
-                        }
-                        
-                    }
-                }
-            }
+            TextRenderer.DrawText(e.Graphics, "Estrutura (Código)", this.Font, rect1, Color.Black,
+                TextFormatFlags.Left | TextFormatFlags.VerticalCenter);
+            TextRenderer.DrawText(e.Graphics, "Denominação", this.Font, rect2, Color.Black,
+                TextFormatFlags.Left | TextFormatFlags.VerticalCenter);
 
+            e.Graphics.DrawLine(Pens.Gray, Col1Width, 0, Col1Width, headerPanel.Height);
+            e.Graphics.DrawLine(Pens.Gray, 0, headerPanel.Height - 1, headerPanel.Width, headerPanel.Height - 1);
         }
-        private bool isPartCod(string cod, out string nwString)
-        {
-            cod = cod.ToLower().Replace(".sldpart", "");
-            string str = ".sldprt";
-            nwString = cod;
-            if (cod.ToLower().Contains(str))
-            {
-                return true;
-            }
-            return false;
-        }
-        private bool validateFolderCod(string cod, int type)
-        {
-            string cod1 = cod.Substring(0, 3);
-            string cod2 = cod.Substring(4, 3);
-            List<string> colunasDesejadas;
-            Dictionary<string, object> filtros;
-            List<string> valoresLinha;
-            switch (type)
-            {
-                case 1:
-                    colunasDesejadas = new List<string> { "COD1" };
-                    filtros = new Dictionary<string, object>
-                    {
-                        { "COD1", cod1 }
-                    };
-                    valoresLinha = sqlcommand.GetRowValues(filtros, colunasDesejadas, "MATERIAIS");
-                    if (valoresLinha.Count > 0)
-                    {
-                        if ($"{valoresLinha[0]}" == cod) { return true; }
-                    }
-                    break;
-                case 2:
-                    colunasDesejadas = new List<string> { "COD1", "COD2" };
-                    filtros = new Dictionary<string, object>
-                {
-                    { "COD1", cod1 },
-                    { "COD2", cod2 }
-                };
-                    valoresLinha = sqlcommand.GetRowValues(filtros, colunasDesejadas, "MATERIAIS");
-                    if (valoresLinha.Count > 0)
-                    {
-                        if ($"{valoresLinha[0]}.{valoresLinha[1]}" == cod) { return true; }
-                    }
 
-                    break;
-            }
-
-            return false;
-        }
-        private bool validateCOD(string cod)
-        {
-            cod = cod.ToLower().Replace(".sldpart", "");
-            string str =  ".sldprt" ;
-            if (cod.ToLower().Contains(str)) 
-            {
-                cod=cod.Substring(0, cod.Length - str.Count());
-                string PadraoCodigo = @"^\d{3}\.\d{3}\.\d{4}$";
-                if (Regex.IsMatch(cod, PadraoCodigo))//texto codigo padrao
-                {
-                    string cod1 = cod.Substring(0, 3);
-                    string cod2 = cod.Substring(4, 3);
-                    string cod3 = cod.Substring(8, 4);
-
-                    List<string> colunasDesejadas = new List<string> { "COD1", "COD2", "COD3" };
-                    Dictionary<string, object> filtros = new Dictionary<string, object>
-                {
-                    { "COD1", cod1 },
-                    { "COD2", cod2 },
-                    { "COD3", cod3 }
-                };
-                    List<string> valoresLinha = sqlcommand.GetRowValues(filtros, colunasDesejadas, "MATERIAIS");
-                    if (valoresLinha.Count > 0)
-                    {
-                        if ($"{valoresLinha[0]}.{valoresLinha[1]}.{valoresLinha[2]}" == cod) { return true; }
-                    }
-                }
-            }
-
-            return false;
-        }
-        private void Folder_BeforeExpand(object sender, TreeViewCancelEventArgs e)
-        {
-            TreeNode node = e.Node;
-
-            // Evita que a pasta seja carregada mais de uma vez
-            if (node.Nodes.Count == 1 && node.Nodes[0].Text == "Carregando...")
-            {
-                node.Nodes.Clear(); // Remove o nó fictício
-
-                string pastaCaminho = node.Tag.ToString(); // Obtém o caminho da pasta
-
-                // 1. Adicionar subpastas
-                List<string> subPastas = pdmcommand.CarregarPastasRaiz(pastaCaminho);
-                if (subPastas != null && subPastas.Count > 0)
-                {
-                    foreach (var subPasta in subPastas)
-                    {
-                        TreeNode subNode = new TreeNode(System.IO.Path.GetFileName(subPasta))
-                        {
-                            Tag = subPasta
-                        };
-                        subNode.Nodes.Add("Carregando..."); // Nó fictício para carregar sob demanda
-                        node.Nodes.Add(subNode);
-                    }
-                }
-
-                // 2. Adicionar arquivos
-                addFiles2(pastaCaminho, node.Nodes);
-            }
-        }
-        private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
-        {
-            //List<string> items = new List<string>();
-            //items = pdmcommand.CarregarPastasRaiz(treeView1.SelectedNode.Text);
-
-            //if(items == null) { return; }
-            //if (items.Count > 0)
-            //{
-            //    foreach (var item in items)
-            //    {
-            //        treeView1.SelectedNode.Nodes.Add(item);
-            //    }
-            //}
-
-        }
+        private void treeView1_AfterSelect(object sender, TreeViewEventArgs e) { }
     }
 }

@@ -44,6 +44,74 @@ namespace Vortex.Addin.PartData.Core
 
             return "";
         }
+        // Lê recursivamente toda a estrutura de pastas/arquivos a partir de uma raiz,
+        // trazendo a propriedade "Denominação" de cada arquivo. Usado pelo Visualizador.
+        public PdmItem CarregarArvore(string localRaiz)
+        {
+            try
+            {
+                if (vault == null || !vault.IsLoggedIn) return null;
+                IEdmFolder5 raiz = vault.GetFolderFromPath(localRaiz);
+                if (raiz == null) return null;
+                return MontarPasta(raiz);
+            }
+            catch (Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show("Erro ao carregar estrutura do PDM: " + ex.Message);
+                return null;
+            }
+        }
+
+        private PdmItem MontarPasta(IEdmFolder5 pasta)
+        {
+            var item = new PdmItem
+            {
+                Name      = System.IO.Path.GetFileName(pasta.LocalPath.TrimEnd('\\')),
+                LocalPath = pasta.LocalPath,
+                IsFolder  = true
+            };
+
+            // Arquivos da pasta
+            IEdmPos5 filePos = pasta.GetFirstFilePosition();
+            while (!filePos.IsNull)
+            {
+                IEdmFile5 file = pasta.GetNextFile(filePos);
+                item.Children.Add(new PdmItem
+                {
+                    Name        = file.Name,
+                    LocalPath   = file.GetLocalPath(pasta.ID),
+                    IsFolder    = false,
+                    Denominacao = ObterVariavel(file, "Denominação")
+                });
+            }
+
+            // Subpastas
+            IEdmPos5 folderPos = pasta.GetFirstSubFolderPosition();
+            while (!folderPos.IsNull)
+            {
+                IEdmFolder5 sub = pasta.GetNextSubFolder(folderPos);
+                item.Children.Add(MontarPasta(sub));
+            }
+
+            return item;
+        }
+
+        // Lê uma variável do cartão de dados do arquivo (tenta a config "@" e depois a vazia).
+        private string ObterVariavel(IEdmFile5 file, string variavel)
+        {
+            try
+            {
+                IEdmEnumeratorVariable5 ev = (IEdmEnumeratorVariable5)file.GetEnumeratorVariable();
+                object valor;
+                if (ev.GetVar(variavel, "@", out valor) && valor != null)
+                    return valor.ToString();
+                if (ev.GetVar(variavel, "", out valor) && valor != null)
+                    return valor.ToString();
+            }
+            catch { }
+            return "";
+        }
+
         public List<string> CarregarPastasRaiz(string local)
         {
             try

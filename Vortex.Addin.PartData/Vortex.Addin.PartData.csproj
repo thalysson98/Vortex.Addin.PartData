@@ -100,6 +100,8 @@
       <DependentUpon>Cadastro_main.cs</DependentUpon>
     </Compile>
     <Compile Include="Core\EPDMHandler.cs" />
+    <Compile Include="Core\PdmItem.cs" />
+    <Compile Include="Core\VisualNode.cs" />
     <Compile Include="Core\PartValidator.cs" />
     <Compile Include="Core\SolidWorksMouseHandler.cs" />
     <Compile Include="Migration\MigrationForm.cs">

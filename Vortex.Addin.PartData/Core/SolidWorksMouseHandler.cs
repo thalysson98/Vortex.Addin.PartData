@@ -30,10 +30,11 @@ public class SolidWorksMouseHandler:Mouse
             MathPoint swPt;
             AssemblyDoc swAssy;
             double[] nPt = new double[3];
+            double[] v = new double[16];
 
             ModelViewTransform = swModelView.Transform;
             swMathUtil = (MathUtility)swApp.GetMathUtility();
-            
+
 
             nPt[0] = x;
             nPt[1] = y;
@@ -43,18 +44,32 @@ public class SolidWorksMouseHandler:Mouse
             swPt = (MathPoint)swPt.MultiplyTransform(ModelViewTransform.IInverse());
 
             double[] pointData = (double[])swPt.ArrayData;
+            v[9]  = pointData[0];
+            v[10] = pointData[1];
+            v[11] = pointData[2];
+
+            MathTransform transform = (MathTransform)swMathUtil.CreateTransform(v);
+            double[] vTransformData = (double[])transform.ArrayData;
 
             swAssy = (AssemblyDoc)swModel;
 
-            // Insere sempre na configuração "simplificado" (independente de maiúsc/minúsc).
-            // Se a peça não tiver essa configuração, configName fica "" e o SolidWorks
-            // usa a última configuração salva.
-            string configName = ResolverConfiguracao(stComponente);
+            // Insere o componente (peça ou montagem) na última configuração salva.
+            string[] strCompNames = new string[] { stComponente };
+            object vComps = swAssy.AddComponents(strCompNames, vTransformData);
 
-            swAssy.AddComponent5(stComponente,
-                (int)swAddComponentConfigOptions_e.swAddComponentConfigOptions_CurrentSelectedConfig,
-                "", false, configName,
-                pointData[0], pointData[1], pointData[2]);
+            // Se existir a configuração "simplificado", troca o componente para ela.
+            string configName = ResolverConfiguracao(stComponente);
+            System.Array comps = vComps as System.Array;
+            if (!string.IsNullOrEmpty(configName) && comps != null)
+            {
+                foreach (object c in comps)
+                {
+                    Component2 comp = c as Component2;
+                    if (comp != null)
+                        comp.ReferencedConfiguration = configName;
+                }
+                swModel.EditRebuild3();
+            }
 
             swModelView = null;
             swMouse.MouseLBtnDownNotify -= MouseLBtnDownNotify;

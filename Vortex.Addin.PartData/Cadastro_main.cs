@@ -431,7 +431,7 @@ namespace Vortex.Addin.PartData
             else
             {
                 // PDM indisponível — permite acesso como usuario padrão
-                _userPermissao = "admin";
+                _userPermissao = "leitor";
             }
             if (_userPermissao == "leitor")
             {
@@ -715,7 +715,8 @@ namespace Vortex.Addin.PartData
         {
             if (e.RowIndex < 0 || e.RowIndex >= dataGridView1.Rows.Count) return;
             var row = dataGridView1.Rows[e.RowIndex];
-            if (row.Tag is string motivo && !string.IsNullOrEmpty(motivo))
+            string motivo = row.Tag as string;
+            if (!string.IsNullOrEmpty(motivo))
                 MessageBox.Show(motivo, "Erro de validação",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
