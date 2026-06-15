@@ -76,6 +76,9 @@ namespace Vortex.Addin.PartData
             incremento_check.CheckedChanged += incremento_check_CheckedChanged;
             gerarSeq_bt.Click += GerarSequencia_bt_Click;
 
+            // Duplo clique numa linha com erro mostra o motivo da validação
+            dataGridView1.CellMouseDoubleClick += DataGridView1_CellMouseDoubleClick;
+
             // Usuários
             UsersGrid.SelectionChanged += UsersGrid_SelectionChanged;
             UserAdd_bt .Click += OnUserAdicionarAsync;
@@ -466,9 +469,23 @@ namespace Vortex.Addin.PartData
             ExcluiCat_bt.Enabled = isAdmin;
             MedDel_bt.Enabled    = isAdmin;
 
-            // Aba Usuários só visível para admin
-            if (!isAdmin)
+            // Aba Usuários só visível para admin — reversível para refletir
+            // mudanças de permissão sem precisar reiniciar o SolidWorks
+            bool tabPresente = tabControl1.TabPages.Contains(tabPage7);
+            if (isAdmin && !tabPresente)
+                tabControl1.TabPages.Add(tabPage7);
+            else if (!isAdmin && tabPresente)
                 tabControl1.TabPages.Remove(tabPage7);
+        }
+
+        // Reavalia a permissão do usuário logado a partir do cache (já atualizado)
+        // e reaplica as restrições — chamado após qualquer alteração em USERS.
+        private void ReavaliarPermissaoAtual()
+        {
+            string idpdm = User_PDM_lb.Text?.Trim();
+            if (string.IsNullOrEmpty(idpdm)) return; // PDM indisponível — mantém a sessão
+            _userPermissao = sqlCommand.GetUserPermissao(idpdm);
+            AplicarPermissoes();
         }
 
         // ─────────────────────────────────────────────────────────────────────────
@@ -512,6 +529,7 @@ namespace Vortex.Addin.PartData
             if (await sqlCommand.InsertUserAsync(idpdm, perm))
             {
                 CarregarUsersGrid();
+                ReavaliarPermissaoAtual();
                 UserIdpdm_txt.Clear();
             }
         }
@@ -521,7 +539,10 @@ namespace Vortex.Addin.PartData
             if (_selectedUserId < 0) return;
             string perm = UserPerm_cb.SelectedItem?.ToString() ?? "usuario";
             if (await sqlCommand.UpdateUserPermissaoAsync(_selectedUserId, perm))
+            {
                 CarregarUsersGrid();
+                ReavaliarPermissaoAtual();
+            }
         }
 
         private async void OnUserExcluirAsync(object sender, EventArgs e)
@@ -538,6 +559,7 @@ namespace Vortex.Addin.PartData
                 UserDel_bt.Enabled  = false;
                 UserIdpdm_txt.Clear();
                 CarregarUsersGrid();
+                ReavaliarPermissaoAtual();
             }
         }
 
@@ -602,6 +624,7 @@ namespace Vortex.Addin.PartData
         {
             List<string> colunas = new List<string> { "CATEGORIA_ID", "M1", "M2", "M3", "M4", "COD1", "COD2", "COD3" };
             await sqlCommand.RemoverDuplicatasAsync("MATERIAIS", "Id", colunas);
+            FiltrarBancoDados(); // recarrega o grid a partir do cache já atualizado
         }
 
         private void Validate_bt_Click(object sender, EventArgs e)
@@ -672,12 +695,29 @@ namespace Vortex.Addin.PartData
                 if (indices.Count > 1)
                 {
                     dataGridView.Rows[indices[0]].DefaultCellStyle.BackColor = Color.Yellow;
+                    dataGridView.Rows[indices[0]].Tag =
+                        "Esta linha está duplicada na lista (primeira ocorrência).";
                     for (int j = 1; j < indices.Count; j++)
+                    {
                         dataGridView.Rows[indices[j]].DefaultCellStyle.BackColor = Color.Red;
+                        dataGridView.Rows[indices[j]].Tag =
+                            "Linha duplicada — já existe uma linha idêntica acima na lista.";
+                    }
                     error = false;
                 }
             }
             return error;
+        }
+
+        // Mostra o motivo do erro ao dar duplo clique numa linha destacada (vermelha/amarela).
+        // O motivo é gravado em row.Tag durante a validação (RowMask / DestacarLinhasDuplicadas).
+        private void DataGridView1_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.RowIndex < 0 || e.RowIndex >= dataGridView1.Rows.Count) return;
+            var row = dataGridView1.Rows[e.RowIndex];
+            if (row.Tag is string motivo && !string.IsNullOrEmpty(motivo))
+                MessageBox.Show(motivo, "Erro de validação",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
 
         private bool RowMask(DataGridView dataGrid)
@@ -691,30 +731,48 @@ namespace Vortex.Addin.PartData
             {
                 if (row.IsNewRow) continue;
                 bool err = false;
+                var motivos = new List<string>();
                 string cod = $"{row.Cells[6]?.Value}.{row.Cells[7]?.Value}.{row.Cells[8]?.Value}";
 
                 if (!PartValidator.ValidateCOD(cod, items))
                 {
                     row.Cells[1].Value = row.Cells[1].Value?.ToString().Trim();
                     if (PartValidator.ValidateCat(row.Cells[1].Value?.ToString().Trim(), categorias))
-                    { row.DefaultCellStyle.BackColor = Color.Red; err = true; error = false; }
+                    {
+                        row.DefaultCellStyle.BackColor = Color.Red; err = true; error = false;
+                        motivos.Add($"A categoria '{row.Cells[1].Value}' não existe no banco.");
+                    }
 
                     for (int i = 2; i <= 5; i++)
                     {
                         if (!PartValidator.FormatDecimal(row.Cells[i].Value, out string result))
                             row.Cells[i].Value = result;
-                        else { row.DefaultCellStyle.BackColor = Color.Red; err = true; error = false; }
+                        else
+                        {
+                            row.DefaultCellStyle.BackColor = Color.Red; err = true; error = false;
+                            motivos.Add($"O valor da coluna '{dataGrid.Columns[i].HeaderText}' é inválido.");
+                        }
                     }
                     for (int i = 6; i <= 8; i++)
                     {
                         int v = (i == 8) ? 4 : 3;
                         if (!PartValidator.FormatInteger(row.Cells[i].Value, v, out string result))
                             row.Cells[i].Value = result;
-                        else { row.DefaultCellStyle.BackColor = Color.Red; err = true; error = false; }
+                        else
+                        {
+                            row.DefaultCellStyle.BackColor = Color.Red; err = true; error = false;
+                            motivos.Add($"O código da coluna '{dataGrid.Columns[i].HeaderText}' é inválido (esperado {v} dígitos).");
+                        }
                     }
                 }
-                else { row.DefaultCellStyle.BackColor = Color.Red; err = true; error = false; }
-                if (!err) row.DefaultCellStyle.BackColor = Color.White;
+                else
+                {
+                    row.DefaultCellStyle.BackColor = Color.Red; err = true; error = false;
+                    motivos.Add($"O código {cod} já existe no banco de dados.");
+                }
+
+                if (!err) { row.DefaultCellStyle.BackColor = Color.White; row.Tag = null; }
+                else      { row.Tag = string.Join(System.Environment.NewLine, motivos); }
             }
             return error;
         }

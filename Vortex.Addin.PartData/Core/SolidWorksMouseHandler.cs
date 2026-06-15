@@ -30,7 +30,6 @@ public class SolidWorksMouseHandler:Mouse
             MathPoint swPt;
             AssemblyDoc swAssy;
             double[] nPt = new double[3];
-            double[] v = new double[16];
 
             ModelViewTransform = swModelView.Transform;
             swMathUtil = (MathUtility)swApp.GetMathUtility();
@@ -43,26 +42,43 @@ public class SolidWorksMouseHandler:Mouse
             swPt = (MathPoint)swMathUtil.CreatePoint(nPt);
             swPt = (MathPoint)swPt.MultiplyTransform(ModelViewTransform.IInverse());
 
-            SelectionMgr swSelMgr = (SelectionMgr)swModel.SelectionManager;
-
-            string[] strCompNames = new string[] { stComponente };
             double[] pointData = (double[])swPt.ArrayData;
-            v[9] = pointData[0];
-            v[10] = pointData[1];
-            v[11] = pointData[2];
-
-
-            MathTransform transform = (MathTransform)swMathUtil.CreateTransform(v);
-            double[] vTransformData = (double[])transform.ArrayData;
-
 
             swAssy = (AssemblyDoc)swModel;
-            object vComps = swAssy.AddComponents(strCompNames, vTransformData);
+
+            // Insere sempre na configuração "simplificado" (independente de maiúsc/minúsc).
+            // Se a peça não tiver essa configuração, configName fica "" e o SolidWorks
+            // usa a última configuração salva.
+            string configName = ResolverConfiguracao(stComponente);
+
+            swAssy.AddComponent5(stComponente,
+                (int)swAddComponentConfigOptions_e.swAddComponentConfigOptions_CurrentSelectedConfig,
+                "", false, configName,
+                pointData[0], pointData[1], pointData[2]);
 
             swModelView = null;
             swMouse.MouseLBtnDownNotify -= MouseLBtnDownNotify;
         }
         return 0;
+    }
+
+    // Procura uma configuração chamada "simplificado" (qualquer combinação de
+    // maiúsculas/minúsculas) lendo o arquivo sem precisar abri-lo.
+    // Retorna o nome com a grafia real da configuração, ou "" se não existir.
+    private string ResolverConfiguracao(string caminho)
+    {
+        try
+        {
+            object names = swApp.GetConfigurationNames(caminho);
+            if (names is string[] configs)
+            {
+                foreach (string nome in configs)
+                    if (string.Equals(nome, "simplificado", StringComparison.OrdinalIgnoreCase))
+                        return nome;
+            }
+        }
+        catch { }
+        return ""; // não encontrada → última configuração salva
     }
 
     public bool Move(int X, int Y, int Flags)

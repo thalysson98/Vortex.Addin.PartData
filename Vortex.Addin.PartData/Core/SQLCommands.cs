@@ -185,12 +185,7 @@ namespace Vortex.Addin.PartData.Core
             ins.Parameters.AddWithValue("@u", idpdm);
             int newId = Convert.ToInt32(await ins.ExecuteScalarAsync());
 
-            if (dadosEmMemoria.ContainsKey("USERS"))
-            {
-                var row = dadosEmMemoria["USERS"].NewRow();
-                row["Id"] = newId; row["IDPDM"] = idpdm; row["PERMISSAO"] = "usuario";
-                dadosEmMemoria["USERS"].Rows.Add(row);
-            }
+            // Cache de USERS é recarregado em CadastrarItensDataGridAsync após o commit
             return newId;
         }
 
@@ -359,6 +354,7 @@ namespace Vortex.Addin.PartData.Core
                     }
                 }
                 await AtualizarMemoriaAsync("MATERIAIS");
+                await AtualizarMemoriaAsync("USERS"); // pode ter criado usuário novo
                 return true;
             }
             catch (Exception ex)
@@ -664,10 +660,10 @@ namespace Vortex.Addin.PartData.Core
                     using (var cmd = new SqlCommand(sql, conn))
                     {
                         cmd.Parameters.AddWithValue("@cat", categoria ?? "");
-                        cmd.Parameters.AddWithValue("@m1",  ToDecimal(m1));
-                        cmd.Parameters.AddWithValue("@m2",  ToDecimal(m2));
-                        cmd.Parameters.AddWithValue("@m3",  ToDecimal(m3));
-                        cmd.Parameters.Add(DecimalParam("@m4", ToDecimalNull(m4)));
+                        cmd.Parameters.AddWithValue("@m1",  (object)m1 ?? DBNull.Value);
+                        cmd.Parameters.AddWithValue("@m2",  (object)m2 ?? DBNull.Value);
+                        cmd.Parameters.AddWithValue("@m3",  (object)m3 ?? DBNull.Value);
+                        cmd.Parameters.AddWithValue("@m4",  (object)m4 ?? DBNull.Value);
                         await conn.OpenAsync();
                         await cmd.ExecuteNonQueryAsync();
                     }
@@ -698,10 +694,10 @@ namespace Vortex.Addin.PartData.Core
                     using (var cmd = new SqlCommand(sql, conn))
                     {
                         cmd.Parameters.AddWithValue("@cat", categoria ?? "");
-                        cmd.Parameters.AddWithValue("@m1",  ToDecimal(m1));
-                        cmd.Parameters.AddWithValue("@m2",  ToDecimal(m2));
-                        cmd.Parameters.AddWithValue("@m3",  ToDecimal(m3));
-                        cmd.Parameters.Add(DecimalParam("@m4", ToDecimalNull(m4)));
+                        cmd.Parameters.AddWithValue("@m1",  (object)m1 ?? DBNull.Value);
+                        cmd.Parameters.AddWithValue("@m2",  (object)m2 ?? DBNull.Value);
+                        cmd.Parameters.AddWithValue("@m3",  (object)m3 ?? DBNull.Value);
+                        cmd.Parameters.AddWithValue("@m4",  (object)m4 ?? DBNull.Value);
                         cmd.Parameters.AddWithValue("@id",  id);
                         await conn.OpenAsync();
                         int rows = await cmd.ExecuteNonQueryAsync();

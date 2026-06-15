@@ -339,7 +339,6 @@
             // 
             // data_lb
             // 
-            this.data_lb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.data_lb.AutoSize = true;
             this.data_lb.Location = new System.Drawing.Point(147, 27);
             this.data_lb.Name = "data_lb";
@@ -586,6 +585,7 @@
             // 
             // automatico_check
             // 
+            this.automatico_check.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.automatico_check.AutoSize = true;
             this.automatico_check.Location = new System.Drawing.Point(610, 28);
             this.automatico_check.Name = "automatico_check";
@@ -597,6 +597,7 @@
             // 
             // manual_check
             // 
+            this.manual_check.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.manual_check.AutoSize = true;
             this.manual_check.Location = new System.Drawing.Point(610, 8);
             this.manual_check.Name = "manual_check";
@@ -748,6 +749,7 @@
             // 
             // incremento_check
             // 
+            this.incremento_check.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.incremento_check.AutoSize = true;
             this.incremento_check.Location = new System.Drawing.Point(610, 48);
             this.incremento_check.Name = "incremento_check";
@@ -955,7 +957,7 @@
             // 
             // BancoSalvar_bt
             // 
-            this.BancoSalvar_bt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.BancoSalvar_bt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.BancoSalvar_bt.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.BancoSalvar_bt.Enabled = false;
             this.BancoSalvar_bt.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -1562,7 +1564,7 @@
             // 
             // MedDel_bt
             // 
-            this.MedDel_bt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.MedDel_bt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.MedDel_bt.BackColor = System.Drawing.Color.Brown;
             this.MedDel_bt.Enabled = false;
             this.MedDel_bt.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -1576,7 +1578,7 @@
             // 
             // MedEdit_bt
             // 
-            this.MedEdit_bt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.MedEdit_bt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.MedEdit_bt.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.MedEdit_bt.Enabled = false;
             this.MedEdit_bt.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -1590,7 +1592,7 @@
             // 
             // MedAdd_bt
             // 
-            this.MedAdd_bt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.MedAdd_bt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.MedAdd_bt.BackColor = System.Drawing.Color.YellowGreen;
             this.MedAdd_bt.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.MedAdd_bt.ForeColor = System.Drawing.Color.White;
