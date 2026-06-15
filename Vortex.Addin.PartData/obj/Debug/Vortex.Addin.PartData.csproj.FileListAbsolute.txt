@@ -56,3 +56,4 @@ C:\Users\ia.cardall\Documents\GitHub\Vortex.Addin.PartData\Vortex.Addin.PartData
 C:\Users\ia.cardall\Documents\GitHub\Vortex.Addin.PartData\Vortex.Addin.PartData\bin\Debug\Xarial.XCad.SolidWorks.xml
 C:\Users\ia.cardall\Documents\GitHub\Vortex.Addin.PartData\Vortex.Addin.PartData\bin\Debug\Xarial.XCad.Toolkit.xml
 C:\Users\ia.cardall\Documents\GitHub\Vortex.Addin.PartData\Vortex.Addin.PartData\obj\Debug\Vortex.A.B065DB10.Up2Date
+C:\Users\ia.cardall\Documents\GitHub\Vortex.Addin.PartData\Vortex.Addin.PartData\bin\Debug\ObjectListView.dll

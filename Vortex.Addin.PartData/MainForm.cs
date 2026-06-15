@@ -362,14 +362,6 @@ namespace Vortex.Addin.PartData
                 {
                     path = asm;
                 }
-                else
-                {
-                    System.Windows.Forms.MessageBox.Show(
-                        $"Arquivo não encontrado:\n{path}\nnem\n{asm}",
-                        "Arquivo inexistente", System.Windows.Forms.MessageBoxButtons.OK,
-                        System.Windows.Forms.MessageBoxIcon.Warning);
-                    return;
-                }
             }
 
             swMathUtils = (MathUtility)swApp.GetMathUtility();

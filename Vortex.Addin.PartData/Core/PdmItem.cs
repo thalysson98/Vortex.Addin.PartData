@@ -9,6 +9,7 @@ namespace Vortex.Addin.PartData.Core
         public string LocalPath;   // caminho local completo
         public bool   IsFolder;
         public string Denominacao; // propriedade "Denominação" do PDM (arquivos)
+        public bool   Registered;  // código existe no banco (pinta de verde)
         public List<PdmItem> Children = new List<PdmItem>();
     }
 }

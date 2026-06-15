@@ -101,6 +101,7 @@
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.BancoSalvar_bt = new System.Windows.Forms.Button();
             this.BancoLimpar_bt = new System.Windows.Forms.Button();
+            this.BancoExcluirSel_bt = new System.Windows.Forms.Button();
             this.BancoM4_cb = new System.Windows.Forms.ComboBox();
             this.lblBancoM4 = new System.Windows.Forms.Label();
             this.BancoM3_cb = new System.Windows.Forms.ComboBox();
@@ -918,6 +919,7 @@
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.BancoSalvar_bt);
+            this.tabPage2.Controls.Add(this.BancoExcluirSel_bt);
             this.tabPage2.Controls.Add(this.BancoLimpar_bt);
             this.tabPage2.Controls.Add(this.BancoM4_cb);
             this.tabPage2.Controls.Add(this.lblBancoM4);
@@ -977,7 +979,21 @@
             this.BancoLimpar_bt.TabIndex = 310;
             this.BancoLimpar_bt.Text = "Limpar";
             this.BancoLimpar_bt.UseVisualStyleBackColor = true;
-            // 
+            //
+            // BancoExcluirSel_bt
+            //
+            this.BancoExcluirSel_bt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.BancoExcluirSel_bt.BackColor = System.Drawing.Color.Firebrick;
+            this.BancoExcluirSel_bt.Enabled = false;
+            this.BancoExcluirSel_bt.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.BancoExcluirSel_bt.ForeColor = System.Drawing.Color.White;
+            this.BancoExcluirSel_bt.Location = new System.Drawing.Point(3, 540);
+            this.BancoExcluirSel_bt.Name = "BancoExcluirSel_bt";
+            this.BancoExcluirSel_bt.Size = new System.Drawing.Size(160, 23);
+            this.BancoExcluirSel_bt.TabIndex = 312;
+            this.BancoExcluirSel_bt.Text = "Excluir Selecionados";
+            this.BancoExcluirSel_bt.UseVisualStyleBackColor = false;
+            //
             // BancoM4_cb
             // 
             this.BancoM4_cb.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -2092,6 +2108,7 @@
         private System.Windows.Forms.ComboBox BancoM4_cb;
         private System.Windows.Forms.Button BancoLimpar_bt;
         private System.Windows.Forms.Button BancoSalvar_bt;
+        private System.Windows.Forms.Button BancoExcluirSel_bt;
         // Editar Categoria
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Label lblEditCatSel;

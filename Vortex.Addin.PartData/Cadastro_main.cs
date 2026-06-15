@@ -57,6 +57,7 @@ namespace Vortex.Addin.PartData
             BancoM4_cb .SelectedIndexChanged += OnBancoM4Changed;
             BancoLimpar_bt.Click += (s, e) => LimparFiltrosBanco();
             BancoSalvar_bt.Click += OnSalvarMaterial;
+            BancoExcluirSel_bt.Click += OnExcluirSelecionadosAsync;
 
             // Edit Categoria — nomes conforme o Designer
             EditCat_cb.SelectedIndexChanged += EditCatCb_SelectedIndexChanged;
@@ -267,6 +268,72 @@ namespace Vortex.Addin.PartData
             BancoSalvar_bt.Enabled = true;
         }
 
+        // Exclui os itens selecionados na tabela do Banco de Dados (só admin).
+        // Várias verificações de segurança baseadas na contagem de itens.
+        private async void OnExcluirSelecionadosAsync(object sender, EventArgs e)
+        {
+            if (_userPermissao != "admin") return; // trava extra além do botão desabilitado
+
+            var selecionadas = DataListGrid.SelectedRows
+                .Cast<DataGridViewRow>()
+                .Where(r => !r.IsNewRow)
+                .ToList();
+
+            int n = selecionadas.Count;
+            if (n == 0)
+            {
+                MessageBox.Show("Selecione ao menos um item na tabela para excluir.",
+                    "Nada selecionado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            // 1ª verificação — confirma a contagem
+            if (MessageBox.Show(
+                    $"Você selecionou {n} item(ns) para exclusão.\nDeseja continuar?",
+                    "Confirmar exclusão", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+                != DialogResult.Yes)
+                return;
+
+            // 2ª verificação — aviso de irreversibilidade (botão padrão = Não)
+            if (MessageBox.Show(
+                    $"ATENÇÃO: esta ação é IRREVERSÍVEL.\n\n{n} item(ns) serão excluídos " +
+                    "permanentemente do banco de dados.\n\nConfirma a exclusão?",
+                    "Confirmação final", MessageBoxButtons.YesNo, MessageBoxIcon.Warning,
+                    MessageBoxDefaultButton.Button2)
+                != DialogResult.Yes)
+                return;
+
+            // 3ª verificação — digitar a quantidade para confirmar
+            string resposta = Microsoft.VisualBasic.Interaction.InputBox(
+                $"Para confirmar, digite o número de itens que serão excluídos ({n}):",
+                "Verificação de segurança", "");
+            if (resposta == null || resposta.Trim() != n.ToString())
+            {
+                MessageBox.Show("Confirmação inválida. Exclusão cancelada.", "Cancelado",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            // Códigos das linhas selecionadas — colunas 6 (COD1), 7 (COD2), 8 (COD3)
+            var codigos = selecionadas
+                .Select(r => new string[]
+                {
+                    r.Cells[6].Value?.ToString() ?? "",
+                    r.Cells[7].Value?.ToString() ?? "",
+                    r.Cells[8].Value?.ToString() ?? ""
+                })
+                .ToList();
+
+            BancoExcluirSel_bt.Enabled = false;
+            int removidos = await sqlCommand.ExcluirMateriaisSelecionadosAsync(codigos);
+            BancoExcluirSel_bt.Enabled = _userPermissao == "admin";
+
+            MessageBox.Show($"{removidos} item(ns) excluído(s) com sucesso.", "Concluído",
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            FiltrarBancoDados(); // recarrega o grid a partir do cache já atualizado
+        }
+
         // ─────────────────────────────────────────────────────────────────────────
         // ABA: CATEGORIAS — CRUD completo
         // ─────────────────────────────────────────────────────────────────────────
@@ -468,6 +535,7 @@ namespace Vortex.Addin.PartData
             ExcluiDUP_bt.Enabled = isAdmin;
             ExcluiCat_bt.Enabled = isAdmin;
             MedDel_bt.Enabled    = isAdmin;
+            BancoExcluirSel_bt.Enabled = isAdmin;
 
             // Aba Usuários só visível para admin — reversível para refletir
             // mudanças de permissão sem precisar reiniciar o SolidWorks

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Vortex.Tests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+59a499e1c79396347aa0450b6360786f887770da")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+09fee24ae1a6dc8076fdd3a1e8b587b11e2d5af6")]
 [assembly: System.Reflection.AssemblyProductAttribute("Vortex.Tests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Vortex.Tests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -502,6 +502,43 @@ namespace Vortex.Addin.PartData.Core
             }
         }
 
+        // Exclui vários materiais pelo código (COD1, COD2, COD3) numa única transação.
+        // Retorna a quantidade de linhas realmente removidas.
+        public async Task<int> ExcluirMateriaisSelecionadosAsync(List<string[]> codigos)
+        {
+            int total = 0;
+            try
+            {
+                using (var conn = Connect())
+                {
+                    await conn.OpenAsync();
+                    using (var tx = conn.BeginTransaction())
+                    {
+                        const string sql =
+                            "DELETE FROM MATERIAIS WHERE COD1 = @c1 AND COD2 = @c2 AND COD3 = @c3";
+                        foreach (var cod in codigos)
+                        {
+                            using (var cmd = new SqlCommand(sql, conn, tx))
+                            {
+                                cmd.Parameters.AddWithValue("@c1", cod[0] ?? "");
+                                cmd.Parameters.AddWithValue("@c2", cod[1] ?? "");
+                                cmd.Parameters.AddWithValue("@c3", cod[2] ?? "");
+                                total += await cmd.ExecuteNonQueryAsync();
+                            }
+                        }
+                        tx.Commit();
+                    }
+                }
+                await AtualizarMemoriaAsync("MATERIAIS");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao excluir itens selecionados: {ex.Message}", "Erro",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            return total;
+        }
+
         public async Task RemoverDuplicatasAsync(string tableName, string idColumn, List<string> colunas)
         {
             string cols = string.Join(", ", colunas);

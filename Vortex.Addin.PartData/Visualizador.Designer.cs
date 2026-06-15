@@ -28,35 +28,42 @@ namespace Vortex.Addin.PartData
         /// </summary>
         private void InitializeComponent()
         {
-            this.treeView1 = new System.Windows.Forms.TreeView();
-            this.headerPanel = new System.Windows.Forms.Panel();
+            this.treeListView1 = new BrightIdeasSoftware.TreeListView();
+            this.olvColCodigo = new BrightIdeasSoftware.OLVColumn();
+            this.olvColDenom = new BrightIdeasSoftware.OLVColumn();
             this.bottomPanel = new System.Windows.Forms.Panel();
             this.btn_loadFiles = new System.Windows.Forms.Button();
+            ((System.ComponentModel.ISupportInitialize)(this.treeListView1)).BeginInit();
             this.bottomPanel.SuspendLayout();
             this.SuspendLayout();
             //
-            // treeView1
+            // treeListView1
             //
-            this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.treeView1.DrawMode = System.Windows.Forms.TreeViewDrawMode.OwnerDrawText;
-            this.treeView1.FullRowSelect = true;
-            this.treeView1.HideSelection = false;
-            this.treeView1.Location = new System.Drawing.Point(0, 22);
-            this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(692, 502);
-            this.treeView1.TabIndex = 0;
-            this.treeView1.DrawNode += new System.Windows.Forms.DrawTreeNodeEventHandler(this.treeView1_DrawNode);
-            this.treeView1.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.treeView1_BeforeExpand);
-            this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
+            this.treeListView1.AllColumns.Add(this.olvColCodigo);
+            this.treeListView1.AllColumns.Add(this.olvColDenom);
+            this.treeListView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.olvColCodigo,
+            this.olvColDenom});
+            this.treeListView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.treeListView1.FullRowSelect = true;
+            this.treeListView1.HideSelection = false;
+            this.treeListView1.Location = new System.Drawing.Point(0, 0);
+            this.treeListView1.Name = "treeListView1";
+            this.treeListView1.ShowGroups = false;
+            this.treeListView1.Size = new System.Drawing.Size(692, 524);
+            this.treeListView1.TabIndex = 0;
+            this.treeListView1.UseCompatibleStateImageBehavior = false;
+            this.treeListView1.View = System.Windows.Forms.View.Details;
             //
-            // headerPanel
+            // olvColCodigo
             //
-            this.headerPanel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.headerPanel.Location = new System.Drawing.Point(0, 0);
-            this.headerPanel.Name = "headerPanel";
-            this.headerPanel.Size = new System.Drawing.Size(692, 22);
-            this.headerPanel.TabIndex = 2;
-            this.headerPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.headerPanel_Paint);
+            this.olvColCodigo.Text = "Estrutura (Código)";
+            this.olvColCodigo.Width = 360;
+            //
+            // olvColDenom
+            //
+            this.olvColDenom.Text = "Denominação";
+            this.olvColDenom.Width = 300;
             //
             // bottomPanel
             //
@@ -65,7 +72,7 @@ namespace Vortex.Addin.PartData
             this.bottomPanel.Location = new System.Drawing.Point(0, 524);
             this.bottomPanel.Name = "bottomPanel";
             this.bottomPanel.Size = new System.Drawing.Size(692, 30);
-            this.bottomPanel.TabIndex = 3;
+            this.bottomPanel.TabIndex = 1;
             //
             // btn_loadFiles
             //
@@ -83,12 +90,12 @@ namespace Vortex.Addin.PartData
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(692, 554);
-            this.Controls.Add(this.treeView1);
-            this.Controls.Add(this.headerPanel);
+            this.Controls.Add(this.treeListView1);
             this.Controls.Add(this.bottomPanel);
             this.Name = "Visualizador";
             this.Text = "Visualizador PDM x Banco";
             this.Load += new System.EventHandler(this.Visualizador_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.treeListView1)).EndInit();
             this.bottomPanel.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -96,8 +103,9 @@ namespace Vortex.Addin.PartData
 
         #endregion
 
-        private System.Windows.Forms.TreeView treeView1;
-        private System.Windows.Forms.Panel headerPanel;
+        private BrightIdeasSoftware.TreeListView treeListView1;
+        private BrightIdeasSoftware.OLVColumn olvColCodigo;
+        private BrightIdeasSoftware.OLVColumn olvColDenom;
         private System.Windows.Forms.Panel bottomPanel;
         private System.Windows.Forms.Button btn_loadFiles;
     }
